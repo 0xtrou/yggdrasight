@@ -737,27 +737,6 @@ function ResultView({
   result: ClassificationResult
   subAgentResults: Record<string, SubAgentResult> | null
 }) {
-  const [expandedAgents, setExpandedAgents] = useState<Set<string>>(new Set())
-  const [expandedResonance, setExpandedResonance] = useState<Set<string>>(new Set())
-
-  const toggleAgent = (key: string) => {
-    setExpandedAgents(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
-  }
-
-  const toggleResonance = (key: string) => {
-    setExpandedResonance(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
-  }
-
   // Get crack mapping resonance data
   const crackResonance: Partial<Record<CrackId, number>> = useMemo(() => {
     if (!subAgentResults?.crack_mapping?.result) return {}
@@ -766,14 +745,6 @@ function ResultView({
   }, [subAgentResults])
 
   const primaryWeight = result.categories.find(c => c.category === result.primary_category)?.weight ?? 0
-
-  // Collect raw resonance entries (agents with rawOutput)
-  const rawResonanceEntries = useMemo(() => {
-    if (!subAgentResults) return []
-    return Object.entries(subAgentResults)
-      .filter(([, agent]) => (agent as SubAgentResult).rawOutput)
-      .map(([key, agent]) => ({ key, rawOutput: (agent as SubAgentResult).rawOutput! }))
-  }, [subAgentResults])
 
   return (
     <div style={{ padding: '16px' }}>
@@ -789,37 +760,7 @@ function ResultView({
       <SectionHeader title="CRACK ALIGNMENT" count={result.crack_alignment.length} />
       <CrackBars crackIds={result.crack_alignment} resonance={crackResonance} />
 
-      {/* Sub-agents */}
-      {subAgentResults && (
-        <>
-          <SectionHeader title="SUB-AGENTS" count={Object.keys(subAgentResults).length} />
-          {Object.entries(subAgentResults).map(([key, agent]) => (
-            <SubAgentCard
-              key={key}
-              agentType={key}
-              agent={agent as SubAgentResult}
-              expanded={expandedAgents.has(key)}
-              onToggle={() => toggleAgent(key)}
-            />
-          ))}
-        </>
-      )}
 
-      {/* Raw Resonance — full unprocessed LLM output from each agent */}
-      {rawResonanceEntries.length > 0 && (
-        <>
-          <SectionHeader title="RAW RESONANCE" count={rawResonanceEntries.length} />
-          {rawResonanceEntries.map(({ key, rawOutput }) => (
-            <RawResonancePanel
-              key={key}
-              agentType={key}
-              rawOutput={rawOutput}
-              expanded={expandedResonance.has(key)}
-              onToggle={() => toggleResonance(key)}
-            />
-          ))}
-        </>
-      )}
 
       {/* Philosophical assessment */}
       {result.overall_assessment && (
@@ -1135,94 +1076,113 @@ function ClassificationHistory({
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   RAW JOB OUTPUT — full unprocessed output from the classification job
+   DEEP DATA SECTION — grouped verbose/raw data below the main classification
+   Sub-Agents • Raw Resonance • Raw Output • Classification History
    ═══════════════════════════════════════════════════════════════════════════ */
 
-function RawJobOutput({ subAgentResults }: { subAgentResults: Record<string, SubAgentResult> }) {
-  const [expanded, setExpanded] = useState(false)
+function DeepDataSection({
+  subAgentResults,
+  history,
+  migrations,
+}: {
+  subAgentResults: Record<string, SubAgentResult> | null
+  history: ClassificationHistoryEntry[]
+  migrations: CategoryMigration[]
+}) {
   const [expandedAgents, setExpandedAgents] = useState<Set<string>>(new Set())
+  const [expandedResonance, setExpandedResonance] = useState<Set<string>>(new Set())
 
-  const entries = Object.entries(subAgentResults)
-    .filter(([, agent]) => (agent as SubAgentResult).rawOutput)
-    .map(([key, agent]) => ({ key, label: AGENT_LABELS[key] || key, rawOutput: (agent as SubAgentResult).rawOutput! }))
+  const toggleAgent = (key: string) => {
+    setExpandedAgents(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
-  if (entries.length === 0) return null
+  const toggleResonance = (key: string) => {
+    setExpandedResonance(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
-  const totalChars = entries.reduce((sum, e) => sum + e.rawOutput.length, 0)
+  // Collect raw resonance entries (agents with rawOutput)
+  const rawResonanceEntries = useMemo(() => {
+    if (!subAgentResults) return []
+    return Object.entries(subAgentResults)
+      .filter(([, agent]) => (agent as SubAgentResult).rawOutput)
+      .map(([key, agent]) => ({ key, rawOutput: (agent as SubAgentResult).rawOutput! }))
+  }, [subAgentResults])
+
+  const hasSubAgents = subAgentResults && Object.keys(subAgentResults).length > 0
+  const hasResonance = rawResonanceEntries.length > 0
+  const hasHistory = history.length > 0
+
+  if (!hasSubAgents && !hasResonance && !hasHistory) return null
 
   return (
-    <>
-      <SectionHeader title="RAW CLASSIFICATION OUTPUT" />
+    <div style={{ padding: '0 16px 16px' }}>
+      {/* ── Section Divider ── */}
       <div style={{
-        border: '1px solid var(--color-terminal-border)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        margin: '8px 0 12px',
         fontFamily: 'var(--font-mono)',
       }}>
-        <div
-          onClick={() => setExpanded(!expanded)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '6px 10px',
-            cursor: 'pointer',
-            fontSize: '10px',
-            background: 'var(--color-terminal-panel)',
-          }}
-        >
-          <span style={{ color: 'var(--color-terminal-dim)', letterSpacing: '0.08em' }}>
-            {entries.length} AGENTS — {totalChars.toLocaleString()} CHARS TOTAL
-          </span>
-          <span style={{ color: 'var(--color-terminal-dim)' }}>
-            {expanded ? '▾' : '▸'}
-          </span>
-        </div>
-        {expanded && entries.map(({ key, label, rawOutput }) => {
-          const isOpen = expandedAgents.has(key)
-          return (
-            <div key={key} style={{ borderTop: '1px solid var(--color-terminal-border)' }}>
-              <div
-                onClick={() => {
-                  const next = new Set(expandedAgents)
-                  if (isOpen) next.delete(key); else next.add(key)
-                  setExpandedAgents(next)
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '4px 10px',
-                  cursor: 'pointer',
-                  fontSize: '10px',
-                  background: 'var(--color-terminal-bg)',
-                }}
-              >
-                <span style={{ color: 'var(--color-terminal-accent)' }}>{label}</span>
-                <span style={{ color: 'var(--color-terminal-dim)' }}>
-                  {rawOutput.length.toLocaleString()} chars {isOpen ? '▾' : '▸'}
-                </span>
-              </div>
-              {isOpen && (
-                <pre style={{
-                  margin: 0,
-                  padding: '10px 12px',
-                  fontSize: '10px',
-                  lineHeight: 1.6,
-                  color: 'var(--color-terminal-muted)',
-                  background: 'var(--color-terminal-bg)',
-                  whiteSpace: 'pre-wrap',
-                  wordWrap: 'break-word',
-                  maxHeight: '400px',
-                  overflowY: 'auto',
-                  borderTop: '1px solid var(--color-terminal-border)',
-                }}>
-                  {rawOutput}
-                </pre>
-              )}
-            </div>
-          )
-        })}
+        <div style={{ flex: 1, height: '1px', background: 'var(--color-terminal-border)' }} />
+        <span style={{
+          fontSize: '9px',
+          letterSpacing: '0.15em',
+          color: 'var(--color-terminal-dim)',
+          whiteSpace: 'nowrap',
+        }}>
+          ◈ DEEP DATA
+        </span>
+        <div style={{ flex: 1, height: '1px', background: 'var(--color-terminal-border)' }} />
       </div>
-    </>
+
+      {/* ── Sub-Agents (parsed results) ── */}
+      {hasSubAgents && (
+        <>
+          <SectionHeader title="SUB-AGENTS" count={Object.keys(subAgentResults!).length} />
+          {Object.entries(subAgentResults!).map(([key, agent]) => (
+            <SubAgentCard
+              key={key}
+              agentType={key}
+              agent={agent as SubAgentResult}
+              expanded={expandedAgents.has(key)}
+              onToggle={() => toggleAgent(key)}
+            />
+          ))}
+        </>
+      )}
+
+      {/* ── Raw Resonance (raw LLM output per agent) ── */}
+      {hasResonance && (
+        <>
+          <SectionHeader title="RAW RESONANCE" count={rawResonanceEntries.length} />
+          {rawResonanceEntries.map(({ key, rawOutput }) => (
+            <RawResonancePanel
+              key={key}
+              agentType={key}
+              rawOutput={rawOutput}
+              expanded={expandedResonance.has(key)}
+              onToggle={() => toggleResonance(key)}
+            />
+          ))}
+        </>
+      )}
+
+      {/* ── Classification History ── */}
+      {hasHistory && (
+        <ClassificationHistory history={history} migrations={migrations} />
+      )}
+    </div>
   )
 }
 
@@ -1247,7 +1207,6 @@ function DetailPanel({
     cancelClassification,
     history,
     migrations,
-    rawOutput,
   } = hook
 
   if (classifying) {
@@ -1269,18 +1228,13 @@ function DetailPanel({
           subAgentResults={subAgentResults as unknown as Record<string, SubAgentResult> | null}
         />
 
-        {/* ── Classification History ── */}
-        {history.length > 0 && (
-          <div style={{ padding: '0 16px 16px' }}>
-            <ClassificationHistory history={history} migrations={migrations} />
-          </div>
-        )}
-
-        {/* ── Raw Agent Output (full dump from latest job) ── */}
-        {rawOutput && (
-          <div style={{ padding: '0 16px 16px' }}>
-            <RawJobOutput rawOutput={rawOutput} />
-          </div>
+        {/* ══════ DEEP DATA SECTION ══════ */}
+        {(subAgentResults || history.length > 0) && (
+          <DeepDataSection
+            subAgentResults={subAgentResults as unknown as Record<string, SubAgentResult> | null}
+            history={history}
+            migrations={migrations}
+          />
         )}
       </div>
     )
