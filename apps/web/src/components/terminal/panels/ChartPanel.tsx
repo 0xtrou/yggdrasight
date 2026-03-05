@@ -1,15 +1,15 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { init, dispose, ActionType } from 'klinecharts'
+import { init, dispose, ActionType, LineType } from 'klinecharts'
 import type { Chart } from 'klinecharts'
 import { useOHLCV } from '@/hooks/useOHLCV'
 import { usePriceTicker } from '@/hooks/usePriceTicker'
 import { useSignals } from '@/hooks/useSignals'
+import { useKlineStream } from '@/hooks/useKlineStream'
+import { ChartSettingsModal, ChartSettings, DEFAULT_CHART_SETTINGS } from './ChartSettingsModal'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
-
-
 
 const TIMEFRAMES = ['1m', '5m', '15m', '1h', '4h', '1d', '1w'] as const
 type TF = (typeof TIMEFRAMES)[number]
@@ -19,12 +19,94 @@ const TF_TO_INTERVAL: Record<TF, string> = {
   '1h': '1h', '4h': '4h', '1d': '1d', '1w': '1w',
 }
 
+// ─── Indicator Registry ───────────────────────────────────────────────────────
+
+interface IndicatorDef {
+  name: string
+  label: string
+  type: 'main' | 'sub'
+}
+
+interface PriceAlert {
+  id: string
+  price: number
+  createdAt: number
+  triggered: boolean
+}
+
+const INDICATOR_CATEGORIES: { label: string; indicators: IndicatorDef[] }[] = [
+  {
+    label: 'MAIN INDICATORS',
+    indicators: [
+      { name: 'MA', label: 'MA (7,25,99)', type: 'main' },
+      { name: 'EMA', label: 'EMA', type: 'main' },
+      { name: 'SMA', label: 'SMA', type: 'main' },
+      { name: 'BOLL', label: 'Bollinger Bands', type: 'main' },
+      { name: 'SAR', label: 'SAR', type: 'main' },
+      { name: 'BBI', label: 'BBI', type: 'main' },
+    ],
+  },
+  {
+    label: 'SUB INDICATORS',
+    indicators: [
+      { name: 'VOL', label: 'Volume', type: 'sub' },
+      { name: 'MACD', label: 'MACD', type: 'sub' },
+      { name: 'RSI', label: 'RSI', type: 'sub' },
+      { name: 'KDJ', label: 'KDJ', type: 'sub' },
+      { name: 'DMI', label: 'DMI', type: 'sub' },
+      { name: 'OBV', label: 'OBV', type: 'sub' },
+      { name: 'BIAS', label: 'BIAS', type: 'sub' },
+      { name: 'BRAR', label: 'BR/AR', type: 'sub' },
+      { name: 'CCI', label: 'CCI', type: 'sub' },
+      { name: 'CR', label: 'CR', type: 'sub' },
+      { name: 'DMA', label: 'DMA', type: 'sub' },
+      { name: 'EMV', label: 'EMV', type: 'sub' },
+      { name: 'MTM', label: 'MTM', type: 'sub' },
+      { name: 'PSY', label: 'PSY', type: 'sub' },
+      { name: 'ROC', label: 'ROC', type: 'sub' },
+      { name: 'TRIX', label: 'TRIX', type: 'sub' },
+      { name: 'VR', label: 'VR', type: 'sub' },
+      { name: 'WR', label: 'WR', type: 'sub' },
+      { name: 'AO', label: 'AO', type: 'sub' },
+      { name: 'PVT', label: 'PVT', type: 'sub' },
+    ],
+  },
+]
+
+const ALL_INDICATORS = INDICATOR_CATEGORIES.flatMap(c => c.indicators)
+const DEFAULT_INDICATORS = ['MA', 'VOL']
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatPrice(price: number): string {
   if (price >= 1000) return price.toLocaleString('en-US', { maximumFractionDigits: 2 })
+  if (price >= 100) return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 3 })
   if (price >= 1) return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
-  return price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 })
+  if (price >= 0.01) return price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 5 })
+  if (price >= 0.0001) return price.toLocaleString('en-US', { minimumFractionDigits: 6, maximumFractionDigits: 7 })
+  return price.toLocaleString('en-US', { minimumFractionDigits: 8, maximumFractionDigits: 10 })
+}
+
+/** Detect required decimal precision from candle price data. */
+function detectPricePrecision(candles: { close: number; low: number }[]): number {
+  const sample = candles.slice(-100)
+  let minPrice = Infinity
+  for (const c of sample) {
+    if (c.close > 0 && c.close < minPrice) minPrice = c.close
+    if (c.low > 0 && c.low < minPrice) minPrice = c.low
+  }
+  if (minPrice === Infinity || minPrice === 0) return 2
+  if (minPrice >= 1000) return 2
+  if (minPrice >= 100) return 3
+  if (minPrice >= 1) return 4
+  const str = minPrice.toFixed(20)
+  const afterDot = str.split('.')[1] || ''
+  let leadingZeros = 0
+  for (const ch of afterDot) {
+    if (ch === '0') leadingZeros++
+    else break
+  }
+  return Math.min(leadingZeros + 4, 12)
 }
 
 function formatChange(change: number): string {
@@ -105,6 +187,7 @@ function OHLCVRow({ candle, prevClose }: OHLCVRowProps) {
       letterSpacing: '0.04em',
       gap: 0,
       overflow: 'hidden',
+      whiteSpace: 'nowrap',
     }}>
       <span style={{ color: 'var(--color-terminal-dim)', marginRight: 10 }}>
         {formatCandleDate(candle.timestamp)}
@@ -218,8 +301,173 @@ function MenuItem({
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdict?: { direction: 'long' | 'short' | 'neutral'; confidence: number } | null; symbol?: string } = {}) {
-  const [timeframe, setTimeframe] = useState<TF>('4h')
+  // ── Persisted chart config (per-asset, saved immediately on every change) ──
+  const storageKey = `oculus-chart-config:${externalSymbol}`
 
+  const readConfig = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw) return JSON.parse(raw) as Record<string, unknown>
+    } catch { /* corrupt */ }
+    return {} as Record<string, unknown>
+  }, [storageKey])
+
+  const saveConfig = useCallback((patch: Record<string, unknown>) => {
+    try {
+      const prev = readConfig()
+      localStorage.setItem(storageKey, JSON.stringify({ ...prev, ...patch }))
+    } catch { /* quota / private browsing */ }
+  }, [storageKey, readConfig])
+
+  // ── State — initialised from localStorage per-asset ──
+  const [timeframe, setTimeframeRaw] = useState<TF>(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed.timeframe && TIMEFRAMES.includes(parsed.timeframe)) return parsed.timeframe as TF
+      }
+    } catch { /* ignore */ }
+    return '4h'
+  })
+
+  const [lockedCursor, setLockedCursorRaw] = useState(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (typeof parsed.lockedCursor === 'boolean') return parsed.lockedCursor
+      }
+    } catch { /* ignore */ }
+    return false
+  })
+
+  const [hideMarks, setHideMarksRaw] = useState(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (typeof parsed.hideMarks === 'boolean') return parsed.hideMarks
+      }
+    } catch { /* ignore */ }
+    return false
+  })
+
+  const [activeIndicators, setActiveIndicatorsRaw] = useState<string[]>(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed.indicators)) return parsed.indicators
+      }
+    } catch { /* ignore */ }
+    return DEFAULT_INDICATORS
+  })
+
+  const setActiveIndicators = useCallback((indicators: string[]) => {
+    setActiveIndicatorsRaw(indicators)
+    saveConfig({ indicators })
+  }, [saveConfig])
+
+  const [alerts, setAlerts] = useState<PriceAlert[]>(() => {
+    try {
+      const stored = localStorage.getItem(`oculus-chart-alerts:${externalSymbol}`)
+      return stored ? JSON.parse(stored) : []
+    } catch { return [] }
+  })
+
+  const setAlertsAndPersist = useCallback((updater: PriceAlert[] | ((prev: PriceAlert[]) => PriceAlert[])) => {
+    setAlerts(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater
+      try {
+        localStorage.setItem(`oculus-chart-alerts:${externalSymbol}`, JSON.stringify(next))
+      } catch { /* quota */ }
+      return next
+    })
+  }, [externalSymbol])
+
+  const [chartSettings, setChartSettingsRaw] = useState<ChartSettings>(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed.chartSettings) return parsed.chartSettings as ChartSettings
+      }
+    } catch { /* ignore */ }
+    return DEFAULT_CHART_SETTINGS
+  })
+
+  const [showSettings, setShowSettings] = useState(false)
+  const [showIndicatorMenu, setShowIndicatorMenu] = useState(false)
+  const indicatorMenuRef = useRef<HTMLDivElement>(null)
+
+  // ── Wrapped setters that persist immediately ──
+  const setTimeframe = useCallback((tf: TF) => {
+    setTimeframeRaw(tf)
+    saveConfig({ timeframe: tf })
+  }, [saveConfig])
+
+  const setLockedCursor = useCallback((v: boolean | ((prev: boolean) => boolean)) => {
+    setLockedCursorRaw((prev: boolean) => {
+      const next = typeof v === 'function' ? v(prev) : v
+      saveConfig({ lockedCursor: next })
+      return next
+    })
+  }, [saveConfig])
+
+  const setHideMarks = useCallback((v: boolean | ((prev: boolean) => boolean)) => {
+    setHideMarksRaw((prev: boolean) => {
+      const next = typeof v === 'function' ? v(prev) : v
+      saveConfig({ hideMarks: next })
+      return next
+    })
+  }, [saveConfig])
+
+  const handleSettingsChange = useCallback((settings: ChartSettings) => {
+    setChartSettingsRaw(settings)
+    saveConfig({ chartSettings: settings })
+    if (chartRef.current) {
+      chartRef.current.setStyles({
+        candle: {
+          bar: {
+            upColor: settings.candleUpColor,
+            downColor: settings.candleDownColor,
+            noChangeColor: '#888888',
+            upBorderColor: settings.candleUpColor,
+            downBorderColor: settings.candleDownColor,
+            noChangeBorderColor: '#888888',
+            upWickColor: settings.candleUpColor,
+            downWickColor: settings.candleDownColor,
+            noChangeWickColor: '#888888',
+          },
+        },
+        grid: { show: settings.gridVisible },
+        crosshair: { show: settings.crosshairVisible },
+      })
+    }
+  }, [saveConfig])
+
+  const toggleIndicator = useCallback((name: string) => {
+    setActiveIndicators(
+      activeIndicators.includes(name)
+        ? activeIndicators.filter(n => n !== name)
+        : [...activeIndicators, name]
+    )
+  }, [activeIndicators, setActiveIndicators])
+
+  // ── Re-hydrate React state when asset changes ──
+  useEffect(() => {
+    const cfg = readConfig()
+    if (cfg.timeframe && TIMEFRAMES.includes(cfg.timeframe as TF)) setTimeframeRaw(cfg.timeframe as TF)
+    if (typeof cfg.lockedCursor === 'boolean') setLockedCursorRaw(cfg.lockedCursor)
+    if (typeof cfg.hideMarks === 'boolean') setHideMarksRaw(cfg.hideMarks)
+    if (Array.isArray(cfg.indicators)) setActiveIndicatorsRaw(cfg.indicators)
+    if (cfg.chartSettings) setChartSettingsRaw(cfg.chartSettings as ChartSettings)
+    try {
+      const stored = localStorage.getItem(`oculus-chart-alerts:${externalSymbol}`)
+      setAlerts(stored ? JSON.parse(stored) : [])
+    } catch { setAlerts([]) }
+  }, [externalSymbol, readConfig])
 
   const symbol = `${externalSymbol}USDT`
   const interval = TF_TO_INTERVAL[timeframe]
@@ -227,6 +475,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
   const { candles, loading, error } = useOHLCV(symbol, interval)
   const { tickers } = usePriceTicker([externalSymbol])
   const { signals } = useSignals()
+  const { latestCandle } = useKlineStream(`${externalSymbol}USDT`, TF_TO_INTERVAL[timeframe])
 
   const ticker = tickers[symbol]
   const change24h = ticker?.change24h ?? 0
@@ -239,17 +488,12 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
 
   // Context menu state
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; price: number } | null>(null)
-  const [lockedCursor, setLockedCursor] = useState(false)
-  const [hideMarks, setHideMarks] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const chartRef = useRef<Chart | null>(null)
-
-  // Chart ref
   const containerRef = useRef<HTMLDivElement>(null)
 
   const toggleFullscreen = useCallback(() => {
     setIsFullscreen(prev => !prev)
-    // Trigger resize after state update so klinecharts recalculates
     setTimeout(() => chartRef.current?.resize(), 50)
   }, [])
 
@@ -266,6 +510,18 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     return () => window.removeEventListener('keydown', onKey)
   }, [isFullscreen])
 
+  // Close indicator menu on outside click
+  useEffect(() => {
+    if (!showIndicatorMenu) return
+    const onMouseDown = (e: MouseEvent) => {
+      if (indicatorMenuRef.current && !indicatorMenuRef.current.contains(e.target as Node)) {
+        setShowIndicatorMenu(false)
+      }
+    }
+    window.addEventListener('mousedown', onMouseDown)
+    return () => window.removeEventListener('mousedown', onMouseDown)
+  }, [showIndicatorMenu])
+
   // ── Chart init & data update ──────────────────────────────────────────────
   useEffect(() => {
     if (!containerRef.current || loading || candles.length === 0) return
@@ -277,18 +533,22 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     if (!chart) return
     chartRef.current = chart
 
-    // Bloomberg terminal dark styles (hex only — CSS vars don't work in canvas)
+    // Set price precision based on actual candle data
+    const pricePrecision = detectPricePrecision(candles)
+    chart.setPriceVolumePrecision(pricePrecision, 0)
+
+    // Bloomberg terminal dark styles — uses chartSettings for configurable values
     chart.setStyles({
       candle: {
         bar: {
-          upColor: '#00ff88',
-          downColor: '#ff3b3b',
+          upColor: chartSettings.candleUpColor,
+          downColor: chartSettings.candleDownColor,
           noChangeColor: '#888888',
-          upBorderColor: '#00ff88',
-          downBorderColor: '#ff3b3b',
+          upBorderColor: chartSettings.candleUpColor,
+          downBorderColor: chartSettings.candleDownColor,
           noChangeBorderColor: '#888888',
-          upWickColor: '#00ff88',
-          downWickColor: '#ff3b3b',
+          upWickColor: chartSettings.candleUpColor,
+          downWickColor: chartSettings.candleDownColor,
           noChangeWickColor: '#888888',
         },
       },
@@ -303,10 +563,12 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
         tickText: { color: '#888888', size: 10, family: 'JetBrains Mono, monospace' },
       },
       grid: {
+        show: chartSettings.gridVisible,
         horizontal: { color: '#1a1a1a' },
         vertical: { color: '#1a1a1a' },
       },
       crosshair: {
+        show: chartSettings.crosshairVisible,
         horizontal: {
           line: { color: '#444444' },
           text: { backgroundColor: '#222222', color: '#e5e5e5' },
@@ -331,15 +593,62 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
       })),
     )
 
-    // MA indicator in MAIN pane (overlaid on candles)
-    try {
-      chart.createIndicator({ name: 'MA', calcParams: [7, 25, 99] }, false, { id: 'candle_pane' })
-    } catch {
-      chart.createIndicator('MA', false, { id: 'candle_pane' })
+    // Re-draw alert overlays (destroyed on chart dispose — must redraw here)
+    const activeAlerts = alerts.filter(a => !a.triggered)
+    activeAlerts.forEach(alert => {
+      chart.createOverlay({
+        name: 'horizontalStraightLine',
+        id: `alert-${alert.id}`,
+        points: [{ value: alert.price }],
+        lock: true,
+        styles: {
+          line: { color: '#ffaa00', style: LineType.Dashed, dashedValue: [4, 4] },
+        },
+      })
+    })
+
+    // Create indicators dynamically — isStack=true allows multiple coexist
+    for (const name of activeIndicators) {
+      const def = ALL_INDICATORS.find(i => i.name === name)
+      if (!def) continue
+      if (def.type === 'main') {
+        try {
+          if (name === 'MA') {
+            chart.createIndicator({ name: 'MA', calcParams: [7, 25, 99] }, true, { id: 'candle_pane' })
+          } else {
+            chart.createIndicator(name, true, { id: 'candle_pane' })
+          }
+        } catch {
+          chart.createIndicator(name, true, { id: 'candle_pane' })
+        }
+      } else {
+        // Sub-pane: constrain height to 100px so candle pane isn't squished
+        chart.createIndicator(name, true, { height: 100 })
+      }
     }
 
-    // Volume indicator in SEPARATE sub-pane (no id = new pane)
-    chart.createIndicator('VOL', false)
+    // Restore saved bar space (zoom) and scroll offset
+    const cfg = readConfig()
+    if (typeof cfg.barSpace === 'number' && cfg.barSpace > 0) {
+      chart.setBarSpace(cfg.barSpace)
+    }
+    if (typeof cfg.offsetRightDistance === 'number') {
+      chart.setOffsetRightDistance(cfg.offsetRightDistance)
+    }
+
+    // Persist zoom & scroll immediately on every user interaction
+    chart.subscribeAction(ActionType.OnZoom, () => {
+      saveConfig({
+        barSpace: chart.getBarSpace(),
+        offsetRightDistance: chart.getOffsetRightDistance(),
+      })
+    })
+    chart.subscribeAction(ActionType.OnScroll, () => {
+      saveConfig({
+        barSpace: chart.getBarSpace(),
+        offsetRightDistance: chart.getOffsetRightDistance(),
+      })
+    })
 
     // Crosshair change listener for OHLCV & MA rows
     chart.subscribeAction(ActionType.OnCrosshairChange, (data: unknown) => {
@@ -351,7 +660,6 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
         if (d.kLineData) {
           setHoverCandle(d.kLineData)
         }
-        // Extract MA values — structure varies by klinechart version
         if (d.indicatorData) {
           try {
             const indMap = d.indicatorData as Map<string, unknown> | Record<string, unknown>
@@ -442,7 +750,60 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
       resizeObserver.disconnect()
       dispose(container)
     }
-  }, [candles, signals, externalSymbol]) // re-create when data or symbol changes
+  }, [candles, signals, externalSymbol, readConfig, saveConfig, activeIndicators, alerts, chartSettings])
+
+  // ── Real-time candle updates (separate effect — chart init disposes on every state change) ──
+  useEffect(() => {
+    if (!latestCandle || !chartRef.current) return
+    chartRef.current.updateData({
+      timestamp: latestCandle.timestamp,
+      open: latestCandle.open,
+      high: latestCandle.high,
+      low: latestCandle.low,
+      close: latestCandle.close,
+      volume: latestCandle.volume,
+    })
+  }, [latestCandle])
+
+  // ── Price alert crossing detection ───────────────────────────────────────
+  const prevPriceRef = useRef<number | undefined>(undefined)
+  useEffect(() => {
+    const currentPrice = ticker?.price
+    if (currentPrice == null) return
+
+    const prev = prevPriceRef.current
+    prevPriceRef.current = currentPrice
+
+    if (prev == null || alerts.length === 0) return
+
+    const activeAlerts = alerts.filter(a => !a.triggered)
+    if (activeAlerts.length === 0) return
+
+    let changed = false
+    const updatedAlerts = alerts.map(alert => {
+      if (alert.triggered) return alert
+      const crossed =
+        (prev < alert.price && currentPrice >= alert.price) ||
+        (prev > alert.price && currentPrice <= alert.price)
+      if (crossed) {
+        if (Notification.permission === 'granted') {
+          try {
+            new Notification(`Price Alert: ${externalSymbol}`, {
+              body: `Price reached $${alert.price.toFixed(2)} (current: $${currentPrice.toFixed(2)})`,
+              icon: '/favicon-192.png',
+            })
+          } catch { /* notification blocked */ }
+        }
+        changed = true
+        return { ...alert, triggered: true }
+      }
+      return alert
+    })
+
+    if (changed) {
+      setAlertsAndPersist(updatedAlerts)
+    }
+  }, [ticker, alerts, externalSymbol, setAlertsAndPersist])
 
   // Displayed candle: prefer hovered, fall back to last candle
   const lastCandle = candles.length > 0 ? candles[candles.length - 1] : null
@@ -490,7 +851,6 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
         borderRight: isFullscreen ? 'none' : '1px solid var(--color-terminal-border)',
       }}
     >
-
       {/* ── Section 2: Timeframe toolbar ── */}
       <div
         style={{
@@ -540,6 +900,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
             </button>
           ))}
         </span>
+
         <button
           onClick={toggleFullscreen}
           title={isFullscreen ? 'Exit fullscreen (Esc)' : 'Fullscreen'}
@@ -557,6 +918,118 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
         >
           {isFullscreen ? '⊡' : '⊞'}
         </button>
+
+        {/* Indicator selector button + dropdown */}
+        <div ref={indicatorMenuRef} style={{ position: 'relative', marginLeft: 4 }}>
+          <button
+            onClick={() => setShowIndicatorMenu(v => !v)}
+            title="Technical Indicators"
+            style={{
+              background: showIndicatorMenu ? 'rgba(255,170,0,0.15)' : 'transparent',
+              border: showIndicatorMenu ? '1px solid rgba(255,170,0,0.5)' : '1px solid var(--color-terminal-border)',
+              color: showIndicatorMenu ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 9,
+              cursor: 'pointer',
+              padding: '1px 5px',
+              lineHeight: 1,
+              letterSpacing: '0.04em',
+            }}
+          >
+            Indicators
+          </button>
+
+          {showIndicatorMenu && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: 4,
+                zIndex: 1000,
+                background: '#1a1a1a',
+                border: '1px solid #333',
+                borderRadius: 6,
+                padding: '6px 0',
+                minWidth: 220,
+                maxHeight: 420,
+                overflowY: 'auto',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: 11,
+              }}
+            >
+              {INDICATOR_CATEGORIES.map((cat) => (
+                <div key={cat.label}>
+                  <div style={{
+                    padding: '6px 12px 3px',
+                    fontSize: 9,
+                    fontWeight: 700,
+                    color: '#888',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase' as const,
+                  }}>
+                    {cat.label}
+                  </div>
+                  {cat.indicators.map((ind) => {
+                    const active = activeIndicators.includes(ind.name)
+                    return (
+                      <div
+                        key={ind.name}
+                        onClick={() => toggleIndicator(ind.name)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          padding: '5px 12px',
+                          cursor: 'pointer',
+                          background: active ? 'rgba(255,170,0,0.08)' : 'transparent',
+                          userSelect: 'none',
+                        }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = active ? 'rgba(255,170,0,0.15)' : '#2a2a2a' }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = active ? 'rgba(255,170,0,0.08)' : 'transparent' }}
+                      >
+                        <span style={{
+                          width: 14,
+                          height: 14,
+                          borderRadius: 3,
+                          border: active ? '1px solid var(--color-terminal-amber)' : '1px solid #555',
+                          background: active ? 'var(--color-terminal-amber)' : 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 10,
+                          color: active ? '#000' : 'transparent',
+                          flexShrink: 0,
+                        }}>
+                          ✓
+                        </span>
+                        <span style={{ color: active ? 'var(--color-terminal-text)' : '#999', fontSize: 11 }}>
+                          {ind.label}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              ))}
+              <div style={{ height: 1, background: '#2a2a2a', margin: '6px 0' }} />
+              <div
+                onClick={() => { setActiveIndicators(DEFAULT_INDICATORS); setShowIndicatorMenu(false) }}
+                style={{
+                  padding: '5px 12px',
+                  cursor: 'pointer',
+                  color: '#888',
+                  fontSize: 10,
+                  userSelect: 'none',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = '#2a2a2a' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
+              >
+                Reset to defaults
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Section 3: OHLCV data row ── */}
@@ -583,7 +1056,6 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
           setCtxMenu({ x: e.clientX, y: e.clientY, price })
         }}
       >
-
         {/* Verdict badge */}
         {verdict && (
           <div style={{
@@ -648,13 +1120,14 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
 
         {/* Chart container — klinecharts mounts here */}
         <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+
         {/* Context menu */}
         {ctxMenu && (
           <div
             onMouseDown={(e) => e.stopPropagation()}
             style={{
               position: 'fixed',
-              top: Math.min(ctxMenu.y, (typeof window !== 'undefined' ? window.innerHeight : 800) - 340),
+              top: Math.min(ctxMenu.y, (typeof window !== 'undefined' ? window.innerHeight : 800) - 380),
               left: Math.min(ctxMenu.x, (typeof window !== 'undefined' ? window.innerWidth : 1200) - 230),
               zIndex: 1000,
               background: '#1a1a1a',
@@ -680,8 +1153,32 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
             <MenuDivider />
             <MenuItem
               label={`Create Alert at ${formatPrice(ctxMenu.price)}`}
-              onClick={() => setCtxMenu(null)}
+              onClick={() => {
+                if (ctxMenu.price == null) return
+                const activeAlerts = alerts.filter(a => !a.triggered)
+                if (activeAlerts.length >= 10) {
+                  setCtxMenu(null)
+                  return
+                }
+                if (Notification.permission === 'default') {
+                  Notification.requestPermission()
+                }
+                const newAlert: PriceAlert = {
+                  id: `alert-${Date.now()}`,
+                  price: ctxMenu.price,
+                  createdAt: Date.now(),
+                  triggered: false,
+                }
+                setAlertsAndPersist(prev => [...prev, newAlert])
+                setCtxMenu(null)
+              }}
             />
+            {alerts.filter(a => !a.triggered).length > 0 && (
+              <MenuItem
+                label={`Clear All Alerts (${alerts.filter(a => !a.triggered).length})`}
+                onClick={() => { setAlertsAndPersist([]); setCtxMenu(null); }}
+              />
+            )}
             <MenuItem
               label={`Copy price ${formatPrice(ctxMenu.price)}`}
               onClick={() => {
@@ -698,11 +1195,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
             <MenuDivider />
             <MenuItem
               label="Remove all indicators"
-              onClick={() => {
-                chartRef.current?.removeIndicator('candle_pane', 'MA')
-                chartRef.current?.removeIndicator('candle_pane', 'VOL')
-                setCtxMenu(null)
-              }}
+              onClick={() => { setActiveIndicators([]); setCtxMenu(null); }}
             />
             <MenuItem
               label="Hide marks on bars"
@@ -710,9 +1203,17 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
               onClick={() => { setHideMarks(v => !v); setCtxMenu(null) }}
             />
             <MenuDivider />
-            <MenuItem icon="⚙" label="Settings..." onClick={() => setCtxMenu(null)} />
+            <MenuItem icon="⚙" label="Settings..." onClick={() => { setShowSettings(true); setCtxMenu(null); }} />
           </div>
         )}
+
+        {/* Chart settings modal */}
+        <ChartSettingsModal
+          open={showSettings}
+          onClose={() => setShowSettings(false)}
+          settings={chartSettings}
+          onSettingsChange={handleSettingsChange}
+        />
       </div>
     </div>
   )

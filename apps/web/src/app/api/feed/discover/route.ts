@@ -31,7 +31,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json() as { symbol?: string; model?: string }
     const symbol = (body.symbol ?? 'BTC').toUpperCase()
-    const model = body.model ?? 'github-copilot/claude-sonnet-4'
+    const model = body.model ?? 'opencode/big-pickle'
 
     console.log(`[discover] Creating job for ${symbol} with model ${model}`)
 

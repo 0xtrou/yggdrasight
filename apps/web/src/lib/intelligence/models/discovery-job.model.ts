@@ -7,6 +7,7 @@ export interface IDiscoveryJob extends mongoose.Document {
   modelId: string
   status: 'pending' | 'running' | 'completed' | 'failed'
   result: DiscoveredProjectInfo | null
+  rawOutput: string | null
   error: string | null
   pid: number | null
   logs: string[]
@@ -26,6 +27,7 @@ export const DiscoveryJobSchema = new mongoose.Schema<IDiscoveryJob>(
       default: 'pending',
     },
     result: { type: mongoose.Schema.Types.Mixed, default: null },
+    rawOutput: { type: String, default: null },
     error: { type: String, default: null },
     pid: { type: Number, default: null },
     logs: { type: [String], default: [] },
@@ -50,6 +52,7 @@ export const DiscoveryJobSchema = new mongoose.Schema<IDiscoveryJob>(
 // ── Indexes ──────────────────────────────────────────────────────────────────
 DiscoveryJobSchema.index({ symbol: 1, startedAt: -1 })
 DiscoveryJobSchema.index({ status: 1 })
+DiscoveryJobSchema.index({ symbol: 1, completedAt: -1 })
 
 // ── Model ────────────────────────────────────────────────────────────────────
 export const DiscoveryJob: mongoose.Model<IDiscoveryJob> =

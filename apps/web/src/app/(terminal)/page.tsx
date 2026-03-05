@@ -4,7 +4,6 @@ import { Suspense, useState, useEffect, useCallback, useRef, useMemo } from 'rea
 import { useSearchParams, useRouter } from 'next/navigation'
 import { TopBar } from '@/components/terminal/TopBar'
 import { AssetTerminal } from '@/components/terminal/AssetTerminal'
-import { StatusBar } from '@/components/terminal/StatusBar'
 
 const CUSTOM_ASSETS_KEY = 'oculus:customAssets'
 
@@ -66,18 +65,9 @@ function TerminalContent() {
     }
     return Array.from(syms)
   }, [customAssets, selectedSymbol])
+
   return (
-    <div
-      style={{
-        height: '100vh',
-        width: '100vw',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'var(--color-terminal-bg)',
-        fontFamily: 'var(--font-mono)',
-      }}
-    >
+    <>
       <TopBar
         selectedSymbol={selectedSymbol}
         onSelectSymbol={handleSelectSymbol}
@@ -86,8 +76,7 @@ function TerminalContent() {
         trackedSymbols={trackedSymbols}
       />
       <AssetTerminal symbol={selectedSymbol} />
-      <StatusBar />
-    </div>
+    </>
   )
 }
 

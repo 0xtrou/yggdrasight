@@ -276,7 +276,7 @@ export function FeedGrid() {
   return (
     <div
       style={{
-        height: 'calc(100vh - 40px - 32px)',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         background: 'var(--color-terminal-bg)',

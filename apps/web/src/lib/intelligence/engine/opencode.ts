@@ -1,11 +1,14 @@
 import { execFile, spawn } from 'child_process'
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import path from 'path'
+
 import type { AvailableModel } from '../types'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const OPENCODE_BIN = process.env.OPENCODE_BIN ?? 'opencode'
+const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
+const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 const DEFAULT_TIMEOUT_MS = 120_000 // 2 minutes per agent call
 // Search multiple candidate paths for the models cache file
 const MODELS_CACHE_CANDIDATES = [
@@ -513,27 +516,38 @@ export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenC
   const startTime = Date.now()
 
   try {
-    const args = [
-      'run',
-      '-m', model,
-      '--format', 'json',
+    const HOME_DIR = process.env.HOME ?? '/root'
+
+    // If a workDir is provided (pre-built data files), mount it as /workspace
+    // and use --dir so the agent's read tool resolves relative paths there.
+    // Otherwise create an isolated temp dir (no data files needed — prompt is short).
+    let tmpDir: string | null = null
+    let mountDir: string | null = null
+    const dockerArgs: string[] = [
+      'run', '--rm',
+      '--network', 'host',
+      '-v', `${HOME_DIR}/.opencode:/root/.opencode:ro`,
+      '-e', 'HOME=/root',
     ]
 
-    // If a work directory is provided, tell OpenCode to run in that directory
-    // so it can read the data files with its built-in tools
     if (workDir) {
-      args.push('--dir', workDir)
+      // Mount the pre-built workspace and tell opencode to run from /workspace
+      dockerArgs.push('-v', `${workDir}:/workspace:rw`)
+      dockerArgs.push(OPENCODE_IMAGE)
+      dockerArgs.push('run', '-m', model, '--format', 'json', '--dir', '/workspace', prompt)
+    } else {
+      // No data files — just pass the prompt as positional arg directly
+      dockerArgs.push(OPENCODE_IMAGE)
+      dockerArgs.push('run', '-m', model, '--format', 'json', prompt)
     }
 
-    args.push(prompt)
+    const args = dockerArgs
 
-    const promptDesc = workDir
-      ? `workDir=${workDir} (${(prompt.length / 1024).toFixed(1)}KB msg)`
-      : `inline (${(prompt.length / 1024).toFixed(1)}KB)`
+    const promptDesc = workDir ? `workDir=${workDir} (${(prompt.length / 1024).toFixed(1)}KB msg)` : `inline (${(prompt.length / 1024).toFixed(1)}KB msg)`
     console.log(`[opencode] Running ${model} — ${promptDesc}`)
 
     const { stdout, stderr } = await new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
-      const child = execFile(OPENCODE_BIN, args, {
+      const child = execFile(DOCKER_BIN, args, {
         timeout: timeoutMs,
         maxBuffer: 10 * 1024 * 1024, // 10MB buffer for large responses
         env: { ...process.env },
@@ -569,6 +583,7 @@ export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenC
         console.warn('[opencode] stderr:', significantStderr.substring(0, 500))
       }
     }
+    // No tmpDir cleanup needed here — workDir is cleaned by caller; no-workDir path passes prompt inline
 
     const { text, filesRead, urlsFetched, toolCallCount } = extractResponse(stdout)
     const trimmedText = text.trim()

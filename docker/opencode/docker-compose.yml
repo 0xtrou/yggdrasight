@@ -1,0 +1,166 @@
+# OpenCode Multi-Agent Setup
+# ────────────────────────────────────────────────────────────────
+# Runs up to N isolated OpenCode agent containers.
+# Each container:
+#   - Shares read-only config + auth from the host (~/.config/opencode, ~/.local/share/opencode/auth.json)
+#   - Gets its OWN sessions/snapshots storage (tmpfs) so SQLite writes never conflict
+#   - Listens on a unique host port (4096 + agent number)
+#
+# Usage:
+#   docker compose -f docker/opencode/docker-compose.yml up -d
+#
+# Send work to agent-1:
+#   docker exec oculus-agent-1 opencode run --attach http://localhost:4096 "your task"
+#
+# From the host:
+#   opencode run --attach http://localhost:4096 "your task"   # agent-1
+#   opencode run --attach http://localhost:4097 "your task"   # agent-2
+# ────────────────────────────────────────────────────────────────
+
+name: oculus-agents
+
+x-agent-common: &agent-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  environment:
+    OPENCODE_DISABLE_AUTOUPDATE: "true"
+    OPENCODE_HOSTNAME: "0.0.0.0"
+    OPENCODE_PORT: "4096"
+  volumes:
+    # ── Shared (read-only) from host ──
+    # OpenCode global config (opencode.json, model preferences, etc.)
+    - type: bind
+      source: ${HOME}/.config/opencode
+      target: /root/.config/opencode
+      read_only: true
+    # Auth credentials (API keys, provider tokens)
+    - type: bind
+      source: ${HOME}/.local/share/opencode/auth.json
+      target: /root/.local/share/opencode/auth.json
+      read_only: true
+    # ── Per-agent isolation ──
+    # Sessions + snapshots DB — each agent gets its own tmpfs so SQLite
+    # writes never conflict across containers.
+    - type: tmpfs
+      target: /root/.local/share/opencode/sessions
+    - type: tmpfs
+      target: /root/.local/share/opencode/snapshots
+
+services:
+  agent-1:
+    <<: *agent-common
+    container_name: oculus-agent-1
+    ports:
+      - "4096:4096"
+    volumes:
+      - type: bind
+        source: ${HOME}/.config/opencode
+        target: /root/.config/opencode
+        read_only: true
+      - type: bind
+        source: ${HOME}/.local/share/opencode/auth.json
+        target: /root/.local/share/opencode/auth.json
+        read_only: true
+      - type: tmpfs
+        target: /root/.local/share/opencode/sessions
+      - type: tmpfs
+        target: /root/.local/share/opencode/snapshots
+      # Mount the project workspace
+      - type: bind
+        source: ${PWD}/../..
+        target: /workspace
+    working_dir: /workspace
+
+  agent-2:
+    <<: *agent-common
+    container_name: oculus-agent-2
+    ports:
+      - "4097:4096"
+    volumes:
+      - type: bind
+        source: ${HOME}/.config/opencode
+        target: /root/.config/opencode
+        read_only: true
+      - type: bind
+        source: ${HOME}/.local/share/opencode/auth.json
+        target: /root/.local/share/opencode/auth.json
+        read_only: true
+      - type: tmpfs
+        target: /root/.local/share/opencode/sessions
+      - type: tmpfs
+        target: /root/.local/share/opencode/snapshots
+      - type: bind
+        source: ${PWD}/../..
+        target: /workspace
+    working_dir: /workspace
+
+  agent-3:
+    <<: *agent-common
+    container_name: oculus-agent-3
+    ports:
+      - "4098:4096"
+    volumes:
+      - type: bind
+        source: ${HOME}/.config/opencode
+        target: /root/.config/opencode
+        read_only: true
+      - type: bind
+        source: ${HOME}/.local/share/opencode/auth.json
+        target: /root/.local/share/opencode/auth.json
+        read_only: true
+      - type: tmpfs
+        target: /root/.local/share/opencode/sessions
+      - type: tmpfs
+        target: /root/.local/share/opencode/snapshots
+      - type: bind
+        source: ${PWD}/../..
+        target: /workspace
+    working_dir: /workspace
+
+  agent-4:
+    <<: *agent-common
+    container_name: oculus-agent-4
+    ports:
+      - "4099:4096"
+    volumes:
+      - type: bind
+        source: ${HOME}/.config/opencode
+        target: /root/.config/opencode
+        read_only: true
+      - type: bind
+        source: ${HOME}/.local/share/opencode/auth.json
+        target: /root/.local/share/opencode/auth.json
+        read_only: true
+      - type: tmpfs
+        target: /root/.local/share/opencode/sessions
+      - type: tmpfs
+        target: /root/.local/share/opencode/snapshots
+      - type: bind
+        source: ${PWD}/../..
+        target: /workspace
+    working_dir: /workspace
+
+  agent-5:
+    <<: *agent-common
+    container_name: oculus-agent-5
+    ports:
+      - "4100:4096"
+    volumes:
+      - type: bind
+        source: ${HOME}/.config/opencode
+        target: /root/.config/opencode
+        read_only: true
+      - type: bind
+        source: ${HOME}/.local/share/opencode/auth.json
+        target: /root/.local/share/opencode/auth.json
+        read_only: true
+      - type: tmpfs
+        target: /root/.local/share/opencode/sessions
+      - type: tmpfs
+        target: /root/.local/share/opencode/snapshots
+      - type: bind
+        source: ${PWD}/../..
+        target: /workspace
+    working_dir: /workspace

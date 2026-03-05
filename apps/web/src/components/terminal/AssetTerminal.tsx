@@ -3,7 +3,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { SignalPanel } from './panels/SignalPanel'
 import { ChartPanel } from './panels/ChartPanel'
-import { MarketDataPanel } from './panels/MarketDataPanel'
 import { AnalysisStrip } from './AnalysisStrip'
 import { useIntelligence } from '@/hooks/useIntelligence'
 
@@ -87,10 +86,10 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
   const verdict = result
     ? { direction: result.direction, confidence: result.confidence }
     : null
-  const DEFAULTS = { signalWidth: 240, chartWidth: 450, feedHeight: 180 }
-  const [signalWidth, setSignalWidth] = useState(DEFAULTS.signalWidth)
-  const [chartWidth, setChartWidth] = useState(DEFAULTS.chartWidth)
-  const [feedHeight, setFeedHeight] = useState(DEFAULTS.feedHeight)
+  const DEFAULTS = { rightColumnWidth: 550, chartRatio: 0.65 }
+  const [rightColumnWidth, setRightColumnWidth] = useState(DEFAULTS.rightColumnWidth)
+  const [chartRatio, setChartRatio] = useState(DEFAULTS.chartRatio)
+  const rightColumnRef = useRef<HTMLDivElement>(null)
   const hydratedRef = useRef(false)
 
   // Restore panel sizes from localStorage on mount (client-side only)
@@ -99,9 +98,8 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
       const saved = localStorage.getItem('oculus-panel-sizes')
       if (saved) {
         const parsed = JSON.parse(saved)
-        if (parsed.signalWidth != null) setSignalWidth(parsed.signalWidth)
-        if (parsed.chartWidth != null) setChartWidth(parsed.chartWidth)
-        if (parsed.feedHeight != null) setFeedHeight(parsed.feedHeight)
+        if (parsed.rightColumnWidth != null) setRightColumnWidth(parsed.rightColumnWidth)
+        if (parsed.chartRatio != null) setChartRatio(parsed.chartRatio)
       }
     } catch {
       // ignore corrupt localStorage
@@ -112,16 +110,19 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
     })
   }, [])
 
-  const handleSignalResize = useCallback((delta: number) => {
-    setSignalWidth((w: number) => Math.min(400, Math.max(160, w + delta)))
+  const handleColumnResize = useCallback((delta: number) => {
+    // Dragging the handle RIGHT makes the right column SMALLER (analysis grows)
+    setRightColumnWidth((w: number) => Math.min(900, Math.max(350, w - delta)))
   }, [])
 
-  const handleChartResize = useCallback((delta: number) => {
-    setChartWidth((w: number) => Math.min(800, Math.max(280, w + delta)))
-  }, [])
-
-  const handleFeedResize = useCallback((delta: number) => {
-    setFeedHeight((h: number) => Math.min(400, Math.max(80, h - delta)))
+  const handleChartSignalResize = useCallback((delta: number) => {
+    if (!rightColumnRef.current) return
+    const totalHeight = rightColumnRef.current.clientHeight
+    if (totalHeight <= 0) return
+    setChartRatio((r: number) => {
+      const newRatio = r + delta / totalHeight
+      return Math.min(0.85, Math.max(0.3, newRatio))
+    })
   }, [])
 
   // Persist panel sizes to localStorage on change (only after hydration)
@@ -129,9 +130,9 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
     if (!hydratedRef.current) return
     localStorage.setItem(
       'oculus-panel-sizes',
-      JSON.stringify({ signalWidth, chartWidth, feedHeight }),
+      JSON.stringify({ rightColumnWidth, chartRatio }),
     )
-  }, [signalWidth, chartWidth, feedHeight])
+  }, [rightColumnWidth, chartRatio])
 
   return (
     <div
@@ -143,7 +144,7 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
         background: 'var(--color-terminal-bg)',
       }}
     >
-      {/* Top row: Signals + Chart + Intelligence */}
+      {/* Main row: Analysis (left) + Chart/Signal (right) */}
       <div
         style={{
           display: 'flex',
@@ -152,35 +153,7 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
           overflow: 'hidden',
         }}
       >
-        {/* Left: Signal Panel */}
-        <div
-          style={{
-            width: signalWidth + 'px',
-            flexShrink: 0,
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column' as const,
-          }}
-        >
-          <SignalPanel symbol={pair} onAnalysisComplete={handleAnalysisComplete} agentModelMap={agentModelMap} onAgentModelMapChange={setAgentModelMap} />
-        </div>
-
-        <ResizeHandle direction="horizontal" onDrag={handleSignalResize} />
-
-        {/* Center: Chart */}
-        <div
-          style={{
-            width: chartWidth + 'px',
-            flexShrink: 0,
-            overflow: 'hidden',
-          }}
-        >
-          <ChartPanel verdict={verdict} symbol={symbol} />
-        </div>
-
-        <ResizeHandle direction="horizontal" onDrag={handleChartResize} />
-
-        {/* Right: Intelligence / Analysis (fills remaining space) */}
+        {/* Left: Analysis (main panel, fills remaining space) */}
         <div
           style={{
             flex: 1,
@@ -189,22 +162,50 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column' as const,
-          }}>
-          <AnalysisStrip symbol={pair} refreshKey={analysisVersion} agentModelMap={agentModelMap} />
+          }}
+        >
+          <AnalysisStrip symbol={pair} refreshKey={analysisVersion} agentModelMap={agentModelMap} onAnalysisComplete={handleAnalysisComplete} onAgentModelMapChange={setAgentModelMap} />
         </div>
-      </div>
 
-      <ResizeHandle direction="vertical" onDrag={handleFeedResize} />
+        <ResizeHandle direction="horizontal" onDrag={handleColumnResize} />
 
-      {/* Bottom: Market Data Feed (compact strip) */}
-      <div
-        style={{
-          height: feedHeight + 'px',
-          flexShrink: 0,
-          overflow: 'hidden',
-        }}
-      >
-        <MarketDataPanel symbol={symbol} />
+        {/* Right column: Chart (top) + Signal (bottom) */}
+        <div
+          ref={rightColumnRef}
+          style={{
+            width: rightColumnWidth + 'px',
+            flexShrink: 0,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column' as const,
+          }}
+        >
+          {/* Top-right: Chart (larger portion) */}
+          <div
+            style={{
+              flex: `${chartRatio} 0 0`,
+              minHeight: 0,
+              overflow: 'hidden',
+            }}
+          >
+            <ChartPanel verdict={verdict} symbol={symbol} />
+          </div>
+
+          <ResizeHandle direction="vertical" onDrag={handleChartSignalResize} />
+
+          {/* Bottom-right: Signal Panel */}
+          <div
+            style={{
+              flex: `${1 - chartRatio} 0 0`,
+              minHeight: 0,
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column' as const,
+            }}
+          >
+            <SignalPanel symbol={pair} />
+          </div>
+        </div>
       </div>
     </div>
   )

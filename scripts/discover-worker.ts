@@ -16,6 +16,9 @@
  */
 import mongoose from 'mongoose'
 import { spawn } from 'child_process'
+import { mkdirSync, writeFileSync, rmSync } from 'fs'
+import { tmpdir } from 'os'
+import path from 'path'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -30,7 +33,8 @@ interface DiscoveredProjectInfo {
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
-const OPENCODE_BIN = process.env.OPENCODE_BIN ?? 'opencode'
+const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
+const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 // No hard timeout — the agent can take as long as it needs
 const WORKER_TIMEOUT_MS = 600_000 // 10 minutes safety limit
 
@@ -81,6 +85,7 @@ const DiscoveryJobSchema = new mongoose.Schema({
     default: 'pending',
   },
   result: { type: mongoose.Schema.Types.Mixed, default: null },
+  rawOutput: { type: String, default: null },
   error: { type: String, default: null },
   pid: { type: Number, default: null },
   logs: { type: [String], default: [] },
@@ -358,13 +363,25 @@ async function runOpenCode(
   prompt: string,
   jobId: string,
 ): Promise<{ success: boolean; text: string; error?: string; urlsFetched: string[]; toolCallCount: number }> {
-  const args = ['run', '-m', model, '--format', 'json', prompt]
+  const HOME_DIR = process.env.HOME ?? '/root'
+  const tmpDir = path.join(tmpdir(), `oculus-job-${jobId}`)
+  mkdirSync(tmpDir, { recursive: true })
+  writeFileSync(path.join(tmpDir, 'prompt.txt'), prompt, 'utf-8')
+  const args = [
+    'run', '--rm',
+    '--network', 'host',
+    '-v', `${HOME_DIR}/.opencode:/root/.opencode:ro`,
+    '-v', `${tmpDir}:/workspace:rw`,
+    '-e', 'HOME=/root',
+    OPENCODE_IMAGE,
+    'run', '-m', model, '--format', 'json', '--dir', '/workspace', 'Read /workspace/prompt.txt and follow the instructions in it exactly.',
+  ]
 
-  log(`Running OpenCode: ${model} (prompt ${(prompt.length / 1024).toFixed(1)}KB)`)
+  log(`Running OpenCode: ${model} (prompt ${(prompt.length / 1024).toFixed(1)}KB, tmpDir: ${tmpDir})`)
   await appendLogs(jobId, [`Starting ${model}...`])
 
   return new Promise((resolve) => {
-    const child = spawn(OPENCODE_BIN, args, {
+    const child = spawn(DOCKER_BIN, args, {
       env: { ...process.env },
       stdio: ['pipe', 'pipe', 'pipe'],
     })
@@ -425,12 +442,13 @@ async function runOpenCode(
                 pendingLogs.push(`▶ ${tool}${detail}`)
               }
             }
-            // Log step transitions
-            if (event.type === 'step_start') {
-              pendingLogs.push('--- new reasoning step ---')
-            }
-            if (event.type === 'step_finish' && event.part?.reason) {
-              pendingLogs.push(`Step finished: ${event.part.reason}`)
+            // Stream agent text output in real-time
+            if (event.type === 'text' && event.part?.text) {
+              const chunk = event.part.text
+              // Only log non-trivial chunks to avoid spamming single characters
+              if (chunk.trim().length > 0) {
+                pendingLogs.push(chunk)
+              }
             }
           } catch { /* skip unparseable */ }
         }
@@ -464,6 +482,7 @@ async function runOpenCode(
         clearInterval(logFlushTimer)
         child.kill('SIGTERM')
         appendLogs(jobId, [...pendingLogs, 'TIMEOUT: Worker killed after 10 minutes']).finally(() => {
+          rmSync(tmpDir, { recursive: true, force: true })
           resolve({ success: false, text: '', error: `OpenCode CLI timed out after ${WORKER_TIMEOUT_MS}ms`, urlsFetched: [], toolCallCount: 0 })
         })
       }
@@ -480,6 +499,8 @@ async function runOpenCode(
       if (pendingLogs.length > 0) {
         await appendLogs(jobId, pendingLogs.splice(0))
       }
+
+      rmSync(tmpDir, { recursive: true, force: true })
 
       const { text, urlsFetched, toolCallCount } = extractResponse(stdout)
       const trimmedText = text.trim()
@@ -502,8 +523,8 @@ async function runOpenCode(
       resolved = true
 
       const msg = err.message || 'Unknown spawn error'
+      rmSync(tmpDir, { recursive: true, force: true })
       await appendLogs(jobId, [...pendingLogs, `ERROR: ${msg}`])
-      resolve({ success: false, text: '', error: msg, urlsFetched: [], toolCallCount: 0 })
     })
 
     // Close stdin so opencode doesn't hang waiting for input
@@ -600,7 +621,7 @@ async function main() {
       log(`Failed to parse response. Preview: ${result.text.substring(0, 300)}`)
       await DiscoveryJob.updateOne(
         { _id: jobId },
-        { $set: { status: 'failed', error: 'Failed to parse agent discovery response', completedAt: new Date() } },
+        { $set: { status: 'failed', error: 'Failed to parse agent discovery response', rawOutput: result.text, completedAt: new Date() } },
       )
       await mongoose.disconnect()
       process.exit(0)
@@ -623,7 +644,7 @@ async function main() {
     // Save to DB
     await DiscoveryJob.updateOne(
       { _id: jobId },
-      { $set: { status: 'completed', result: discovered, completedAt: new Date() } },
+      { $set: { status: 'completed', result: discovered, rawOutput: result.text, completedAt: new Date() } },
     )
 
     log(`Job completed successfully`)

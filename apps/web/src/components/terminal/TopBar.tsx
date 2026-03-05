@@ -83,15 +83,6 @@ export function TopBar({ selectedSymbol, onSelectSymbol, customAssets, onAddAsse
     >
       {/* Left: Logo + Asset Selector + Add Button + Asset Details */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexShrink: 0 }}>
-          <span style={{ color: 'var(--color-terminal-up)', fontWeight: 700, fontSize: '15px', letterSpacing: '0.12em' }}>
-            OCULUS
-          </span>
-          <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', letterSpacing: '0.08em' }}>
-            TERMINAL
-          </span>
-        </div>
-        <div style={{ width: '1px', height: '20px', background: 'var(--color-terminal-border)', flexShrink: 0 }} />
         <AssetSelector selected={selectedSymbol} onSelect={onSelectSymbol} customAssets={customAssets} />
 
         {/* Add Asset: + button or inline input — now right of dropdown */}

@@ -1,6 +1,9 @@
 {
   "active_plan": "/Users/mrk/Workspace/Cabin/research/oculus-trading/.sisyphus/plans/chart-enhancements.md",
   "started_at": "2026-03-05T08:15:50.771Z",
-  "session_ids": ["ses_343ca18f5ffehNwMMB0QgaDqUP"],
+  "session_ids": [
+    "ses_343ca18f5ffehNwMMB0QgaDqUP",
+    "ses_342afcfcdffeVDeM98cuHVx5jg"
+  ],
   "plan_name": "chart-enhancements"
 }

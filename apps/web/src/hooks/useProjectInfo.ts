@@ -9,12 +9,27 @@ import type {
   UnifiedProjectField,
 } from '@/lib/intelligence/types'
 
+export interface DiscoveryHistoryEntry {
+  id: string
+  symbol: string
+  modelId: string
+  status: string
+  result: DiscoveredProjectInfo | null
+  rawOutput: string | null
+  startedAt: string
+  completedAt: string
+}
+
 export interface ProjectInfoHook {
   unified: UnifiedProjectInfo | null
   loading: boolean
   discovering: boolean
   discoveryElapsed: number
   discoveryLogs: string[]
+  discoveryHistory: DiscoveryHistoryEntry[]
+  discoveryRawOutput: string | null
+  discoveryDialogOpen: boolean
+  setDiscoveryDialogOpen: (open: boolean) => void
   error: string | null
   discover: (model?: string) => Promise<void>
   cancelDiscovery: () => Promise<void>
@@ -210,6 +225,9 @@ export function useProjectInfo(symbol: string): ProjectInfoHook {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const activeJobIdRef = useRef<string | null>(null)
+  const [discoveryHistory, setDiscoveryHistory] = useState<DiscoveryHistoryEntry[]>([])
+  const [discoveryRawOutput, setDiscoveryRawOutput] = useState<string | null>(null)
+  const [discoveryDialogOpen, setDiscoveryDialogOpen] = useState(false)
 
   // ── Polling helpers (reused by discover() and active-job check) ──
   const clearPolling = useCallback(() => {
@@ -237,6 +255,7 @@ export function useProjectInfo(symbol: string): ProjectInfoHook {
         const pollJson = await pollRes.json() as {
           status: 'pending' | 'running' | 'completed' | 'failed'
           data: DiscoveredProjectInfo | null
+          rawOutput: string | null
           error: string | null
           logs: string[]
         }
@@ -249,7 +268,16 @@ export function useProjectInfo(symbol: string): ProjectInfoHook {
         if (pollJson.status === 'completed') {
           clearPolling()
           setDiscovered(pollJson.data)
+          setDiscoveryRawOutput(pollJson.rawOutput ?? null)
           setDiscovering(false)
+          // Refresh history after completion
+          const base = symbol.replace(/USDT$|BUSD$|USD$/i, '').toUpperCase()
+          if (base) {
+            fetch(`/api/feed/discover/history?symbol=${encodeURIComponent(base)}`)
+              .then(r => r.json())
+              .then((h: { jobs: DiscoveryHistoryEntry[] }) => setDiscoveryHistory(h.jobs ?? []))
+              .catch(() => {})
+          }
         } else if (pollJson.status === 'failed') {
           clearPolling()
           setError(pollJson.error ?? 'Agent discovery failed')
@@ -341,29 +369,45 @@ export function useProjectInfo(symbol: string): ProjectInfoHook {
     setDiscoveryElapsed(0)
   }, [clearPolling])
 
-  // Reset state and check for active discovery jobs when symbol changes
+  // Reset state and check for active discovery jobs + load latest completed discovery when symbol changes
   useEffect(() => {
     setDiscovered(null)
     setDiscovering(false)
     setDiscoveryElapsed(0)
     clearPolling()
     setDiscoveryLogs([])
+    setDiscoveryRawOutput(null)
+    setDiscoveryHistory([])
 
-    // Check if there's already an active (pending/running) job for this symbol
     const base = symbol.replace(/USDT$|BUSD$|USD$/i, '').toUpperCase()
     if (!base) return
 
     let cancelled = false
-    fetch(`/api/feed/discover?symbol=${encodeURIComponent(base)}`)
-      .then(res => res.json())
-      .then((json: { job: { id: string; status: string; startedAt: string } | null }) => {
-        if (cancelled) return
-        if (json.job) {
-          // Active job found — resume polling
-          startPolling(json.job.id, json.job.startedAt)
-        }
-      })
-      .catch(() => { /* ignore — no active job check is non-critical */ })
+
+    // Parallel: check for active job + fetch completed history
+    Promise.all([
+      fetch(`/api/feed/discover?symbol=${encodeURIComponent(base)}`)
+        .then(res => res.json())
+        .then((json: { job: { id: string; status: string; startedAt: string } | null }) => {
+          if (cancelled) return
+          if (json.job) {
+            startPolling(json.job.id, json.job.startedAt)
+          }
+        })
+        .catch(() => {}),
+      fetch(`/api/feed/discover/history?symbol=${encodeURIComponent(base)}`)
+        .then(res => res.json())
+        .then((json: { jobs: DiscoveryHistoryEntry[]; latest: DiscoveryHistoryEntry | null }) => {
+          if (cancelled) return
+          setDiscoveryHistory(json.jobs ?? [])
+          // Auto-load latest completed discovery result
+          if (json.latest?.result) {
+            setDiscovered(json.latest.result)
+            setDiscoveryRawOutput(json.latest.rawOutput ?? null)
+          }
+        })
+        .catch(() => {}),
+    ])
 
     return () => { cancelled = true }
   }, [symbol, clearPolling, startPolling])
@@ -386,5 +430,5 @@ export function useProjectInfo(symbol: string): ProjectInfoHook {
     [developer, defi, discovered, loading],
   )
 
-  return { unified, loading, discovering, discoveryElapsed, discoveryLogs, error, discover, cancelDiscovery }
+  return { unified, loading, discovering, discoveryElapsed, discoveryLogs, discoveryHistory, discoveryRawOutput, discoveryDialogOpen, setDiscoveryDialogOpen, error, discover, cancelDiscovery }
 }
