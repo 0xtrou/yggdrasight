@@ -7,6 +7,7 @@ import { useOHLCV } from '@/hooks/useOHLCV'
 import { usePriceTicker } from '@/hooks/usePriceTicker'
 import { useSignals } from '@/hooks/useSignals'
 import { useKlineStream } from '@/hooks/useKlineStream'
+import { ChartSettingsModal, ChartSettings, DEFAULT_CHART_SETTINGS } from './ChartSettingsModal'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -381,6 +382,12 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     })
   }, [externalSymbol])
 
+  const [chartSettings, setChartSettingsRaw] = useState<ChartSettings>(() => {
+    const cfg = readConfig()
+    return (cfg.chartSettings as ChartSettings) ?? DEFAULT_CHART_SETTINGS
+  })
+  const [showSettings, setShowSettings] = useState(false)
+
   const [showIndicatorMenu, setShowIndicatorMenu] = useState(false)
   const indicatorMenuRef = useRef<HTMLDivElement>(null)
 
@@ -406,6 +413,30 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     })
   }, [saveConfig])
 
+  const handleSettingsChange = useCallback((settings: ChartSettings) => {
+    setChartSettingsRaw(settings)
+    saveConfig({ chartSettings: settings })
+    if (chartRef.current) {
+      chartRef.current.setStyles({
+        candle: {
+          bar: {
+            upColor: settings.candleUpColor,
+            downColor: settings.candleDownColor,
+            noChangeColor: '#888888',
+            upBorderColor: settings.candleUpColor,
+            downBorderColor: settings.candleDownColor,
+            noChangeBorderColor: '#888888',
+            upWickColor: settings.candleUpColor,
+            downWickColor: settings.candleDownColor,
+            noChangeWickColor: '#888888',
+          },
+        },
+        grid: { show: settings.gridVisible },
+        crosshair: { show: settings.crosshairVisible },
+      })
+    }
+  }, [saveConfig])
+
   const toggleIndicator = useCallback((name: string) => {
     setActiveIndicators(
       activeIndicators.includes(name)
@@ -421,6 +452,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     if (typeof cfg.lockedCursor === 'boolean') setLockedCursorRaw(cfg.lockedCursor)
     if (typeof cfg.hideMarks === 'boolean') setHideMarksRaw(cfg.hideMarks)
     if (Array.isArray(cfg.indicators)) setActiveIndicatorsRaw(cfg.indicators)
+    if (cfg.chartSettings) setChartSettingsRaw(cfg.chartSettings as ChartSettings)
     try {
       const stored = localStorage.getItem(`oculus-chart-alerts:${externalSymbol}`)
       setAlerts(stored ? JSON.parse(stored) : [])
@@ -503,14 +535,14 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     chart.setStyles({
       candle: {
         bar: {
-          upColor: '#00ff88',
-          downColor: '#ff3b3b',
+          upColor: chartSettings.candleUpColor,
+          downColor: chartSettings.candleDownColor,
           noChangeColor: '#888888',
-          upBorderColor: '#00ff88',
-          downBorderColor: '#ff3b3b',
+          upBorderColor: chartSettings.candleUpColor,
+          downBorderColor: chartSettings.candleDownColor,
           noChangeBorderColor: '#888888',
-          upWickColor: '#00ff88',
-          downWickColor: '#ff3b3b',
+          upWickColor: chartSettings.candleUpColor,
+          downWickColor: chartSettings.candleDownColor,
           noChangeWickColor: '#888888',
         },
       },
@@ -525,10 +557,12 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
         tickText: { color: '#888888', size: 10, family: 'JetBrains Mono, monospace' },
       },
       grid: {
+        show: chartSettings.gridVisible,
         horizontal: { color: '#1a1a1a' },
         vertical: { color: '#1a1a1a' },
       },
       crosshair: {
+        show: chartSettings.crosshairVisible,
         horizontal: {
           line: { color: '#444444' },
           text: { backgroundColor: '#222222', color: '#e5e5e5' },
@@ -711,7 +745,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
       resizeObserver.disconnect()
       dispose(container)
     }
-  }, [candles, signals, externalSymbol, readConfig, saveConfig, activeIndicators, alerts]) // re-create when data, symbol, or indicators change
+  }, [candles, signals, externalSymbol, readConfig, saveConfig, activeIndicators, alerts, chartSettings]) // re-create when data, symbol, or indicators change
 
   // ── Real-time candle updates ──────────────────────────────────────────────
   useEffect(() => {
@@ -1165,9 +1199,15 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
               onClick={() => { setHideMarks(v => !v); setCtxMenu(null) }}
             />
             <MenuDivider />
-            <MenuItem icon="⚙" label="Settings..." onClick={() => setCtxMenu(null)} />
+            <MenuItem icon="⚙" label="Settings..." onClick={() => { setShowSettings(true); setCtxMenu(null); }} />
           </div>
         )}
+      <ChartSettingsModal
+        open={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={chartSettings}
+        onSettingsChange={handleSettingsChange}
+      />
       </div>
     </div>
   )
