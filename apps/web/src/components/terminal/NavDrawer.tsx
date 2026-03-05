@@ -19,6 +19,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'intelligence', label: 'INTELLIGENCE', icon: '◈', path: '/intelligence', description: 'Global Intelligence' },
   { id: 'signals', label: 'SIGNALS', icon: '⚡', path: '/signals', description: 'Signal History' },
   { id: 'discovery', label: 'DISCOVERY', icon: '◎', path: '/discovery', description: 'Discovery Lab' },
+  { id: 'ai-config', label: 'AI CONFIG', icon: '⚙', path: '/ai-config', description: 'AI Model Configuration' },
 ]
 
 const COLLAPSED_WIDTH = 48
@@ -92,12 +93,13 @@ export function NavDrawer() {
         onClick={toggleCollapsed}
         title={collapsed ? 'Expand navigation' : 'Collapse navigation'}
       >
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexShrink: 0 }}>
-          <span style={{ color: '#4ade80', fontWeight: 700, fontSize: '13px', letterSpacing: '0.12em' }}>OCULUS</span>
-          {showExpanded && (
+        <img src="/logo.png" alt="Oculus" style={{ width: '22px', height: '22px', flexShrink: 0 }} />
+        {showExpanded && (
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexShrink: 0 }}>
+            <span style={{ color: '#4ade80', fontWeight: 700, fontSize: '13px', letterSpacing: '0.12em' }}>OCULUS</span>
             <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', letterSpacing: '0.08em' }}>TERMINAL</span>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Nav Items */}

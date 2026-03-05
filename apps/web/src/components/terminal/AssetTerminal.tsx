@@ -75,10 +75,24 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
   const [analysisVersion, setAnalysisVersion] = useState(0)
   const { result } = useIntelligence(pair, { refreshKey: analysisVersion })
 
-  // Per-agent model selection — each agent (+ discovery) gets its own model
-  // Keys: agent IDs ('wyckoff', 'elliott-wave', ...) + 'discovery' for discover agent
+  // Per-agent model selection — shared with AI Config page via localStorage
+  // Keys: agent IDs ('wyckoff', 'elliott-wave', ...) + 'discovery'
   // Values: model IDs ('opencode/big-pickle', 'github-copilot/claude-sonnet-4', ...)
-  const [agentModelMap, setAgentModelMap] = useState<Record<string, string>>({})
+  const [agentModelMap, setAgentModelMapState] = useState<Record<string, string>>(() => {
+    if (typeof window === 'undefined') return {}
+    try {
+      const raw = localStorage.getItem('oculus:agentModelMap')
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed && typeof parsed === 'object') return parsed as Record<string, string>
+      }
+    } catch { /* ignore */ }
+    return {}
+  })
+  const setAgentModelMap = useCallback((next: Record<string, string>) => {
+    setAgentModelMapState(next)
+    try { localStorage.setItem('oculus:agentModelMap', JSON.stringify(next)) } catch { /* ignore */ }
+  }, [])
   const handleAnalysisComplete = useCallback(() => {
     setAnalysisVersion((v) => v + 1)
   }, [])

@@ -1,37 +1,17 @@
 'use client'
 
-import { Suspense, useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { Suspense, useState, useCallback, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { TopBar } from '@/components/terminal/TopBar'
 import { AssetTerminal } from '@/components/terminal/AssetTerminal'
-
-const CUSTOM_ASSETS_KEY = 'oculus:customAssets'
-
-function loadCustomAssets(): string[] {
-  if (typeof window === 'undefined') return []
-  try {
-    const raw = localStorage.getItem(CUSTOM_ASSETS_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw)
-      if (Array.isArray(parsed)) return parsed.filter((s): s is string => typeof s === 'string')
-    }
-  } catch { /* ignore */ }
-  return []
-}
+import { useTrackedAssets } from '@/hooks/useTrackedAssets'
 
 function TerminalContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const initialAsset = searchParams.get('asset')?.toUpperCase() || 'BTC'
   const [selectedSymbol, setSelectedSymbol] = useState(initialAsset)
-  const [customAssets, setCustomAssets] = useState<string[]>([])
-  const hydratedRef = useRef(false)
-
-  // Hydrate custom assets from localStorage on mount
-  useEffect(() => {
-    setCustomAssets(loadCustomAssets())
-    hydratedRef.current = true
-  }, [])
+  const { symbols: trackedSymbols, addAsset } = useTrackedAssets()
 
   // Sync selected symbol to URL search param
   const handleSelectSymbol = useCallback((symbol: string) => {
@@ -41,39 +21,26 @@ function TerminalContent() {
     router.replace(url.pathname + url.search, { scroll: false })
   }, [router])
 
-  // Persist custom assets to localStorage when they change (after hydration)
-  useEffect(() => {
-    if (!hydratedRef.current) return
-    localStorage.setItem(CUSTOM_ASSETS_KEY, JSON.stringify(customAssets))
-  }, [customAssets])
-
   const handleAddAsset = useCallback((symbol: string) => {
-    setCustomAssets((prev) => {
-      const upper = symbol.toUpperCase()
-      if (prev.includes(upper)) return prev
-      return [...prev, upper]
-    })
-  }, [])
+    addAsset(symbol)
+    handleSelectSymbol(symbol)
+  }, [addAsset, handleSelectSymbol])
 
-  // Compute all tracked symbols (defaults + custom) for price feeds
-  const DEFAULT_SYMBOLS = ['BTC', 'ETH', 'SOL', 'BNB', 'TAO']
-  const trackedSymbols = useMemo(() => {
-    const syms = new Set(DEFAULT_SYMBOLS)
+  // All tracked symbols + currently selected (in case it's not tracked yet)
+  const allSymbols = useMemo(() => {
+    const syms = new Set(trackedSymbols)
     syms.add(selectedSymbol)
-    for (const s of customAssets) {
-      syms.add(s.toUpperCase())
-    }
     return Array.from(syms)
-  }, [customAssets, selectedSymbol])
+  }, [trackedSymbols, selectedSymbol])
 
   return (
     <>
       <TopBar
         selectedSymbol={selectedSymbol}
         onSelectSymbol={handleSelectSymbol}
-        customAssets={customAssets}
+        customAssets={trackedSymbols}
         onAddAsset={handleAddAsset}
-        trackedSymbols={trackedSymbols}
+        trackedSymbols={allSymbols}
       />
       <AssetTerminal symbol={selectedSymbol} />
     </>

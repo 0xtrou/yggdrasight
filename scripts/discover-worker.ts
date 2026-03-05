@@ -371,6 +371,8 @@ async function runOpenCode(
     'run', '--rm',
     '--network', 'host',
     '-v', `${HOME_DIR}/.opencode:/root/.opencode:ro`,
+    '-v', `${HOME_DIR}/.local/share/opencode/auth.json:/root/.local/share/opencode/auth.json:ro`,
+    '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
     '-v', `${tmpDir}:/workspace:rw`,
     '-e', 'HOME=/root',
     OPENCODE_IMAGE,

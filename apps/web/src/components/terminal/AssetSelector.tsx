@@ -9,21 +9,6 @@ interface AssetSelectorProps {
   customAssets?: string[];
 }
 
-interface FallbackAsset {
-  symbol: string;
-  name: string;
-  currentPrice: number;
-  priceChange24h: number;
-}
-
-const FALLBACK_ASSETS: FallbackAsset[] = [
-  { symbol: 'BTCUSDT', name: 'Bitcoin', currentPrice: 0, priceChange24h: 0 },
-  { symbol: 'ETHUSDT', name: 'Ethereum', currentPrice: 0, priceChange24h: 0 },
-  { symbol: 'SOLUSDT', name: 'Solana', currentPrice: 0, priceChange24h: 0 },
-  { symbol: 'BNBUSDT', name: 'BNB', currentPrice: 0, priceChange24h: 0 },
-  { symbol: 'TAOUSDT', name: 'Bittensor', currentPrice: 0, priceChange24h: 0 },
-];
-
 function stripSuffix(symbol: string): string {
   return symbol.replace(/USDT$/i, '').toUpperCase();
 }
@@ -48,46 +33,26 @@ export function AssetSelector({ selected, onSelect, customAssets }: AssetSelecto
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Derive all tracked symbols for the market data API
+  // Derive tracked symbols from customAssets (which now come from DB)
   const trackedSymbols = useMemo(() => {
-    const syms = new Set(FALLBACK_ASSETS.map((a) => stripSuffix(a.symbol)));
-    if (customAssets) {
-      for (const s of customAssets) {
-        syms.add(s.toUpperCase().replace(/USDT$/i, ''));
-      }
-    }
-    return Array.from(syms);
+    if (!customAssets || customAssets.length === 0) return [];
+    return customAssets.map((s) => s.toUpperCase().replace(/USDT$/i, ''));
   }, [customAssets]);
 
-  const { coins, loading } = useMarketCoins(trackedSymbols);
+  const { coins, loading } = useMarketCoins(trackedSymbols.length > 0 ? trackedSymbols : undefined);
 
-  // Merge market coins with fallbacks
+  // Build asset list from tracked symbols + market data
   const assets = useMemo(() => {
     const coinMap = new Map<string, { symbol: string; name: string; currentPrice: number; priceChange24h: number }>();
 
-    // Add fallbacks first
-    for (const fb of FALLBACK_ASSETS) {
-      coinMap.set(stripSuffix(fb.symbol), {
-        symbol: fb.symbol,
-        name: fb.name,
-        currentPrice: fb.currentPrice,
-        priceChange24h: fb.priceChange24h,
+    // Add all tracked symbols as placeholders first
+    for (const sym of trackedSymbols) {
+      coinMap.set(sym, {
+        symbol: sym,
+        name: sym,
+        currentPrice: 0,
+        priceChange24h: 0,
       });
-    }
-
-    // Add manually-added custom assets (if not already present)
-    if (customAssets) {
-      for (const sym of customAssets) {
-        const base = stripSuffix(sym);
-        if (!coinMap.has(base)) {
-          coinMap.set(base, {
-            symbol: `${base}USDT`,
-            name: base,
-            currentPrice: 0,
-            priceChange24h: 0,
-          });
-        }
-      }
     }
 
     // Override with real data from CoinGecko/market
@@ -107,7 +72,7 @@ export function AssetSelector({ selected, onSelect, customAssets }: AssetSelecto
       base,
       ...data,
     }));
-  }, [coins, customAssets]);
+  }, [coins, trackedSymbols]);
 
   // Filter by search
   const filtered = useMemo(() => {
@@ -307,7 +272,7 @@ export function AssetSelector({ selected, onSelect, customAssets }: AssetSelecto
                   color: 'var(--color-terminal-dim)',
                 }}
               >
-                No matches
+                {trackedSymbols.length === 0 ? 'No assets tracked. Use + to add.' : 'No matches'}
               </div>
             )}
             {filtered.map((asset) => {

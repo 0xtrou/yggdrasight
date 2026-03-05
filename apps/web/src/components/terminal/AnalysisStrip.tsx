@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useIntelligence } from '@/hooks/useIntelligence'
 import { useProjectInfo } from '@/hooks/useProjectInfo'
 import { useMarketGlobal } from '@/hooks/useMarketGlobal'
@@ -1205,13 +1206,13 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
   const [activeTab, setActiveTab] = useState<ActiveTab>('analysis')
   const [expandedAnalysts, setExpandedAnalysts] = useState<Set<string>>(new Set())
+  const hasAutoExpanded = useRef(false)
   const [expandedActivities, setExpandedActivities] = useState<Set<string>>(new Set())
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [selectedAgents, setSelectedAgents] = useState<string[]>([])
   const [availableModels, setAvailableModels] = useState<ModelInfo[]>([])
   const [availableAgents, setAvailableAgents] = useState<AgentInfo[]>([])
-  const [configOpen, setConfigOpen] = useState(false)
-  const [setAllOpen, setSetAllOpen] = useState(false)
+  const router = useRouter()
 
 
   const toggleFullscreen = useCallback(() => {
@@ -1226,20 +1227,6 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [isFullscreen])
-
-  useEffect(() => {
-    let cancelled = false
-    fetch('/api/intelligence/models')
-      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
-      .then((data) => {
-        if (!cancelled) {
-          setAvailableModels(data.models ?? [])
-          setAvailableAgents(data.agents ?? [])
-        }
-      })
-      .catch((err) => console.warn('[AnalysisStrip] Failed to fetch models:', err))
-    return () => { cancelled = true }
-  }, [])
 
   const toggleAgent = (agentId: string) => {
     setSelectedAgents((prev) =>
@@ -1261,14 +1248,6 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
     onAgentModelMapChange?.({ ...(agentModelMap ?? {}), [agentId]: modelId })
   }, [agentModelMap, onAgentModelMapChange])
 
-  const setAllModels = useCallback((modelId: string) => {
-    const newMap: Record<string, string> = {}
-    for (const key of allAgentKeys) {
-      newMap[key] = modelId
-    }
-    onAgentModelMapChange?.(newMap)
-    setSetAllOpen(false)
-  }, [allAgentKeys, onAgentModelMapChange])
 
   const handleAnalyze = () => {
     if (!loading) {
@@ -1326,6 +1305,14 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
     })
   }, [allAnalystKeys])
 
+
+  useEffect(() => {
+    if (allAnalystKeys.length > 0 && !hasAutoExpanded.current) {
+      hasAutoExpanded.current = true
+      setExpandedAnalysts(new Set(allAnalystKeys))
+    }
+  }, [allAnalystKeys])
+
   const tabStyle = (tab: ActiveTab): React.CSSProperties => ({
     cursor: 'pointer',
     background: 'none',
@@ -1380,11 +1367,11 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
         <button style={tabStyle('analysis')} onClick={() => setActiveTab('analysis')}>
           ANALYSIS ({analystCount})
         </button>
-        <button style={tabStyle('activities')} onClick={() => setActiveTab('activities')}>
-          ACTIVITIES ({history.length + projectInfo.discoveryHistory.length})
-        </button>
         <button style={tabStyle('project-info')} onClick={() => setActiveTab('project-info')}>
           PROJECT INFO
+        </button>
+          <button style={tabStyle('activities')} onClick={() => setActiveTab('activities')}>
+          ACTIVITIES ({history.length + projectInfo.discoveryHistory.length})
         </button>
 
         {/* Consensus summary — only on analysis tab */}
@@ -1460,7 +1447,7 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
         {/* CONFIG + ANALYZE — always visible in header */}
         {activeTab !== 'analysis' && <div style={{ marginLeft: 'auto' }} />}
         <button
-          onClick={() => setConfigOpen(true)}
+          onClick={() => router.push('/ai-config')}
           title="AI Config"
           style={{
             background: 'transparent',
@@ -1669,229 +1656,6 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
         /* ── PROJECT INFO TAB ── */
         <ProjectInfoContent symbol={symbol} projectInfo={projectInfo} agentModelMap={agentModelMap} />
       )}
-
-
-      {/* AI CONFIG — Modal overlay */}
-      {configOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 20000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.6)',
-          }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setConfigOpen(false)
-          }}
-        >
-          <div
-            style={{
-              width: '460px',
-              maxHeight: '80vh',
-              background: 'var(--color-terminal-surface)',
-              border: '1px solid var(--color-terminal-border)',
-              borderRadius: '4px',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-            }}
-          >
-            {/* Modal header */}
-            <div
-              style={{
-                padding: '10px 14px',
-                borderBottom: '1px solid var(--color-terminal-border)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexShrink: 0,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: '12px',
-                  fontFamily: 'var(--font-mono)',
-                  color: 'var(--color-terminal-text)',
-                  letterSpacing: '0.5px',
-                  textTransform: 'uppercase',
-                  fontWeight: 600,
-                }}
-              >
-                AI CONFIG
-              </span>
-              <button
-                onClick={() => setConfigOpen(false)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--color-terminal-dim)',
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  padding: '0 2px',
-                  fontFamily: 'var(--font-mono)',
-                  lineHeight: 1,
-                }}
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Modal body — scrollable */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '10px 14px' }}>
-              {/* SET ALL — Apply one model to all agents */}
-              <div style={{ marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid var(--color-terminal-border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <label
-                    style={{
-                      fontSize: '10px',
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--color-terminal-dim)',
-                      letterSpacing: '0.5px',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    SET ALL AGENTS
-                  </label>
-                  <button
-                    onClick={() => setSetAllOpen(!setAllOpen)}
-                    style={{
-                      padding: '2px 8px',
-                      fontSize: '9px',
-                      fontFamily: 'var(--font-mono)',
-                      background: 'var(--color-terminal-blue)',
-                      color: 'var(--color-terminal-bg)',
-                      border: 'none',
-                      borderRadius: '2px',
-                      cursor: 'pointer',
-                      letterSpacing: '0.3px',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    SET ALL
-                  </button>
-                </div>
-                {setAllOpen && (
-                  <ModelDropdown
-                    value=""
-                    onChange={(modelId) => setAllModels(modelId)}
-                    models={availableModels}
-                  />
-                )}
-              </div>
-
-              {/* Per-agent model selectors */}
-              {availableAgents.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {availableAgents.map((agent) => {
-                    const isSelected = selectedAgents.length === 0 || selectedAgents.includes(agent.id)
-                    return (
-                      <div key={agent.id} style={{ opacity: isSelected ? 1 : 0.5 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
-                          <button
-                            onClick={() => toggleAgent(agent.id)}
-                            title={agent.description}
-                            style={{
-                              padding: '2px 6px',
-                              fontSize: '9px',
-                              fontFamily: 'var(--font-mono)',
-                              border: '1px solid ' + (selectedAgents.includes(agent.id) || selectedAgents.length === 0 ? 'var(--color-terminal-blue)' : 'var(--color-terminal-border)'),
-                              borderRadius: '2px',
-                              background: selectedAgents.includes(agent.id) || selectedAgents.length === 0 ? 'rgba(68, 136, 255, 0.15)' : 'var(--color-terminal-bg)',
-                              color: selectedAgents.includes(agent.id) || selectedAgents.length === 0 ? 'var(--color-terminal-blue)' : 'var(--color-terminal-muted)',
-                              cursor: 'pointer',
-                              letterSpacing: '0.3px',
-                              textTransform: 'uppercase',
-                              lineHeight: '1.3',
-                              whiteSpace: 'nowrap',
-                            }}
-                          >
-                            {agent.name}
-                          </button>
-                          <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
-                            {getAgentModel(agent.id).split('/').pop()}
-                          </span>
-                        </div>
-                        <ModelDropdown
-                          value={getAgentModel(agent.id)}
-                          onChange={(modelId) => setAgentModel(agent.id, modelId)}
-                          models={availableModels}
-                        />
-                      </div>
-                    )
-                  })}
-
-                  {/* Discovery agent model */}
-                  <div style={{ paddingTop: '6px', borderTop: '1px solid var(--color-terminal-border)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
-                      <span
-                        style={{
-                          padding: '2px 6px',
-                          fontSize: '9px',
-                          fontFamily: 'var(--font-mono)',
-                          border: '1px solid var(--color-terminal-amber)',
-                          borderRadius: '2px',
-                          background: 'rgba(255, 170, 0, 0.1)',
-                          color: 'var(--color-terminal-amber)',
-                          letterSpacing: '0.3px',
-                          textTransform: 'uppercase',
-                          lineHeight: '1.3',
-                        }}
-                      >
-                        DISCOVERY
-                      </span>
-                      <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
-                        {getAgentModel('discovery').split('/').pop()}
-                      </span>
-                    </div>
-                    <ModelDropdown
-                      value={getAgentModel('discovery')}
-                      onChange={(modelId) => setAgentModel('discovery', modelId)}
-                      models={availableModels}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Modal footer */}
-            <div
-              style={{
-                padding: '8px 14px',
-                borderTop: '1px solid var(--color-terminal-border)',
-                display: 'flex',
-                justifyContent: 'flex-end',
-                flexShrink: 0,
-              }}
-            >
-              <button
-                onClick={() => setConfigOpen(false)}
-                style={{
-                  padding: '4px 16px',
-                  fontSize: '10px',
-                  fontFamily: 'var(--font-mono)',
-                  background: 'var(--color-terminal-blue)',
-                  color: 'var(--color-terminal-bg)',
-                  border: 'none',
-                  borderRadius: '2px',
-                  cursor: 'pointer',
-                  letterSpacing: '0.3px',
-                  textTransform: 'uppercase',
-                  fontWeight: 600,
-                }}
-              >
-                DONE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
 
       {/* ── Discovery Dialog (fullscreen) ── */}
       <DiscoveryDialog

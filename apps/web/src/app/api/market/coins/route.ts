@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { connectDB, TrackedAsset } from '@oculus/db'
 
 export const dynamic = 'force-dynamic'
 
@@ -6,11 +7,11 @@ interface CoinGeckoMarket {
   id: string
   symbol: string
   name: string
-  current_price: number
-  market_cap: number
-  total_volume: number
-  price_change_percentage_24h: number
-  market_cap_rank: number
+  current_price: number | null
+  market_cap: number | null
+  total_volume: number | null
+  price_change_percentage_24h: number | null
+  market_cap_rank: number | null
 }
 
 // Comprehensive symbol → CoinGecko ID mapping
@@ -98,7 +99,15 @@ export async function GET(request: Request) {
       // Legacy/direct: accept CoinGecko IDs directly
       ids = idsParam
     } else {
-      ids = 'bitcoin,ethereum,solana,binancecoin'
+      // Default: return only tracked assets from DB
+      await connectDB()
+      const tracked = await TrackedAsset.find({}).lean()
+      if (tracked.length > 0) {
+        ids = resolveSymbolsToIds(tracked.map(a => a.symbol))
+      } else {
+        // No tracked assets — return empty
+        return NextResponse.json([])
+      }
     }
 
     const res = await fetch(
@@ -120,11 +129,11 @@ export async function GET(request: Request) {
       id: c.id,
       symbol: c.symbol,
       name: c.name,
-      currentPrice: c.current_price,
-      marketCap: c.market_cap,
-      volume24h: c.total_volume,
-      priceChange24h: c.price_change_percentage_24h,
-      rank: c.market_cap_rank,
+      currentPrice: c.current_price ?? 0,
+      marketCap: c.market_cap ?? 0,
+      volume24h: c.total_volume ?? 0,
+      priceChange24h: c.price_change_percentage_24h ?? 0,
+      rank: c.market_cap_rank ?? 9999,
     }))
 
     return NextResponse.json(coins)

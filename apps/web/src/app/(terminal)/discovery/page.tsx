@@ -1,14 +1,12 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
+import { useTrackedAssets } from '@/hooks/useTrackedAssets'
 import { useProjectInfo } from '@/hooks/useProjectInfo'
 import type { DiscoveryHistoryEntry } from '@/hooks/useProjectInfo'
 import { DiscoveryDialog } from '@/components/terminal/DiscoveryDialog'
 import { ProjectInfoContent } from '@/components/terminal/ProjectInfoContent'
 
-/* ── Constants ── */
-const ASSETS = ['BTC', 'ETH', 'SOL', 'BNB', 'TAO'] as const
-type Asset = (typeof ASSETS)[number]
 
 /* ── Helpers ── */
 function timeAgo(iso: string): string {
@@ -221,7 +219,8 @@ function DetailPanel({
 
 /* ── Main component ── */
 function DiscoveryContent() {
-  const [selectedAsset, setSelectedAsset] = useState<Asset>('BTC')
+  const { symbols: trackedSymbols, loading: assetsLoading } = useTrackedAssets()
+  const [selectedAsset, setSelectedAsset] = useState<string>('')
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null)
 
   const projectInfo = useProjectInfo(selectedAsset)
@@ -237,6 +236,13 @@ function DiscoveryContent() {
     discover,
     cancelDiscovery,
   } = projectInfo
+
+  // Auto-select first tracked asset when loaded
+  useEffect(() => {
+    if (!selectedAsset && trackedSymbols.length > 0) {
+      setSelectedAsset(trackedSymbols[0])
+    }
+  }, [trackedSymbols, selectedAsset])
 
   const selectedEntry = selectedHistoryId
     ? discoveryHistory.find(e => e.id === selectedHistoryId) ?? null
@@ -256,25 +262,31 @@ function DiscoveryContent() {
         </span>
 
         {/* Asset buttons */}
-        {ASSETS.map(asset => (
-          <button
-            key={asset}
-            onClick={() => { setSelectedAsset(asset); setSelectedHistoryId(null) }}
-            style={{
-              background: selectedAsset === asset ? 'rgba(255,170,0,0.1)' : 'transparent',
-              border: `1px solid ${selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-border)'}`,
-              color: selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-muted)',
-              fontSize: '12px',
-              fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.08em',
-              cursor: 'pointer',
-              padding: '3px 10px',
-              fontWeight: selectedAsset === asset ? 'bold' : 'normal',
-            }}
-          >
-            {asset}
-          </button>
-        ))}
+        {assetsLoading ? (
+          <span style={{ color: 'var(--color-terminal-dim)', fontSize: '12px' }}>Loading assets...</span>
+        ) : trackedSymbols.length === 0 ? (
+          <span style={{ color: 'var(--color-terminal-dim)', fontSize: '12px' }}>No tracked assets. Use + in terminal to add.</span>
+        ) : (
+          trackedSymbols.map(asset => (
+            <button
+              key={asset}
+              onClick={() => { setSelectedAsset(asset); setSelectedHistoryId(null) }}
+              style={{
+                background: selectedAsset === asset ? 'rgba(255,170,0,0.1)' : 'transparent',
+                border: `1px solid ${selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-border)'}`,
+                color: selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-muted)',
+                fontSize: '12px',
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.08em',
+                cursor: 'pointer',
+                padding: '3px 10px',
+                fontWeight: selectedAsset === asset ? 'bold' : 'normal',
+              }}
+            >
+              {asset}
+            </button>
+          ))
+        )}
 
         {/* Run discovery button */}
         <button

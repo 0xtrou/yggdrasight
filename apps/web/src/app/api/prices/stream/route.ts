@@ -1,7 +1,9 @@
+import { connectDB, TrackedAsset } from '@oculus/db'
+
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const DEFAULT_SYMBOLS = ['btcusdt', 'ethusdt', 'solusdt', 'bnbusdt']
+const FALLBACK_SYMBOLS = ['btcusdt', 'ethusdt', 'solusdt', 'bnbusdt']
 const RECONNECT_DELAY = 3000
 
 function buildStreamUrl(symbols: string[]): string {
@@ -21,9 +23,21 @@ export async function GET(request: Request) {
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean)
       .map((s) => (s.endsWith('usdt') ? s : `${s}usdt`))
-    if (symbols.length === 0) symbols = DEFAULT_SYMBOLS
+    if (symbols.length === 0) symbols = FALLBACK_SYMBOLS
   } else {
-    symbols = DEFAULT_SYMBOLS
+    // Default: use tracked assets from DB
+    try {
+      await connectDB()
+      const tracked = await TrackedAsset.find({}).lean()
+      if (tracked.length > 0) {
+        symbols = tracked.map(a => `${a.symbol.toLowerCase()}usdt`)
+      } else {
+        symbols = FALLBACK_SYMBOLS
+      }
+    } catch (err) {
+      console.error('[GET /api/prices/stream] DB fallback:', err)
+      symbols = FALLBACK_SYMBOLS
+    }
   }
 
   const wsUrl = buildStreamUrl(symbols)
