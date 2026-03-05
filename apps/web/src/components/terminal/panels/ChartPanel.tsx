@@ -6,6 +6,7 @@ import type { Chart } from 'klinecharts'
 import { useOHLCV } from '@/hooks/useOHLCV'
 import { usePriceTicker } from '@/hooks/usePriceTicker'
 import { useSignals } from '@/hooks/useSignals'
+import { useKlineStream } from '@/hooks/useKlineStream'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -406,6 +407,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
   const { candles, loading, error } = useOHLCV(symbol, interval)
   const { tickers } = usePriceTicker([externalSymbol])
   const { signals } = useSignals()
+  const { latestCandle, connected: _klineConnected } = useKlineStream(`${externalSymbol}USDT`, TF_TO_INTERVAL[timeframe])
 
   const ticker = tickers[symbol]
   const change24h = ticker?.change24h ?? 0
@@ -669,6 +671,19 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
       dispose(container)
     }
   }, [candles, signals, externalSymbol, readConfig, saveConfig, activeIndicators]) // re-create when data, symbol, or indicators change
+
+  // ── Real-time candle updates ──────────────────────────────────────────────
+  useEffect(() => {
+    if (!latestCandle || !chartRef.current) return
+    chartRef.current.updateData({
+      timestamp: latestCandle.timestamp,
+      open: latestCandle.open,
+      high: latestCandle.high,
+      low: latestCandle.low,
+      close: latestCandle.close,
+      volume: latestCandle.volume,
+    })
+  }, [latestCandle])
 
   // Displayed candle: prefer hovered, fall back to last candle
   const lastCandle = candles.length > 0 ? candles[candles.length - 1] : null
