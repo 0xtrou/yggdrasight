@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { init, dispose, ActionType } from 'klinecharts'
+import { init, dispose, ActionType, LineType } from 'klinecharts'
 import type { Chart } from 'klinecharts'
 import { useOHLCV } from '@/hooks/useOHLCV'
 import { usePriceTicker } from '@/hooks/usePriceTicker'
@@ -553,6 +553,20 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
       })),
     )
 
+    // Re-draw alert overlays (destroyed on chart dispose — must redraw here)
+    const activeAlerts = alerts.filter(a => !a.triggered)
+    activeAlerts.forEach(alert => {
+      chart.createOverlay({
+        name: 'horizontalStraightLine',
+        id: `alert-${alert.id}`,
+        points: [{ value: alert.price }],
+        lock: true,
+        styles: {
+          line: { color: '#ffaa00', style: LineType.Dashed, dashedValue: [4, 4] },
+        },
+      })
+    })
+
     // Create indicators dynamically from activeIndicators
     // isStack=true allows multiple indicators to coexist in the same pane
     for (const name of activeIndicators) {
@@ -697,7 +711,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
       resizeObserver.disconnect()
       dispose(container)
     }
-  }, [candles, signals, externalSymbol, readConfig, saveConfig, activeIndicators]) // re-create when data, symbol, or indicators change
+  }, [candles, signals, externalSymbol, readConfig, saveConfig, activeIndicators, alerts]) // re-create when data, symbol, or indicators change
 
   // ── Real-time candle updates ──────────────────────────────────────────────
   useEffect(() => {
@@ -711,6 +725,47 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
       volume: latestCandle.volume,
     })
   }, [latestCandle])
+
+  // ── Price alert crossing detection ───────────────────────────────────────
+  const prevPriceRef = useRef<number | undefined>(undefined)
+  useEffect(() => {
+    const currentPrice = ticker?.price
+    if (currentPrice == null) return
+
+    const prev = prevPriceRef.current
+    prevPriceRef.current = currentPrice
+
+    if (prev == null || alerts.length === 0) return
+
+    const activeAlerts = alerts.filter(a => !a.triggered)
+    if (activeAlerts.length === 0) return
+
+    let changed = false
+    const updatedAlerts = alerts.map(alert => {
+      if (alert.triggered) return alert
+      // Detect crossing: was on one side, now on the other (or exactly at level)
+      const crossed =
+        (prev < alert.price && currentPrice >= alert.price) ||
+        (prev > alert.price && currentPrice <= alert.price)
+      if (crossed) {
+        if (Notification.permission === 'granted') {
+          try {
+            new Notification(`Price Alert: ${externalSymbol}`, {
+              body: `Price reached $${alert.price.toFixed(2)} (current: $${currentPrice.toFixed(2)})`,
+              icon: '/favicon-192.png',
+            })
+          } catch { /* notification blocked */ }
+        }
+        changed = true
+        return { ...alert, triggered: true }
+      }
+      return alert
+    })
+
+    if (changed) {
+      setAlertsAndPersist(updatedAlerts)
+    }
+  }, [ticker, alerts, externalSymbol, setAlertsAndPersist])
 
   // Displayed candle: prefer hovered, fall back to last candle
   const lastCandle = candles.length > 0 ? candles[candles.length - 1] : null
