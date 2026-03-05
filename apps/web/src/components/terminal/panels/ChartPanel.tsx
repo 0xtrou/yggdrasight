@@ -28,6 +28,12 @@ interface IndicatorDef {
   type: 'main' | 'sub'
 }
 
+interface PriceAlert {
+  id: string
+  price: number
+  createdAt: number
+  triggered: boolean
+}
 const INDICATOR_CATEGORIES: { label: string; indicators: IndicatorDef[] }[] = [
   {
     label: 'MAIN INDICATORS',
@@ -358,6 +364,23 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     saveConfig({ indicators })
   }, [saveConfig])
 
+  const [alerts, setAlerts] = useState<PriceAlert[]>(() => {
+    try {
+      const stored = localStorage.getItem(`oculus-chart-alerts:${externalSymbol}`)
+      return stored ? JSON.parse(stored) : []
+    } catch { return [] }
+  })
+
+  const setAlertsAndPersist = useCallback((updater: PriceAlert[] | ((prev: PriceAlert[]) => PriceAlert[])) => {
+    setAlerts(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater
+      try {
+        localStorage.setItem(`oculus-chart-alerts:${externalSymbol}`, JSON.stringify(next))
+      } catch { /* quota */ }
+      return next
+    })
+  }, [externalSymbol])
+
   const [showIndicatorMenu, setShowIndicatorMenu] = useState(false)
   const indicatorMenuRef = useRef<HTMLDivElement>(null)
 
@@ -398,6 +421,10 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     if (typeof cfg.lockedCursor === 'boolean') setLockedCursorRaw(cfg.lockedCursor)
     if (typeof cfg.hideMarks === 'boolean') setHideMarksRaw(cfg.hideMarks)
     if (Array.isArray(cfg.indicators)) setActiveIndicatorsRaw(cfg.indicators)
+    try {
+      const stored = localStorage.getItem(`oculus-chart-alerts:${externalSymbol}`)
+      setAlerts(stored ? JSON.parse(stored) : [])
+    } catch { setAlerts([]) }
   }, [externalSymbol, readConfig])
 
 
@@ -1033,8 +1060,32 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
             <MenuDivider />
             <MenuItem
               label={`Create Alert at ${formatPrice(ctxMenu.price)}`}
-              onClick={() => setCtxMenu(null)}
+              onClick={() => {
+                if (ctxMenu.price == null) return
+                const activeAlerts = alerts.filter(a => !a.triggered)
+                if (activeAlerts.length >= 10) {
+                  setCtxMenu(null)
+                  return
+                }
+                if (Notification.permission === 'default') {
+                  Notification.requestPermission()
+                }
+                const newAlert: PriceAlert = {
+                  id: `alert-${Date.now()}`,
+                  price: ctxMenu.price,
+                  createdAt: Date.now(),
+                  triggered: false,
+                }
+                setAlertsAndPersist(prev => [...prev, newAlert])
+                setCtxMenu(null)
+              }}
             />
+            {alerts.filter(a => !a.triggered).length > 0 && (
+              <MenuItem
+                label={`Clear All Alerts (${alerts.filter(a => !a.triggered).length})`}
+                onClick={() => { setAlertsAndPersist([]); setCtxMenu(null); }}
+              />
+            )}
             <MenuItem
               label={`Copy price ${formatPrice(ctxMenu.price)}`}
               onClick={() => {
