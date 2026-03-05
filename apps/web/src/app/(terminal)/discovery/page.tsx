@@ -54,18 +54,18 @@ function HistoryRow({
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '3px' }}>
-        <span style={{ color: 'var(--color-terminal-text)', fontSize: '11px', fontWeight: 'bold' }}>
+        <span style={{ color: 'var(--color-terminal-text)', fontSize: '13px', fontWeight: 'bold' }}>
           {entry.symbol}
         </span>
-        <span style={{ color: statusColor, fontSize: '9px', letterSpacing: '0.08em' }}>
+        <span style={{ color: statusColor, fontSize: '11px', letterSpacing: '0.08em' }}>
           {entry.status.toUpperCase()}
         </span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '9px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>
+        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>
           {entry.modelId.split('/').pop() ?? entry.modelId}
         </span>
-        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', flexShrink: 0 }}>
+        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '11px', flexShrink: 0 }}>
           {timeAgo(entry.completedAt)}
         </span>
       </div>
@@ -100,10 +100,10 @@ function DetailPanel({
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px', gap: '12px', overflow: 'hidden', minHeight: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ color: 'var(--color-terminal-amber)', fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.1em', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ color: 'var(--color-terminal-amber)', fontSize: '13px', fontWeight: 'bold', letterSpacing: '0.1em', fontFamily: 'var(--font-mono)' }}>
             ◉ AGENT RUNNING
           </span>
-          <span style={{ color: 'var(--color-terminal-muted)', fontSize: '10px', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
             {formatElapsed(discoveryElapsed)}
           </span>
           <button
@@ -113,7 +113,7 @@ function DetailPanel({
               background: 'transparent',
               border: '1px solid var(--color-terminal-border)',
               color: 'var(--color-terminal-blue)',
-              fontSize: '10px',
+              fontSize: '12px',
               fontFamily: 'var(--font-mono)',
               cursor: 'pointer',
               padding: '2px 8px',
@@ -127,7 +127,7 @@ function DetailPanel({
               background: 'transparent',
               border: '1px solid var(--color-terminal-down)44',
               color: 'var(--color-terminal-down)',
-              fontSize: '10px',
+              fontSize: '12px',
               fontFamily: 'var(--font-mono)',
               cursor: 'pointer',
               padding: '2px 8px',
@@ -143,10 +143,10 @@ function DetailPanel({
           border: '1px solid var(--color-terminal-border)', padding: '8px', minHeight: 0,
         }}>
           {discoveryLogs.length === 0 ? (
-            <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px', fontFamily: 'var(--font-mono)' }}>Initializing agent...</span>
+            <span style={{ color: 'var(--color-terminal-dim)', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>Initializing agent...</span>
           ) : (
             discoveryLogs.map((log, i) => (
-              <div key={i} style={{ color: 'var(--color-terminal-muted)', fontSize: '10px', fontFamily: 'var(--font-mono)', lineHeight: 1.6 }}>
+              <div key={i} style={{ color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)', lineHeight: 1.6 }}>
                 {log}
               </div>
             ))
@@ -174,8 +174,8 @@ function DetailPanel({
         fontFamily: 'var(--font-mono)',
       }}>
         <span style={{ color: 'var(--color-terminal-text)', fontSize: '12px', fontWeight: 'bold' }}>{entry.symbol}</span>
-        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '10px' }}>{timeAgo(entry.completedAt)}</span>
-        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
+        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '12px' }}>{timeAgo(entry.completedAt)}</span>
+        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
           {entry.modelId}
         </span>
 
@@ -189,7 +189,7 @@ function DetailPanel({
                 background: view === v ? 'rgba(255,170,0,0.1)' : 'transparent',
                 border: `1px solid ${view === v ? 'var(--color-terminal-amber)' : 'var(--color-terminal-border)'}`,
                 color: view === v ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
-                fontSize: '9px',
+                fontSize: '11px',
                 fontFamily: 'var(--font-mono)',
                 letterSpacing: '0.08em',
                 cursor: 'pointer',
@@ -206,7 +206,7 @@ function DetailPanel({
       {view === 'raw' ? (
         <div style={{ flex: 1, overflow: 'auto', padding: '16px', minHeight: 0 }}>
           <pre style={{
-            color: 'var(--color-terminal-muted)', fontSize: '10px', fontFamily: 'var(--font-mono)',
+            color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)',
             lineHeight: 1.7, whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0,
           }}>
             {rawOutput ?? '(no raw output saved)'}
@@ -251,7 +251,7 @@ function DiscoveryContent() {
         background: 'var(--color-terminal-panel)', borderBottom: '1px solid var(--color-terminal-border)',
         flexShrink: 0,
       }}>
-        <span style={{ color: 'var(--color-terminal-amber)', fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.15em', marginRight: '8px' }}>
+        <span style={{ color: 'var(--color-terminal-amber)', fontSize: '13px', fontWeight: 'bold', letterSpacing: '0.15em', marginRight: '8px' }}>
           DISCOVERY LAB
         </span>
 
@@ -264,7 +264,7 @@ function DiscoveryContent() {
               background: selectedAsset === asset ? 'rgba(255,170,0,0.1)' : 'transparent',
               border: `1px solid ${selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-border)'}`,
               color: selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-muted)',
-              fontSize: '10px',
+              fontSize: '12px',
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.08em',
               cursor: 'pointer',
@@ -285,7 +285,7 @@ function DiscoveryContent() {
             background: discovering ? 'transparent' : 'rgba(0,255,136,0.08)',
             border: `1px solid ${discovering ? 'var(--color-terminal-border)' : 'var(--color-terminal-up)'}`,
             color: discovering ? 'var(--color-terminal-dim)' : 'var(--color-terminal-up)',
-            fontSize: '10px',
+            fontSize: '12px',
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.1em',
             cursor: discovering ? 'not-allowed' : 'pointer',
@@ -302,7 +302,7 @@ function DiscoveryContent() {
               background: 'transparent',
               border: '1px solid var(--color-terminal-down)44',
               color: 'var(--color-terminal-down)',
-              fontSize: '10px',
+              fontSize: '12px',
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.1em',
               cursor: 'pointer',
@@ -322,7 +322,7 @@ function DiscoveryContent() {
           <div style={{
             padding: '6px 12px',
             background: 'var(--color-terminal-panel)', borderBottom: '1px solid var(--color-terminal-border)',
-            color: 'var(--color-terminal-dim)', fontSize: '9px', letterSpacing: '0.1em', flexShrink: 0,
+            color: 'var(--color-terminal-dim)', fontSize: '11px', letterSpacing: '0.1em', flexShrink: 0,
           }}>
             HISTORY ({discoveryHistory.length})
           </div>
@@ -330,7 +330,7 @@ function DiscoveryContent() {
             {discoveryHistory.length === 0 ? (
               <div style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                height: '80px', color: 'var(--color-terminal-dim)', fontSize: '10px',
+                height: '80px', color: 'var(--color-terminal-dim)', fontSize: '12px',
               }}>
                 NO RUNS YET
               </div>

@@ -15,7 +15,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
 
   if (loading) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-terminal-dim)', fontSize: '11px', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-terminal-dim)', fontSize: '13px', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
         LOADING PROJECT DATA...
       </div>
     )
@@ -23,7 +23,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
 
   if (error && !unified) {
     return (
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', color: 'var(--color-terminal-dim)', fontSize: '11px', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', color: 'var(--color-terminal-dim)', fontSize: '13px', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
         <span>{error}</span>
         <button
           onClick={() => discover(agentModelMap?.['discovery'] || 'opencode/big-pickle')}
@@ -33,7 +33,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
             color: discovering ? 'var(--color-terminal-dim)' : '#000',
             border: 'none',
             padding: '6px 16px',
-            fontSize: '11px',
+            fontSize: '13px',
             fontWeight: 'bold',
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.1em',
@@ -50,7 +50,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
               color: 'var(--color-terminal-down)',
               border: '1px solid var(--color-terminal-down)44',
               padding: '4px 12px',
-              fontSize: '10px',
+              fontSize: '12px',
               fontWeight: 'bold',
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.1em',
@@ -71,7 +71,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
             border: '1px solid var(--color-terminal-border)',
             padding: '6px 8px',
             fontFamily: 'var(--font-mono)',
-            fontSize: '9px',
+            fontSize: '11px',
             lineHeight: '1.5',
             color: 'var(--color-terminal-muted)',
           }}>
@@ -102,7 +102,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
   }
 
   const sectionHeader = (title: string, color: string): React.CSSProperties => ({
-    fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.1em', color, fontFamily: 'var(--font-mono)', padding: '6px 10px 3px', borderBottom: `1px solid ${color}33`,
+    fontSize: '13px', fontWeight: 'bold', letterSpacing: '0.1em', color, fontFamily: 'var(--font-mono)', padding: '6px 10px 3px', borderBottom: `1px solid ${color}33`,
   })
 
   // ── Unified row — shows source badge ──
@@ -112,10 +112,10 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
     if (!display || display === '—') return null
     return (
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2px 10px', gap: '8px' }}>
-        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '10px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
           {label}{sourceBadge(field.source)}
         </span>
-        <span style={{ color: valueColor ?? 'var(--color-terminal-text)', fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 'bold', textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{display}</span>
+        <span style={{ color: valueColor ?? 'var(--color-terminal-text)', fontSize: '13px', fontFamily: 'var(--font-mono)', fontWeight: 'bold', textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{display}</span>
       </div>
     )
   }
@@ -154,11 +154,11 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
     if (!field.value || field.value.length === 0) return null
     return (
       <div style={{ padding: '2px 10px' }}>
-        <div style={{ color: 'var(--color-terminal-muted)', fontSize: '10px', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+        <div style={{ color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
           {label}{sourceBadge(field.source)}
         </div>
         {field.value.map((item, i) => (
-          <div key={i} style={{ color: itemColor ?? 'var(--color-terminal-text)', fontSize: '10px', fontFamily: 'var(--font-mono)', padding: '1px 0', opacity: 0.9, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div key={i} style={{ color: itemColor ?? 'var(--color-terminal-text)', fontSize: '12px', fontFamily: 'var(--font-mono)', padding: '1px 0', opacity: 0.9, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {String.fromCharCode(0x25AA)} {item}
           </div>
         ))}
@@ -171,7 +171,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
     if (!field.value) return null
     return (
       <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '2px 10px' }}>
-        <span style={{ fontSize: '10px', padding: '2px 8px', background: 'var(--color-terminal-amber)11', border: '1px solid var(--color-terminal-amber)44', color: 'var(--color-terminal-amber)', fontWeight: 'bold', fontFamily: 'var(--font-mono)' }}>
+        <span style={{ fontSize: '12px', padding: '2px 8px', background: 'var(--color-terminal-amber)11', border: '1px solid var(--color-terminal-amber)44', color: 'var(--color-terminal-amber)', fontWeight: 'bold', fontFamily: 'var(--font-mono)' }}>
           SCORE: {field.value}
         </span>
       </div>
@@ -182,7 +182,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
   const textBlock = (field: UnifiedProjectField<string | null>, borderColor?: string): React.ReactNode => {
     if (!field.value) return null
     return (
-      <div style={{ padding: '4px 10px', color: 'var(--color-terminal-text)', fontSize: '10px', fontFamily: 'var(--font-mono)', lineHeight: '1.5', opacity: 0.85, ...(borderColor ? { borderLeft: `2px solid ${borderColor}`, marginLeft: '8px', marginRight: '8px' } : {}) }}>
+      <div style={{ padding: '4px 10px', color: 'var(--color-terminal-text)', fontSize: '12px', fontFamily: 'var(--font-mono)', lineHeight: '1.5', opacity: 0.85, ...(borderColor ? { borderLeft: `2px solid ${borderColor}`, marginLeft: '8px', marginRight: '8px' } : {}) }}>
         {sourceBadge(field.source)} {field.value}
       </div>
     )
@@ -202,7 +202,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
             color: discovering ? 'var(--color-terminal-dim)' : (u.hasAiData ? 'var(--color-terminal-amber)' : '#000'),
             border: u.hasAiData ? `1px solid ${discovering ? 'var(--color-terminal-border)' : 'var(--color-terminal-amber)44'}` : 'none',
             padding: '5px 12px',
-            fontSize: '10px',
+            fontSize: '12px',
             fontWeight: 'bold',
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.1em',
@@ -211,7 +211,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
         >
           {discovering ? `AGENT RESEARCHING... ${discoveryElapsed}s` : (u.hasAiData ? `RE-DISCOVER ${base}` : `DISCOVER ${base} VIA AI AGENT`)}
         </button>
-        <div style={{ fontSize: '9px', color: 'var(--color-terminal-dim)', marginTop: '2px', textAlign: 'center', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ fontSize: '11px', color: 'var(--color-terminal-dim)', marginTop: '2px', textAlign: 'center', fontFamily: 'var(--font-mono)' }}>
           {discovering ? 'Worker running off-thread — UI stays responsive' : 'Uses web search + blockchain explorers to find project data'}
         </div>
         {discovering && (
@@ -223,7 +223,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
               color: 'var(--color-terminal-down)',
               border: '1px solid var(--color-terminal-down)44',
               padding: '4px 12px',
-              fontSize: '9px',
+              fontSize: '11px',
               fontWeight: 'bold',
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.1em',
@@ -244,7 +244,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
             border: '1px solid var(--color-terminal-border)',
             padding: '6px 8px',
             fontFamily: 'var(--font-mono)',
-            fontSize: '9px',
+            fontSize: '11px',
             lineHeight: '1.5',
             color: 'var(--color-terminal-muted)',
           }}>
@@ -262,7 +262,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
         {base} {String.fromCharCode(0x2014)} PROJECT OVERVIEW
       </div>
       {u.description.value && (
-        <div style={{ padding: '4px 10px', color: 'var(--color-terminal-text)', fontSize: '11px', lineHeight: '1.5', opacity: 0.85 }}>
+        <div style={{ padding: '4px 10px', color: 'var(--color-terminal-text)', fontSize: '13px', lineHeight: '1.5', opacity: 0.85 }}>
           {u.description.value.slice(0, 300)}{u.description.value.length > 300 ? '...' : ''}
           {sourceBadge(u.description.source)}
         </div>
@@ -270,7 +270,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {u.categories.value.length > 0 && (
         <div style={{ padding: '2px 10px', display: 'flex', flexWrap: 'wrap', gap: '3px', alignItems: 'center' }}>
           {u.categories.value.map(cat => (
-            <span key={cat} style={{ fontSize: '9px', padding: '1px 5px', background: 'var(--color-terminal-surface)', border: '1px solid var(--color-terminal-border)', color: 'var(--color-terminal-blue)' }}>{cat}</span>
+            <span key={cat} style={{ fontSize: '11px', padding: '1px 5px', background: 'var(--color-terminal-surface)', border: '1px solid var(--color-terminal-border)', color: 'var(--color-terminal-blue)' }}>{cat}</span>
           ))}
           {sourceBadge(u.categories.source)}
         </div>
@@ -297,9 +297,9 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {uRow('Commits (4w)', u.commitCount4Weeks, (v) => v !== null ? fmtNum(v) : '\u2014', u.commitCount4Weeks.value !== null ? (u.commitCount4Weeks.value > 20 ? 'var(--color-terminal-up)' : u.commitCount4Weeks.value > 5 ? 'var(--color-terminal-amber)' : 'var(--color-terminal-down)') : undefined)}
       {u.commitActivitySeries.value.length > 0 && (
         <div style={{ padding: '2px 10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ color: 'var(--color-terminal-muted)', fontSize: '10px' }}>28d Activity</span>
+          <span style={{ color: 'var(--color-terminal-muted)', fontSize: '12px' }}>28d Activity</span>
           {sourceBadge(u.commitActivitySeries.source)}
-          <span style={{ color: 'var(--color-terminal-blue)', fontSize: '11px', letterSpacing: '1px', fontFamily: 'var(--font-mono)' }}>{sparkline(u.commitActivitySeries.value)}</span>
+          <span style={{ color: 'var(--color-terminal-blue)', fontSize: '13px', letterSpacing: '1px', fontFamily: 'var(--font-mono)' }}>{sparkline(u.commitActivitySeries.value)}</span>
         </div>
       )}
       {uRow('PRs Merged', u.pullRequestsMerged, (v) => v !== null ? fmtNum(v) : '\u2014')}
@@ -325,7 +325,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
               const hotNarratives = ['Artificial Intelligence', 'AI', 'DePIN', 'Real World Assets', 'RWA', 'Layer 1', 'Layer 2', 'DeFi', 'Gaming', 'Privacy', 'Infrastructure', 'Interoperability']
               const isHot = hotNarratives.some(h => cat.toLowerCase().includes(h.toLowerCase()))
               return (
-                <span key={cat} style={{ fontSize: '10px', padding: '2px 6px', background: isHot ? 'var(--color-terminal-up)11' : 'var(--color-terminal-surface)', border: `1px solid ${isHot ? 'var(--color-terminal-up)' : 'var(--color-terminal-border)'}`, color: isHot ? 'var(--color-terminal-up)' : 'var(--color-terminal-muted)', fontWeight: isHot ? 'bold' : 'normal' }}>
+                <span key={cat} style={{ fontSize: '12px', padding: '2px 6px', background: isHot ? 'var(--color-terminal-up)11' : 'var(--color-terminal-surface)', border: `1px solid ${isHot ? 'var(--color-terminal-up)' : 'var(--color-terminal-border)'}`, color: isHot ? 'var(--color-terminal-up)' : 'var(--color-terminal-muted)', fontWeight: isHot ? 'bold' : 'normal' }}>
                   {cat}
                 </span>
               )
@@ -415,11 +415,11 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
           </div>
           {u.risks.value && u.risks.value.length > 0 && (
             <div style={{ padding: '4px 10px' }}>
-              <div style={{ color: 'var(--color-terminal-down)', fontSize: '10px', fontFamily: 'var(--font-mono)', fontWeight: 'bold', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ color: 'var(--color-terminal-down)', fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 'bold', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 RISKS{sourceBadge(u.risks.source)}
               </div>
               {u.risks.value.map((r, i) => (
-                <div key={i} style={{ color: 'var(--color-terminal-text)', fontSize: '10px', fontFamily: 'var(--font-mono)', padding: '1px 0', lineHeight: '1.4', opacity: 0.9 }}>
+                <div key={i} style={{ color: 'var(--color-terminal-text)', fontSize: '12px', fontFamily: 'var(--font-mono)', padding: '1px 0', lineHeight: '1.4', opacity: 0.9 }}>
                   {String.fromCharCode(0x25AA)} {r}
                 </div>
               ))}
@@ -427,11 +427,11 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
           )}
           {u.recentNews.value && u.recentNews.value.length > 0 && (
             <div style={{ padding: '4px 10px' }}>
-              <div style={{ color: 'var(--color-terminal-blue)', fontSize: '10px', fontFamily: 'var(--font-mono)', fontWeight: 'bold', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ color: 'var(--color-terminal-blue)', fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 'bold', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 RECENT NEWS{sourceBadge(u.recentNews.source)}
               </div>
               {u.recentNews.value.map((n, i) => (
-                <div key={i} style={{ color: 'var(--color-terminal-text)', fontSize: '10px', fontFamily: 'var(--font-mono)', padding: '1px 0', lineHeight: '1.4', opacity: 0.9 }}>
+                <div key={i} style={{ color: 'var(--color-terminal-text)', fontSize: '12px', fontFamily: 'var(--font-mono)', padding: '1px 0', lineHeight: '1.4', opacity: 0.9 }}>
                   {String.fromCharCode(0x25AA)} {n}
                 </div>
               ))}
@@ -446,7 +446,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
           <div style={sectionHeader('AI ASSESSMENT', 'var(--color-terminal-amber)')}>
             AI ASSESSMENT
           </div>
-          <div style={{ padding: '6px 10px', color: 'var(--color-terminal-text)', fontSize: '11px', fontFamily: 'var(--font-mono)', lineHeight: '1.6', opacity: 0.9, borderLeft: '2px solid var(--color-terminal-amber)', marginLeft: '8px', marginRight: '8px' }}>
+          <div style={{ padding: '6px 10px', color: 'var(--color-terminal-text)', fontSize: '13px', fontFamily: 'var(--font-mono)', lineHeight: '1.6', opacity: 0.9, borderLeft: '2px solid var(--color-terminal-amber)', marginLeft: '8px', marginRight: '8px' }}>
             {u.aiSummary.value}
           </div>
         </>
@@ -455,16 +455,16 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {/* ══════ SOURCES ══════ */}
       {u.sourcesUsed.length > 0 && (
         <div style={{ padding: '4px 10px' }}>
-          <div style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', fontFamily: 'var(--font-mono)', marginBottom: '2px' }}>SOURCES ({u.sourcesUsed.length})</div>
+          <div style={{ color: 'var(--color-terminal-dim)', fontSize: '11px', fontFamily: 'var(--font-mono)', marginBottom: '2px' }}>SOURCES ({u.sourcesUsed.length})</div>
           {u.sourcesUsed.filter(s => !s.startsWith('search:')).slice(0, 10).map((s, i) => (
-            <div key={i} style={{ color: 'var(--color-terminal-blue)', fontSize: '9px', fontFamily: 'var(--font-mono)', padding: '1px 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', opacity: 0.7 }}>
+            <div key={i} style={{ color: 'var(--color-terminal-blue)', fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '1px 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', opacity: 0.7 }}>
               {s}
             </div>
           ))}
         </div>
       )}
       {u.discoveredAt && (
-        <div style={{ padding: '2px 10px', color: 'var(--color-terminal-dim)', fontSize: '9px', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ padding: '2px 10px', color: 'var(--color-terminal-dim)', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
           Discovered {new Date(u.discoveredAt).toLocaleString()}
         </div>
       )}

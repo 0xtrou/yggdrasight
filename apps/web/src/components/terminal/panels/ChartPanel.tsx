@@ -901,27 +901,8 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
           ))}
         </span>
 
+     
         <button
-          onClick={toggleFullscreen}
-          title={isFullscreen ? 'Exit fullscreen (Esc)' : 'Fullscreen'}
-          style={{
-            background: 'transparent',
-            border: '1px solid var(--color-terminal-border)',
-            color: isFullscreen ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            cursor: 'pointer',
-            padding: '1px 5px',
-            marginLeft: 4,
-            lineHeight: 1,
-          }}
-        >
-          {isFullscreen ? '⊡' : '⊞'}
-        </button>
-
-        {/* Indicator selector button + dropdown */}
-        <div ref={indicatorMenuRef} style={{ position: 'relative', marginLeft: 4 }}>
-          <button
             onClick={() => setShowIndicatorMenu(v => !v)}
             title="Technical Indicators"
             style={{
@@ -938,6 +919,9 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
           >
             Indicators
           </button>
+        {/* Indicator selector button + dropdown */}
+        <div ref={indicatorMenuRef} style={{ position: 'relative', marginLeft: 4 }}>
+          
 
           {showIndicatorMenu && (
             <div
@@ -1030,6 +1014,26 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
             </div>
           )}
         </div>
+
+   <button
+          onClick={toggleFullscreen}
+          title={isFullscreen ? 'Exit fullscreen (Esc)' : 'Fullscreen'}
+          style={{
+            background: 'transparent',
+            border: '1px solid var(--color-terminal-border)',
+            color: isFullscreen ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 11,
+            cursor: 'pointer',
+            padding: '1px 5px',
+            marginLeft: 4,
+            lineHeight: 1,
+          }}
+        >
+          {isFullscreen ? '⊡' : '⊞'}
+        </button>
+
+
       </div>
 
       {/* ── Section 3: OHLCV data row ── */}

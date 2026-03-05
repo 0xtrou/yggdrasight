@@ -1305,6 +1305,27 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
     })
   }, [])
 
+  const allAnalystKeys = useMemo(() => {
+    const keys: string[] = []
+    for (const group of groupAnalystsByCategory(analysts)) {
+      group.analysts.forEach((analyst, idx) => {
+        keys.push(analyst.meta.id ?? `${group.category}-${idx}`)
+      })
+    }
+    return keys
+  }, [analysts])
+
+  const allExpanded = allAnalystKeys.length > 0 && allAnalystKeys.every(k => expandedAnalysts.has(k))
+
+  const toggleExpandAll = useCallback(() => {
+    setExpandedAnalysts(prev => {
+      const allKeys = allAnalystKeys
+      const allCurrentlyExpanded = allKeys.length > 0 && allKeys.every(k => prev.has(k))
+      if (allCurrentlyExpanded) return new Set<string>()
+      return new Set<string>(allKeys)
+    })
+  }, [allAnalystKeys])
+
   const tabStyle = (tab: ActiveTab): React.CSSProperties => ({
     cursor: 'pointer',
     background: 'none',
@@ -1415,8 +1436,71 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
           </div>
         )}
 
-        {/* Fullscreen toggle — always visible */}
+        {/* Expand/Collapse all — only on analysis tab with analysts */}
+        {activeTab === 'analysis' && analystCount > 0 && (
+          <button
+            onClick={toggleExpandAll}
+            title={allExpanded ? 'Collapse all' : 'Expand all'}
+            style={{
+              cursor: 'pointer',
+              background: 'none',
+              border: 'none',
+              fontSize: '10px',
+              padding: '0 3px',
+              fontFamily: 'var(--font-mono)',
+              color: allExpanded ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
+              marginLeft: '2px',
+              flexShrink: 0,
+            }}
+          >
+            {allExpanded ? '▲' : '▼'}
+          </button>
+        )}
+
+        {/* CONFIG + ANALYZE — always visible in header */}
         {activeTab !== 'analysis' && <div style={{ marginLeft: 'auto' }} />}
+        <button
+          onClick={() => setConfigOpen(true)}
+          title="AI Config"
+          style={{
+            background: 'transparent',
+            border: '1px solid var(--color-terminal-border)',
+            color: 'var(--color-terminal-dim)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            cursor: 'pointer',
+            padding: '1px 5px',
+            lineHeight: 1,
+            marginLeft: activeTab === 'analysis' ? '4px' : '0',
+          }}
+        >
+          ⚙
+        </button>
+        <button
+          onClick={handleAnalyze}
+          disabled={loading}
+          title="Run analysis"
+          style={{
+            background: loading ? 'var(--color-terminal-border)' : 'var(--color-terminal-blue)',
+            color: loading ? 'var(--color-terminal-dim)' : 'var(--color-terminal-bg)',
+            border: 'none',
+            borderRadius: '2px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            fontWeight: 600,
+            cursor: loading ? 'not-allowed' : 'pointer',
+            padding: '2px 8px',
+            lineHeight: 1,
+            letterSpacing: '0.3px',
+            textTransform: 'uppercase',
+            opacity: loading ? 0.7 : 1,
+            marginLeft: '2px',
+          }}
+        >
+          {loading ? 'ANALYZING...' : 'ANALYZE'}
+        </button>
+
+        {/* Fullscreen toggle — always visible */}
         <button
           onClick={toggleFullscreen}
           title={isFullscreen ? 'Exit fullscreen (Esc)' : 'Fullscreen'}
@@ -1586,37 +1670,6 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
         <ProjectInfoContent symbol={symbol} projectInfo={projectInfo} agentModelMap={agentModelMap} />
       )}
 
-      {/* AI CONFIG — Modal trigger */}
-      <div
-        style={{
-          borderTop: '1px solid var(--color-terminal-border)',
-          flexShrink: 0,
-          padding: '4px 8px',
-        }}
-      >
-        <button
-          onClick={() => setConfigOpen(true)}
-          style={{
-            width: '100%',
-            padding: '3px 6px',
-            background: 'transparent',
-            border: '1px solid var(--color-terminal-border)',
-            borderRadius: '2px',
-            color: 'var(--color-terminal-dim)',
-            fontSize: '10px',
-            fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.5px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            textTransform: 'uppercase',
-          }}
-        >
-          <span>AI CONFIG</span>
-          <span style={{ fontSize: '8px' }}>⚙</span>
-        </button>
-      </div>
 
       {/* AI CONFIG — Modal overlay */}
       {configOpen && (
@@ -1839,41 +1892,6 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
         </div>
       )}
 
-      {/* ANALYZE button */}
-      <div
-        style={{
-          padding: '6px 8px',
-          borderTop: '1px solid var(--color-terminal-border)',
-          flexShrink: 0,
-        }}
-      >
-        <button
-          onClick={handleAnalyze}
-          disabled={loading}
-          style={{
-            width: '100%',
-            padding: '5px 0',
-            background: loading
-              ? 'var(--color-terminal-border)'
-              : 'var(--color-terminal-blue)',
-            color: loading
-              ? 'var(--color-terminal-dim)'
-              : 'var(--color-terminal-bg)',
-            border: 'none',
-            borderRadius: '2px',
-            fontSize: '12px',
-            fontFamily: 'var(--font-mono)',
-            fontWeight: 600,
-            letterSpacing: '0.5px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            textTransform: 'uppercase',
-            opacity: loading ? 0.7 : 1,
-            transition: 'opacity 0.15s ease',
-          }}
-        >
-          {loading ? 'ANALYZING...' : 'ANALYZE'}
-        </button>
-      </div>
 
       {/* ── Discovery Dialog (fullscreen) ── */}
       <DiscoveryDialog

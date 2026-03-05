@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useMarketFeed, type FeedTab } from '@/hooks/useMarketFeed'
 
 interface MarketDataPanelProps {
-  symbol: string
+  symbol?: string
 }
 
 const TABS: FeedTab[] = ['NEWS', 'SOCIAL', 'ON-CHAIN', 'AGGREGATED']
@@ -68,7 +68,7 @@ function SentimentDot({ sentiment }: { sentiment?: 'up' | 'down' | 'neutral' }) 
   )
 }
 
-export function MarketDataPanel({ symbol }: MarketDataPanelProps) {
+export function MarketDataPanel({ symbol = '' }: MarketDataPanelProps) {
   const [activeTab, setActiveTab] = useState<FeedTab>('NEWS')
   const [isFullscreen, setIsFullscreen] = useState(false)
   const { entries, loading, error, refresh } = useMarketFeed(activeTab, symbol)
@@ -246,7 +246,7 @@ export function MarketDataPanel({ symbol }: MarketDataPanelProps) {
         {loading && entries.length === 0 && (
           <div style={{ padding: '20px 10px', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-terminal-dim)', letterSpacing: '0.05em' }}>
-              ■ FETCHING {activeTab} DATA FOR {symbol}...
+              ■ FETCHING {activeTab} DATA{symbol ? ` FOR ${symbol}` : ''}...
             </span>
           </div>
         )}
@@ -264,7 +264,7 @@ export function MarketDataPanel({ symbol }: MarketDataPanelProps) {
         {!loading && !error && entries.length === 0 && (
           <div style={{ padding: '20px 10px', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-terminal-dim)', letterSpacing: '0.05em' }}>
-              ■ NO {activeTab} DATA AVAILABLE FOR {symbol}
+              ■ NO {activeTab} DATA AVAILABLE{symbol ? ` FOR ${symbol}` : ''}
             </span>
           </div>
         )}
