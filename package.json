@@ -1,0 +1,22 @@
+{
+  "name": "oculus-trading",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "feed": "ts-node -r scripts/bootstrap.js -r tsconfig-paths/register -P scripts/tsconfig.json scripts/feed.ts"
+  },
+  "devDependencies": {
+    "tsconfig-paths": "^4.2.0",
+    "turbo": "^2.8.13",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.15.1"
+}

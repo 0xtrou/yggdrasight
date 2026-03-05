@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "outDir": "./dist",
+    "baseUrl": "..",
+    "paths": {
+      "@oculus/db": ["packages/db/src/index.ts"],
+      "@oculus/core": ["packages/core/src/index.ts"]
+    }
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "require": ["tsconfig-paths/register"]
+  },
+  "include": ["*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,57 @@
+# Oculus Trading — Infrastructure Services
+# Dev server runs on host via: pnpm dev
+# Start services: docker compose up -d
+# Stop services: docker compose down
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: oculus-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: oculus
+      MONGO_INITDB_ROOT_PASSWORD: oculus_dev_secret
+      MONGO_INITDB_DATABASE: oculus-trading
+    volumes:
+      - mongodb_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - oculus-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: oculus-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: oculus
+      ME_CONFIG_MONGODB_ADMINPASSWORD: oculus_dev_secret
+      ME_CONFIG_MONGODB_URL: mongodb://oculus:oculus_dev_secret@mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongodb
+    networks:
+      - oculus-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: oculus-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    networks:
+      - oculus-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  oculus-network:
+    driver: bridge

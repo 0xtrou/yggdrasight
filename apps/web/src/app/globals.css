@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  /* Bloomberg Terminal Color System */
+  --color-terminal-bg: #0a0a0a;
+  --color-terminal-surface: #111111;
+  --color-terminal-panel: #161616;
+  --color-terminal-border: #2a2a2a;
+  --color-terminal-text: #e5e5e5;
+  --color-terminal-muted: #888888;
+  --color-terminal-dim: #555555;
+  --color-terminal-up: #00ff88;
+  --color-terminal-down: #ff3b3b;
+  --color-terminal-amber: #ffaa00;
+  --color-terminal-blue: #4488ff;
+  --color-terminal-purple: #aa66ff;
+
+  /* Fonts */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-terminal-bg);
+  color: var(--color-terminal-text);
+  font-family: var(--font-mono);
+}

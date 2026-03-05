@@ -1,0 +1,418 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: OCULUS
+        - generic [ref=e6]: TRADING TERMINAL
+      - generic [ref=e7]:
+        - button "SIGNALS" [ref=e8] [cursor=pointer]
+        - button "CHART" [ref=e9] [cursor=pointer]
+        - button "PORTFOLIO" [ref=e10] [cursor=pointer]
+        - button "PROJECTS" [ref=e11] [cursor=pointer]
+        - button "INTEL" [ref=e12] [cursor=pointer]
+        - button "+" [ref=e13] [cursor=pointer]
+      - generic [ref=e14]:
+        - generic [ref=e15]: 20:56:27
+        - generic [ref=e18]: LIVE
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: SIGNAL FEED
+          - generic [ref=e23]: 30 signals
+        - generic [ref=e24]:
+          - generic [ref=e25] [cursor=pointer]:
+            - generic [ref=e26]:
+              - generic [ref=e27]: BTC/USDT
+              - generic [ref=e28]: LONG
+              - generic [ref=e29]: ● PENDING
+            - generic [ref=e30]: "Entry: 66,188│SL: 64,111"
+            - generic [ref=e31]: "TP1: 68,020│TP2: 70,301"
+            - generic [ref=e32]: manual · 1d
+          - generic [ref=e33] [cursor=pointer]:
+            - generic [ref=e34]:
+              - generic [ref=e35]: ETH/USDT
+              - generic [ref=e36]: LONG
+              - generic [ref=e37]: ● EXPIRED
+            - generic [ref=e38]: "Entry: 3,141│SL: 3,022"
+            - generic [ref=e39]: "TP1: 3,241│TP2: 3,338"
+            - generic [ref=e40]: tradingview · 4h
+          - generic [ref=e41] [cursor=pointer]:
+            - generic [ref=e42]:
+              - generic [ref=e43]: SOL/USDT
+              - generic [ref=e44]: LONG
+              - generic [ref=e45]: ● PENDING
+            - generic [ref=e46]: "Entry: 144.63│SL: 140.95"
+            - generic [ref=e47]: "TP1: 148.74│TP2: 155.40"
+            - generic [ref=e48]: manual · 4h
+          - generic [ref=e49] [cursor=pointer]:
+            - generic [ref=e50]:
+              - generic [ref=e51]: BNB/USDT
+              - generic [ref=e52]: SHORT
+              - generic [ref=e53]: ● ACTIVE
+            - generic [ref=e54]: "Entry: 569.23│SL: 592.85"
+            - generic [ref=e55]: "TP1: 542.88│TP2: 540.60"
+            - generic [ref=e56]: webhook · 4h
+          - generic [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]:
+              - generic [ref=e59]: AVAX/USDT
+              - generic [ref=e60]: SHORT
+              - generic [ref=e61]: ● SL HIT
+            - generic [ref=e62]: "Entry: 33.88│SL: 35.34"
+            - generic [ref=e63]: "TP1: 32.45│TP2: 31.77"
+            - generic [ref=e64]: manual · 1d
+          - generic [ref=e65] [cursor=pointer]:
+            - generic [ref=e66]:
+              - generic [ref=e67]: MATIC/USDT
+              - generic [ref=e68]: LONG
+              - generic [ref=e69]: ● CANCELLED
+            - generic [ref=e70]: "Entry: 0.807683│SL: 0.767271"
+            - generic [ref=e71]: "TP1: 0.843358│TP2: 0.881625"
+            - generic [ref=e72]: webhook · 4h
+          - generic [ref=e73] [cursor=pointer]:
+            - generic [ref=e74]:
+              - generic [ref=e75]: ARB/USDT
+              - generic [ref=e76]: SHORT
+              - generic [ref=e77]: ● SL HIT
+            - generic [ref=e78]: "Entry: 1.18│SL: 1.22"
+            - generic [ref=e79]: "TP1: 1.14│TP2: 1.09"
+            - generic [ref=e80]: telegram · 4h
+          - generic [ref=e81] [cursor=pointer]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: OP/USDT
+              - generic [ref=e84]: LONG
+              - generic [ref=e85]: ● TP HIT
+            - generic [ref=e86]: "Entry: 2.36│SL: 2.22"
+            - generic [ref=e87]: "TP1: 2.43│TP2: 2.55"
+            - generic [ref=e88]: webhook · 1d
+          - generic [ref=e89] [cursor=pointer]:
+            - generic [ref=e90]:
+              - generic [ref=e91]: LINK/USDT
+              - generic [ref=e92]: SHORT
+              - generic [ref=e93]: ● TP HIT
+            - generic [ref=e94]: "Entry: 14.54│SL: 15.40"
+            - generic [ref=e95]: "TP1: 14.08│TP2: 13.32"
+            - generic [ref=e96]: telegram · 1d
+          - generic [ref=e97] [cursor=pointer]:
+            - generic [ref=e98]:
+              - generic [ref=e99]: INJ/USDT
+              - generic [ref=e100]: SHORT
+              - generic [ref=e101]: ● TP HIT
+            - generic [ref=e102]: "Entry: 26.74│SL: 27.84"
+            - generic [ref=e103]: "TP1: 25.96│TP2: 24.16"
+            - generic [ref=e104]: tradingview · 15m
+          - generic [ref=e105] [cursor=pointer]:
+            - generic [ref=e106]:
+              - generic [ref=e107]: BTC/USDT
+              - generic [ref=e108]: SHORT
+              - generic [ref=e109]: ● ACTIVE
+            - generic [ref=e110]: "Entry: 68,066│SL: 71,029"
+            - generic [ref=e111]: "TP1: 65,832│TP2: 62,748"
+            - generic [ref=e112]: webhook · 15m
+          - generic [ref=e113] [cursor=pointer]:
+            - generic [ref=e114]:
+              - generic [ref=e115]: ETH/USDT
+              - generic [ref=e116]: LONG
+              - generic [ref=e117]: ● ACTIVE
+            - generic [ref=e118]: "Entry: 3,231│SL: 3,096"
+            - generic [ref=e119]: "TP1: 3,392│TP2: 3,553"
+            - generic [ref=e120]: telegram · 1d
+          - generic [ref=e121] [cursor=pointer]:
+            - generic [ref=e122]:
+              - generic [ref=e123]: SOL/USDT
+              - generic [ref=e124]: LONG
+              - generic [ref=e125]: ● ACTIVE
+            - generic [ref=e126]: "Entry: 147.26│SL: 144.33"
+            - generic [ref=e127]: "TP1: 153.33│TP2: 159.80"
+            - generic [ref=e128]: webhook · 1d
+          - generic [ref=e129] [cursor=pointer]:
+            - generic [ref=e130]:
+              - generic [ref=e131]: BNB/USDT
+              - generic [ref=e132]: SHORT
+              - generic [ref=e133]: ● ACTIVE
+            - generic [ref=e134]: "Entry: 578.86│SL: 598.49"
+            - generic [ref=e135]: "TP1: 555.76│TP2: 521.46"
+            - generic [ref=e136]: webhook · 1d
+          - generic [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]:
+              - generic [ref=e139]: AVAX/USDT
+              - generic [ref=e140]: LONG
+              - generic [ref=e141]: ● TP HIT
+            - generic [ref=e142]: "Entry: 33.57│SL: 32.70"
+            - generic [ref=e143]: "TP1: 35.09│TP2: 36.10"
+            - generic [ref=e144]: manual · 4h
+          - generic [ref=e145] [cursor=pointer]:
+            - generic [ref=e146]:
+              - generic [ref=e147]: MATIC/USDT
+              - generic [ref=e148]: SHORT
+              - generic [ref=e149]: ● ACTIVE
+            - generic [ref=e150]: "Entry: 0.871866│SL: 0.916984"
+            - generic [ref=e151]: "TP1: 0.853931│TP2: 0.813989"
+            - generic [ref=e152]: manual · 4h
+          - generic [ref=e153] [cursor=pointer]:
+            - generic [ref=e154]:
+              - generic [ref=e155]: ARB/USDT
+              - generic [ref=e156]: LONG
+              - generic [ref=e157]: ● EXPIRED
+            - generic [ref=e158]: "Entry: 1.13│SL: 1.07"
+            - generic [ref=e159]: "TP1: 1.17│TP2: 1.21"
+            - generic [ref=e160]: telegram · 1d
+          - generic [ref=e161] [cursor=pointer]:
+            - generic [ref=e162]:
+              - generic [ref=e163]: OP/USDT
+              - generic [ref=e164]: LONG
+              - generic [ref=e165]: ● CANCELLED
+            - generic [ref=e166]: "Entry: 2.31│SL: 2.26"
+            - generic [ref=e167]: "TP1: 2.38│TP2: 2.52"
+            - generic [ref=e168]: manual · 4h
+          - generic [ref=e169] [cursor=pointer]:
+            - generic [ref=e170]:
+              - generic [ref=e171]: LINK/USDT
+              - generic [ref=e172]: LONG
+              - generic [ref=e173]: ● PENDING
+            - generic [ref=e174]: "Entry: 14.27│SL: 13.76"
+            - generic [ref=e175]: "TP1: 14.81│TP2: 15.33"
+            - generic [ref=e176]: telegram · 1d
+          - generic [ref=e177] [cursor=pointer]:
+            - generic [ref=e178]:
+              - generic [ref=e179]: INJ/USDT
+              - generic [ref=e180]: SHORT
+              - generic [ref=e181]: ● EXPIRED
+            - generic [ref=e182]: "Entry: 27.43│SL: 28.82"
+            - generic [ref=e183]: "TP1: 26.30│TP2: 24.95"
+            - generic [ref=e184]: manual · 4h
+          - generic [ref=e185] [cursor=pointer]:
+            - generic [ref=e186]:
+              - generic [ref=e187]: BTC/USDT
+              - generic [ref=e188]: LONG
+              - generic [ref=e189]: ● TP HIT
+            - generic [ref=e190]: "Entry: 68,284│SL: 64,630"
+            - generic [ref=e191]: "TP1: 71,448│TP2: 72,915"
+            - generic [ref=e192]: tradingview · 1h
+          - generic [ref=e193] [cursor=pointer]:
+            - generic [ref=e194]:
+              - generic [ref=e195]: ETH/USDT
+              - generic [ref=e196]: LONG
+              - generic [ref=e197]: ● PENDING
+            - generic [ref=e198]: "Entry: 3,244│SL: 3,108"
+            - generic [ref=e199]: "TP1: 3,394│TP2: 3,470"
+            - generic [ref=e200]: webhook · 4h
+          - generic [ref=e201] [cursor=pointer]:
+            - generic [ref=e202]:
+              - generic [ref=e203]: SOL/USDT
+              - generic [ref=e204]: SHORT
+              - generic [ref=e205]: ● TP HIT
+            - generic [ref=e206]: "Entry: 142.55│SL: 146.90"
+            - generic [ref=e207]: "TP1: 136.08│TP2: 128.35"
+            - generic [ref=e208]: webhook · 1d
+          - generic [ref=e209] [cursor=pointer]:
+            - generic [ref=e210]:
+              - generic [ref=e211]: BNB/USDT
+              - generic [ref=e212]: LONG
+              - generic [ref=e213]: ● CANCELLED
+            - generic [ref=e214]: "Entry: 589.10│SL: 559.23"
+            - generic [ref=e215]: "TP1: 614.67│TP2: 638.37"
+            - generic [ref=e216]: manual · 1d
+          - generic [ref=e217] [cursor=pointer]:
+            - generic [ref=e218]:
+              - generic [ref=e219]: AVAX/USDT
+              - generic [ref=e220]: LONG
+              - generic [ref=e221]: ● TP HIT
+            - generic [ref=e222]: "Entry: 36.51│SL: 35.83"
+            - generic [ref=e223]: "TP1: 37.66│TP2: 39.80"
+            - generic [ref=e224]: webhook · 1h
+          - generic [ref=e225] [cursor=pointer]:
+            - generic [ref=e226]:
+              - generic [ref=e227]: MATIC/USDT
+              - generic [ref=e228]: SHORT
+              - generic [ref=e229]: ● ACTIVE
+            - generic [ref=e230]: "Entry: 0.81877│SL: 0.847286"
+            - generic [ref=e231]: "TP1: 0.789347│TP2: 0.749516"
+            - generic [ref=e232]: webhook · 1h
+          - generic [ref=e233] [cursor=pointer]:
+            - generic [ref=e234]:
+              - generic [ref=e235]: ARB/USDT
+              - generic [ref=e236]: LONG
+              - generic [ref=e237]: ● SL HIT
+            - generic [ref=e238]: "Entry: 1.11│SL: 1.07"
+            - generic [ref=e239]: "TP1: 1.16│TP2: 1.19"
+            - generic [ref=e240]: manual · 1h
+          - generic [ref=e241] [cursor=pointer]:
+            - generic [ref=e242]:
+              - generic [ref=e243]: OP/USDT
+              - generic [ref=e244]: SHORT
+              - generic [ref=e245]: ● SL HIT
+            - generic [ref=e246]: "Entry: 2.30│SL: 2.40"
+            - generic [ref=e247]: "TP1: 2.24│TP2: 2.11"
+            - generic [ref=e248]: manual · 1d
+          - generic [ref=e249] [cursor=pointer]:
+            - generic [ref=e250]:
+              - generic [ref=e251]: LINK/USDT
+              - generic [ref=e252]: SHORT
+              - generic [ref=e253]: ● SL HIT
+            - generic [ref=e254]: "Entry: 14.45│SL: 15.30"
+            - generic [ref=e255]: "TP1: 14.01│TP2: 13.17"
+            - generic [ref=e256]: manual · 1d
+          - generic [ref=e257] [cursor=pointer]:
+            - generic [ref=e258]:
+              - generic [ref=e259]: INJ/USDT
+              - generic [ref=e260]: LONG
+              - generic [ref=e261]: ● ACTIVE
+            - generic [ref=e262]: "Entry: 29.46│SL: 28.59"
+            - generic [ref=e263]: "TP1: 30.87│TP2: 32.23"
+            - generic [ref=e264]: webhook · 15m
+      - generic [ref=e265]:
+        - generic [ref=e266]:
+          - button "BTC" [ref=e267] [cursor=pointer]
+          - button "ETH" [ref=e268] [cursor=pointer]
+          - button "SOL" [ref=e269] [cursor=pointer]
+          - button "BNB" [ref=e270] [cursor=pointer]
+        - generic [ref=e271]:
+          - generic [ref=e272]: BTC/USDT
+          - generic [ref=e338]: ▲ +6.98%
+          - generic [ref=e273]:
+            - button "1m" [ref=e274] [cursor=pointer]
+            - button "5m" [ref=e275] [cursor=pointer]
+            - button "15m" [ref=e276] [cursor=pointer]
+            - button "1h" [ref=e277] [cursor=pointer]
+            - button "4h" [ref=e278] [cursor=pointer]
+            - button "1d" [ref=e279] [cursor=pointer]
+            - button "1w" [ref=e280] [cursor=pointer]
+        - generic [ref=e281]:
+          - generic [ref=e339]: 2026/02/22 19:00
+          - generic [ref=e340]: O
+          - generic [ref=e341]: 68,219.97
+          - generic [ref=e342]: H
+          - generic [ref=e343]: 68,232.4
+          - generic [ref=e344]: L
+          - generic [ref=e345]: 67,303.5
+          - generic [ref=e346]: C
+          - generic [ref=e347]: 67,684.14
+          - generic [ref=e348]: Chg
+          - generic [ref=e349]: "-4.82%"
+          - generic [ref=e350]: Rng
+          - generic [ref=e351]: 1.38%
+          - generic [ref=e352]: Vol
+          - generic [ref=e353]: 2.5K
+        - generic [ref=e282]:
+          - generic [ref=e283]: MA(7)
+          - generic [ref=e284]: —
+          - generic [ref=e285]: MA(25)
+          - generic [ref=e286]: —
+          - generic [ref=e287]: MA(99)
+          - generic [ref=e288]: —
+      - generic [ref=e292]:
+        - generic [ref=e293]: INTELLIGENCE
+        - generic [ref=e375]:
+          - generic [ref=e376]: PERFORMANCE
+          - generic [ref=e377]:
+            - generic [ref=e378]:
+              - generic [ref=e379]: Win Rate
+              - generic [ref=e380]: 58.3%
+            - generic [ref=e381]:
+              - generic [ref=e382]: Total Signals
+              - generic [ref=e383]: "30"
+            - generic [ref=e384]:
+              - generic [ref=e385]: Active
+              - generic [ref=e386]: "8"
+            - generic [ref=e387]:
+              - generic [ref=e388]: Pending
+              - generic [ref=e389]: "4"
+            - generic [ref=e390]:
+              - generic [ref=e391]: Avg PnL
+              - generic [ref=e392]: —
+        - generic [ref=e393]:
+          - generic [ref=e394]: OUTCOMES
+          - generic [ref=e395]:
+            - generic [ref=e396]:
+              - generic [ref=e397]: TP Hit
+              - generic [ref=e398]: "7"
+            - generic [ref=e399]:
+              - generic [ref=e400]: SL Hit
+              - generic [ref=e401]: "5"
+            - generic [ref=e402]:
+              - generic [ref=e403]: Profit Factor
+              - generic [ref=e404]: 1.4x
+        - generic [ref=e405]:
+          - generic [ref=e406]: MARKET INTEL
+          - generic [ref=e407]:
+            - generic [ref=e408]:
+              - generic [ref=e409]: BTC Dominance
+              - generic [ref=e410]: 57.3%
+            - generic [ref=e411]:
+              - generic [ref=e412]: Fear & Greed
+              - generic [ref=e413]: 10 Extreme Fear
+            - generic [ref=e414]:
+              - generic [ref=e415]: Total MCap
+              - generic [ref=e416]: $2.49t
+      - generic [ref=e296]:
+        - generic [ref=e297]: FUNDAMENTALS
+        - generic [ref=e298]:
+          - generic [ref=e417]:
+            - generic [ref=e418]: "#"
+            - generic [ref=e419]: SYM
+            - generic [ref=e420]: PRICE
+            - generic [ref=e421]: 24H%
+            - generic [ref=e422]: MCAP
+            - generic [ref=e423]: VOL
+          - generic [ref=e424]:
+            - generic [ref=e425]: "1"
+            - generic [ref=e426]: btc
+            - generic [ref=e427]: $71,395.00
+            - generic [ref=e428]: +6.94%
+            - generic [ref=e429]: $1.43t
+            - generic [ref=e430]: $68b
+          - generic [ref=e431]:
+            - generic [ref=e432]: "2"
+            - generic [ref=e433]: eth
+            - generic [ref=e434]: $2,063.68
+            - generic [ref=e435]: +6.06%
+            - generic [ref=e436]: $249b
+            - generic [ref=e437]: $28b
+          - generic [ref=e438]:
+            - generic [ref=e439]: "4"
+            - generic [ref=e440]: bnb
+            - generic [ref=e441]: $652.48
+            - generic [ref=e442]: +4.56%
+            - generic [ref=e443]: $89b
+            - generic [ref=e444]: $1b
+          - generic [ref=e445]:
+            - generic [ref=e446]: "7"
+            - generic [ref=e447]: sol
+            - generic [ref=e448]: $89.83
+            - generic [ref=e449]: +7.69%
+            - generic [ref=e450]: $51b
+            - generic [ref=e451]: $7b
+    - generic [ref=e299]:
+      - generic [ref=e300]:
+        - generic [ref=e301]:
+          - generic [ref=e302]: ●
+          - generic [ref=e303]: CONNECTED
+        - generic [ref=e304]:
+          - generic [ref=e305]: ◉
+          - generic [ref=e306]: "MongoDB: Ready"
+      - generic [ref=e307]:
+        - generic [ref=e308]:
+          - generic [ref=e309]: BTC
+          - generic [ref=e452]: $71,491
+          - generic [ref=e453]: +6.98%
+        - generic [ref=e311]:
+          - generic [ref=e312]: │
+          - generic [ref=e313]: ETH
+          - generic [ref=e454]: $2,065
+          - generic [ref=e455]: +6.01%
+        - generic [ref=e315]:
+          - generic [ref=e316]: │
+          - generic [ref=e317]: SOL
+          - generic [ref=e456]: $90.05
+          - generic [ref=e457]: +8.03%
+        - generic [ref=e319]:
+          - generic [ref=e320]: │
+          - generic [ref=e321]: BNB
+          - generic [ref=e458]: $654.11
+          - generic [ref=e459]: +4.78%
+      - generic [ref=e323]:
+        - generic [ref=e324]: OCULUS v0.1.0-alpha
+        - generic [ref=e325]: 2026-03-04
+  - button "Open Next.js Dev Tools" [ref=e331] [cursor=pointer]:
+    - img [ref=e332]
+  - alert [ref=e337]
