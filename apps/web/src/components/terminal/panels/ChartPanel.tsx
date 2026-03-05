@@ -37,7 +37,6 @@ const INDICATOR_CATEGORIES: { label: string; indicators: IndicatorDef[] }[] = [
       { name: 'BOLL', label: 'Bollinger Bands', type: 'main' },
       { name: 'SAR', label: 'SAR', type: 'main' },
       { name: 'BBI', label: 'BBI', type: 'main' },
-      { name: 'AVP', label: 'AVP', type: 'main' },
     ],
   },
   {
@@ -541,7 +540,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
           chart.createIndicator(name, true, { id: 'candle_pane' })
         }
       } else {
-        chart.createIndicator(name, true)
+        chart.createIndicator(name, true, { height: 100 })
       }
     }
 
