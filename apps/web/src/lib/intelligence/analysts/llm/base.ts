@@ -183,11 +183,11 @@ function serializeDefi(data: DefiProtocolData): string {
   // TVL metrics
   lines.push('')
   lines.push('## TVL')
-  if (data.tvl !== null) lines.push(`Current TVL: $${(data.tvl / 1e6).toFixed(1)}M`)
-  if (data.tvlChange24h !== null) lines.push(`TVL Change 24h: ${data.tvlChange24h.toFixed(2)}%`)
-  if (data.tvlChange7d !== null) lines.push(`TVL Change 7d: ${data.tvlChange7d.toFixed(2)}%`)
-  if (data.mcapToTvl !== null) lines.push(`Market Cap / TVL: ${data.mcapToTvl.toFixed(2)}x`)
-  if (data.chainTvl !== null) lines.push(`Chain Total TVL: $${(data.chainTvl / 1e9).toFixed(2)}B`)
+  if (data.tvl != null) lines.push(`Current TVL: $${(data.tvl / 1e6).toFixed(1)}M`)
+  if (data.tvlChange24h != null) lines.push(`TVL Change 24h: ${data.tvlChange24h.toFixed(2)}%`)
+  if (data.tvlChange7d != null) lines.push(`TVL Change 7d: ${data.tvlChange7d.toFixed(2)}%`)
+  if (data.mcapToTvl != null) lines.push(`Market Cap / TVL: ${data.mcapToTvl.toFixed(2)}x`)
+  if (data.chainTvl != null) lines.push(`Chain Total TVL: $${(data.chainTvl / 1e9).toFixed(2)}B`)
 
   // Fees
   if (data.fees24h !== null || data.fees7d !== null || data.fees30d !== null) {

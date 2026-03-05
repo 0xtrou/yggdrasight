@@ -44,13 +44,15 @@ function GlobalMetricsBar({ data, loading }: { data: MarketGlobalData | null; lo
 
   return (
     <div style={{
-      height: '44px',
-      minHeight: '44px',
+      height: '40px',
+      minHeight: '40px',
+      maxHeight: '40px',
+      boxSizing: 'border-box',
       display: 'flex',
       alignItems: 'center',
-      padding: '0 16px',
+      padding: '0 12px',
       gap: '24px',
-      background: 'var(--color-terminal-panel)',
+      background: 'var(--color-terminal-surface)',
       borderBottom: '1px solid var(--color-terminal-border)',
       overflowX: 'auto',
       flexShrink: 0,

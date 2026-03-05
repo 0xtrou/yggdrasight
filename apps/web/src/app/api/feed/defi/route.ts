@@ -51,9 +51,9 @@ interface DefiLlamaChain {
 interface DefiLlamaProtocol {
   name: string
   slug: string
-  tvl: number
-  tvlPrevDay: number
-  tvlPrevWeek: number
+  tvl: number | null
+  tvlPrevDay: number | null
+  tvlPrevWeek: number | null
   mcap: number | null
   category: string
   chains: string[]
@@ -75,10 +75,10 @@ async function fetchProtocol(slug: string): Promise<DefiLlamaProtocol | null> {
     return {
       name: data.name as string,
       slug: data.slug as string,
-      tvl: data.tvl as number,
-      tvlPrevDay: data.tvlPrevDay as number,
-      tvlPrevWeek: data.tvlPrevWeek as number,
-      mcap: (data.mcap as number) ?? null,
+      tvl: typeof data.tvl === 'number' ? data.tvl : null,
+      tvlPrevDay: typeof data.tvlPrevDay === 'number' ? data.tvlPrevDay : null,
+      tvlPrevWeek: typeof data.tvlPrevWeek === 'number' ? data.tvlPrevWeek : null,
+      category: data.category as string,
       category: data.category as string,
       chains: data.chains as string[],
     }
