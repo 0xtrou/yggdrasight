@@ -1,7 +1,20 @@
-# OCULUS
-
-> **AI-native trading intelligence terminal.**
-> Real-time market data. Multi-agent philosophical analysis. Bloomberg vibes.
+<div align="center">
+  <img src="./apps/web/public/logo.png" alt="Oculus" width="100" />
+  <h1>OCULUS</h1>
+  <p><strong>AI-native trading intelligence terminal.</strong><br/>Real-time market data. Multi-agent philosophical analysis. Bloomberg vibes.</p>
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" />
+    <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black" />
+    <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+    <img src="https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" />
+    <img src="https://img.shields.io/badge/Bun-1-F472B6?style=flat-square&logo=bun&logoColor=white" />
+    <img src="https://img.shields.io/badge/MongoDB-7-47A248?style=flat-square&logo=mongodb&logoColor=white" />
+    <img src="https://img.shields.io/badge/Redis-7-DC382D?style=flat-square&logo=redis&logoColor=white" />
+    <img src="https://img.shields.io/badge/Docker-required-2496ED?style=flat-square&logo=docker&logoColor=white" />
+    <img src="https://img.shields.io/badge/pnpm-9-F69220?style=flat-square&logo=pnpm&logoColor=white" />
+    <img src="https://img.shields.io/badge/license-private-red?style=flat-square" />
+  </p>
+</div>
 
 ---
 

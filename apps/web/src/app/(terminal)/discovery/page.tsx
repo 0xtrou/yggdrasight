@@ -1,9 +1,10 @@
 'use client'
 
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react'
 import { useTrackedAssets } from '@/hooks/useTrackedAssets'
 import { useProjectInfo } from '@/hooks/useProjectInfo'
 import type { DiscoveryHistoryEntry } from '@/hooks/useProjectInfo'
+import { useMarketCoins } from '@/hooks/useMarketCoins'
 import { DiscoveryDialog } from '@/components/terminal/DiscoveryDialog'
 import { ProjectInfoContent } from '@/components/terminal/ProjectInfoContent'
 
@@ -25,352 +26,851 @@ function formatElapsed(secs: number): string {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
-/* ── History entry row ── */
-function HistoryRow({
-  entry,
-  selected,
-  onClick,
-}: {
-  entry: DiscoveryHistoryEntry
-  selected: boolean
-  onClick: () => void
-}) {
-  const isCompleted = entry.status === 'completed'
-  const statusColor = isCompleted ? 'var(--color-terminal-up)' : 'var(--color-terminal-down)'
-
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        padding: '8px 12px',
-        borderBottom: '1px solid var(--color-terminal-border)',
-        background: selected ? 'rgba(255,170,0,0.07)' : 'transparent',
-        borderLeft: selected ? '2px solid var(--color-terminal-amber)' : '2px solid transparent',
-        cursor: 'pointer',
-        fontFamily: 'var(--font-mono)',
-        transition: 'background 0.1s',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '3px' }}>
-        <span style={{ color: 'var(--color-terminal-text)', fontSize: '13px', fontWeight: 'bold' }}>
-          {entry.symbol}
-        </span>
-        <span style={{ color: statusColor, fontSize: '11px', letterSpacing: '0.08em' }}>
-          {entry.status.toUpperCase()}
-        </span>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>
-          {entry.modelId.split('/').pop() ?? entry.modelId}
-        </span>
-        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '11px', flexShrink: 0 }}>
-          {timeAgo(entry.completedAt)}
-        </span>
-      </div>
-    </div>
-  )
+function formatPrice(price: number): string {
+  if (price >= 1000) return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  if (price >= 1) return `$${price.toFixed(2)}`
+  if (price >= 0.01) return `$${price.toFixed(4)}`
+  return `$${price.toFixed(6)}`
 }
 
-/* ── Detail panel ── */
-function DetailPanel({
+/* ── Discovery status for table rows ── */
+interface AssetDiscoveryStatus {
+  discoveredAt: string
+  modelId: string
+  hasData: boolean
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DEEP DATA SECTION — raw output + discovery history below main data
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function DiscoveryDeepData({
   entry,
-  discovering,
-  discoveryElapsed,
-  discoveryLogs,
-  onOpenDialog,
-  symbol,
-  projectInfo,
-  onCancel,
+  history,
 }: {
   entry: DiscoveryHistoryEntry | null
-  discovering: boolean
-  discoveryElapsed: number
-  discoveryLogs: string[]
-  onOpenDialog: () => void
-  symbol: string
-  onCancel: () => void
-  projectInfo: ReturnType<typeof useProjectInfo>
+  history: DiscoveryHistoryEntry[]
 }) {
-  const [view, setView] = useState<'project-info' | 'raw'>('project-info')
+  const [rawExpanded, setRawExpanded] = useState(false)
+  const [historyExpanded, setHistoryExpanded] = useState(true)
+  const [expandedHistoryIds, setExpandedHistoryIds] = useState<Set<string>>(new Set())
 
-  // Active discovery state
-  if (discovering) {
-    return (
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px', gap: '12px', overflow: 'hidden', minHeight: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ color: 'var(--color-terminal-amber)', fontSize: '13px', fontWeight: 'bold', letterSpacing: '0.1em', fontFamily: 'var(--font-mono)' }}>
-            ◉ AGENT RUNNING
-          </span>
-          <span style={{ color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
-            {formatElapsed(discoveryElapsed)}
-          </span>
-          <button
-            onClick={onOpenDialog}
-            style={{
-              marginLeft: 'auto',
-              background: 'transparent',
-              border: '1px solid var(--color-terminal-border)',
-              color: 'var(--color-terminal-blue)',
-              fontSize: '12px',
-              fontFamily: 'var(--font-mono)',
-              cursor: 'pointer',
-              padding: '2px 8px',
-            }}
-          >
-            FULL SCREEN ⊞
-          </button>
-          <button
-            onClick={onCancel}
-            style={{
-              background: 'transparent',
-              border: '1px solid var(--color-terminal-down)44',
-              color: 'var(--color-terminal-down)',
-              fontSize: '12px',
-              fontFamily: 'var(--font-mono)',
-              cursor: 'pointer',
-              padding: '2px 8px',
-            }}
-          >
-            ✕ CANCEL
-          </button>
-        </div>
-
-        {/* Live logs */}
-        <div style={{
-          flex: 1, overflow: 'auto', background: 'var(--color-terminal-surface)',
-          border: '1px solid var(--color-terminal-border)', padding: '8px', minHeight: 0,
-        }}>
-          {discoveryLogs.length === 0 ? (
-            <span style={{ color: 'var(--color-terminal-dim)', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>Initializing agent...</span>
-          ) : (
-            discoveryLogs.map((log, i) => (
-              <div key={i} style={{ color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)', lineHeight: 1.6 }}>
-                {log}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    )
+  const toggleHistoryRow = (id: string) => {
+    setExpandedHistoryIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
   }
 
-  // No entry selected — still show project info
-  if (!entry) {
-    return <ProjectInfoContent symbol={symbol} projectInfo={projectInfo} />
-  }
+  const rawOutput = entry?.rawOutput
+  const hasRaw = !!rawOutput
+  const hasHistory = history.length > 0
 
-  const rawOutput = entry.rawOutput
+  if (!hasRaw && !hasHistory) return null
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
-      {/* Header */}
+    <div style={{ padding: '0 16px 16px' }}>
+      {/* ── Section Divider ── */}
       <div style={{
-        padding: '10px 16px',
-        background: 'var(--color-terminal-panel)',
-        borderBottom: '1px solid var(--color-terminal-border)',
-        display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        margin: '8px 0 12px',
         fontFamily: 'var(--font-mono)',
       }}>
-        <span style={{ color: 'var(--color-terminal-text)', fontSize: '12px', fontWeight: 'bold' }}>{entry.symbol}</span>
-        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '12px' }}>{timeAgo(entry.completedAt)}</span>
-        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
-          {entry.modelId}
+        <div style={{ flex: 1, height: '1px', background: 'var(--color-terminal-border)' }} />
+        <span style={{
+          fontSize: '9px',
+          letterSpacing: '0.15em',
+          color: 'var(--color-terminal-dim)',
+          whiteSpace: 'nowrap',
+        }}>
+          ◈ DEEP DATA
         </span>
-
-        {/* View toggle */}
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '4px' }}>
-          {(['project-info', 'raw'] as const).map(v => (
-            <button
-              key={v}
-              onClick={() => setView(v)}
-              style={{
-                background: view === v ? 'rgba(255,170,0,0.1)' : 'transparent',
-                border: `1px solid ${view === v ? 'var(--color-terminal-amber)' : 'var(--color-terminal-border)'}`,
-                color: view === v ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
-                fontSize: '11px',
-                fontFamily: 'var(--font-mono)',
-                letterSpacing: '0.08em',
-                cursor: 'pointer',
-                padding: '2px 8px',
-              }}
-            >
-              {v === 'project-info' ? 'PROJECT INFO' : 'RAW'}
-            </button>
-          ))}
-        </div>
+        <div style={{ flex: 1, height: '1px', background: 'var(--color-terminal-border)' }} />
       </div>
 
-      {/* Content */}
-      {view === 'raw' ? (
-        <div style={{ flex: 1, overflow: 'auto', padding: '16px', minHeight: 0 }}>
-          <pre style={{
-            color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)',
-            lineHeight: 1.7, whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0,
-          }}>
-            {rawOutput ?? '(no raw output saved)'}
-          </pre>
-        </div>
-      ) : (
-        <ProjectInfoContent symbol={symbol} projectInfo={projectInfo} />
+      {/* ── Raw Agent Output ── */}
+      {hasRaw && (
+        <>
+          <button
+            onClick={() => setRawExpanded(!rawExpanded)}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '6px 10px',
+              background: 'var(--color-terminal-surface)',
+              border: '1px solid var(--color-terminal-border)',
+              borderBottom: rawExpanded ? 'none' : '1px solid var(--color-terminal-border)',
+              color: 'var(--color-terminal-text)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              fontWeight: 'bold',
+              letterSpacing: '0.08em',
+              cursor: 'pointer',
+              marginBottom: rawExpanded ? 0 : '8px',
+            }}
+          >
+            <span style={{ color: 'var(--color-terminal-amber)' }}>■</span>
+            RAW AGENT OUTPUT
+            <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px', marginLeft: 'auto' }}>
+              {rawOutput!.length.toLocaleString()} chars
+            </span>
+            <span style={{ color: 'var(--color-terminal-dim)' }}>{rawExpanded ? '▾' : '▸'}</span>
+          </button>
+          {rawExpanded && (
+            <div style={{
+              border: '1px solid var(--color-terminal-border)',
+              borderTop: 'none',
+              padding: '10px',
+              marginBottom: '8px',
+              maxHeight: '400px',
+              overflow: 'auto',
+            }}>
+              <pre style={{
+                color: 'var(--color-terminal-muted)',
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                lineHeight: 1.7,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                margin: 0,
+              }}>
+                {rawOutput}
+              </pre>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── Discovery History ── */}
+      {hasHistory && (
+        <>
+          <button
+            onClick={() => setHistoryExpanded(!historyExpanded)}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '6px 10px',
+              background: 'var(--color-terminal-surface)',
+              border: '1px solid var(--color-terminal-border)',
+              borderBottom: historyExpanded ? 'none' : '1px solid var(--color-terminal-border)',
+              color: 'var(--color-terminal-text)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              fontWeight: 'bold',
+              letterSpacing: '0.08em',
+              cursor: 'pointer',
+              marginBottom: historyExpanded ? 0 : '8px',
+            }}
+          >
+            <span style={{ color: 'var(--color-terminal-blue)' }}>■</span>
+            DISCOVERY HISTORY
+            <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px', marginLeft: 'auto' }}>
+              {history.length} {history.length === 1 ? 'run' : 'runs'}
+            </span>
+            <span style={{ color: 'var(--color-terminal-dim)' }}>{historyExpanded ? '▾' : '▸'}</span>
+          </button>
+          {historyExpanded && (
+            <div style={{
+              border: '1px solid var(--color-terminal-border)',
+              borderTop: 'none',
+              marginBottom: '8px',
+            }}>
+              {/* Header row */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '24px 1fr 1fr 80px 60px',
+                gap: '8px',
+                padding: '4px 10px',
+                borderBottom: '1px solid var(--color-terminal-border)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '9px',
+                letterSpacing: '0.1em',
+                color: 'var(--color-terminal-dim)',
+              }}>
+                <span />
+                <span>MODEL</span>
+                <span>DATE</span>
+                <span>STATUS</span>
+                <span />
+              </div>
+              {history.map(h => {
+                const isExpanded = expandedHistoryIds.has(h.id)
+                const isCompleted = h.status === 'completed'
+                return (
+                  <div key={h.id}>
+                    <div
+                      onClick={() => toggleHistoryRow(h.id)}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '24px 1fr 1fr 80px 60px',
+                        gap: '8px',
+                        padding: '5px 10px',
+                        borderBottom: isExpanded ? 'none' : '1px solid var(--color-terminal-border)',
+                        cursor: h.rawOutput ? 'pointer' : 'default',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '11px',
+                        transition: 'background 0.1s',
+                      }}
+                    >
+                      <span style={{ color: 'var(--color-terminal-dim)' }}>{h.rawOutput ? (isExpanded ? '▾' : '▸') : ' '}</span>
+                      <span style={{ color: 'var(--color-terminal-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {h.modelId.split('/').pop() ?? h.modelId}
+                      </span>
+                      <span style={{ color: 'var(--color-terminal-muted)' }}>{timeAgo(h.completedAt)}</span>
+                      <span style={{ color: isCompleted ? 'var(--color-terminal-up)' : 'var(--color-terminal-down)', fontSize: '10px', letterSpacing: '0.08em' }}>
+                        {h.status.toUpperCase()}
+                      </span>
+                      <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px' }}>
+                        {h.rawOutput ? `${h.rawOutput.length.toLocaleString()}c` : '—'}
+                      </span>
+                    </div>
+                    {isExpanded && h.rawOutput && (
+                      <div style={{
+                        padding: '8px 10px',
+                        borderBottom: '1px solid var(--color-terminal-border)',
+                        background: 'rgba(0,0,0,0.15)',
+                        maxHeight: '200px',
+                        overflow: 'auto',
+                      }}>
+                        <pre style={{
+                          color: 'var(--color-terminal-muted)',
+                          fontSize: '10px',
+                          fontFamily: 'var(--font-mono)',
+                          lineHeight: 1.6,
+                          whiteSpace: 'pre-wrap',
+                          wordBreak: 'break-word',
+                          margin: 0,
+                        }}>
+                          {h.rawOutput}
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
 }
 
-/* ── Main component ── */
-function DiscoveryContent() {
-  const { symbols: trackedSymbols, loading: assetsLoading } = useTrackedAssets()
-  const [selectedAsset, setSelectedAsset] = useState<string>('')
-  const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null)
 
-  const projectInfo = useProjectInfo(selectedAsset)
+/* ═══════════════════════════════════════════════════════════════════════════
+   ASSET TABLE VIEW — grid list of all tracked assets with discovery status
+   ═══════════════════════════════════════════════════════════════════════════ */
 
+function AssetTableView({
+  onSelectAsset,
+  trackedSymbols,
+}: {
+  onSelectAsset: (symbol: string) => void
+  trackedSymbols: string[]
+}) {
+  const { coins, loading: coinsLoading, error: coinsError } = useMarketCoins(trackedSymbols.length > 0 ? trackedSymbols : undefined)
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set())
+  const [statuses, setStatuses] = useState<Map<string, AssetDiscoveryStatus>>(new Map())
+  const [statusesLoading, setStatusesLoading] = useState(false)
+  const [discoveringSymbols, setDiscoveringSymbols] = useState<Set<string>>(new Set())
+  const fetchedSymbolsRef = useRef<string>('')
+
+  // Fetch discovery status for all coins
+  useEffect(() => {
+    if (coins.length === 0) return
+
+    const symbolsKey = coins.map(c => c.symbol.toUpperCase()).sort().join(',')
+    if (symbolsKey === fetchedSymbolsRef.current) return
+    fetchedSymbolsRef.current = symbolsKey
+
+    setStatusesLoading(true)
+
+    const fetchStatuses = async () => {
+      const newStatuses = new Map<string, AssetDiscoveryStatus>()
+
+      const promises = coins.map(async (coin) => {
+        const sym = coin.symbol.toUpperCase().replace(/USDT$|BUSD$|USD$/i, '')
+        if (!sym) return
+        try {
+          const res = await fetch(`/api/feed/discover/history?symbol=${encodeURIComponent(sym)}&limit=1`)
+          const json = await res.json()
+          if (json.latest) {
+            newStatuses.set(sym, {
+              discoveredAt: json.latest.completedAt,
+              modelId: json.latest.modelId,
+              hasData: !!json.latest.result,
+            })
+          }
+        } catch { /* ignore */ }
+      })
+
+      await Promise.all(promises)
+      setStatuses(newStatuses)
+      setStatusesLoading(false)
+    }
+
+    fetchStatuses()
+  }, [coins])
+
+  const toggleRow = useCallback((symbol: string) => {
+    setSelectedRows(prev => {
+      const next = new Set(prev)
+      if (next.has(symbol)) next.delete(symbol)
+      else next.add(symbol)
+      return next
+    })
+  }, [])
+
+  const toggleAll = useCallback(() => {
+    setSelectedRows(prev => {
+      if (prev.size === coins.length) return new Set()
+      return new Set(coins.map(c => c.symbol.toUpperCase().replace(/USDT$|BUSD$|USD$/i, '')))
+    })
+  }, [coins])
+
+  const handleDiscoverSingle = useCallback(async (symbol: string) => {
+    const base = symbol.toUpperCase().replace(/USDT$|BUSD$|USD$/i, '')
+    if (!base) return
+    setDiscoveringSymbols(prev => new Set(prev).add(base))
+
+    try {
+      let model: string | undefined
+      try {
+        const raw = localStorage.getItem('oculus:agentModelMap')
+        if (raw) {
+          const parsed = JSON.parse(raw)
+          if (parsed?.discovery) model = parsed.discovery
+        }
+      } catch { /* ignore */ }
+
+      const res = await fetch('/api/feed/discover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol: base, model }),
+      })
+
+      if (!res.ok) {
+        setDiscoveringSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
+        return
+      }
+
+      const json = await res.json()
+      if (!json.jobId) {
+        setDiscoveringSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
+        return
+      }
+
+      // Poll until done
+      const pollUntilDone = async (jobId: string) => {
+        while (true) {
+          await new Promise(r => setTimeout(r, 3000))
+          try {
+            const pollRes = await fetch(`/api/feed/discover/${jobId}`)
+            const pollJson = await pollRes.json()
+            if (pollJson.status === 'completed') {
+              setStatuses(prev => {
+                const next = new Map(prev)
+                next.set(base, {
+                  discoveredAt: new Date().toISOString(),
+                  modelId: model ?? 'default',
+                  hasData: !!pollJson.data,
+                })
+                return next
+              })
+              break
+            }
+            if (pollJson.status === 'failed') break
+          } catch { /* keep polling */ }
+        }
+        setDiscoveringSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
+      }
+
+      pollUntilDone(json.jobId)
+    } catch {
+      setDiscoveringSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
+    }
+  }, [])
+
+  const handleDiscoverSelected = useCallback(() => {
+    for (const sym of selectedRows) {
+      if (!discoveringSymbols.has(sym)) {
+        handleDiscoverSingle(sym)
+      }
+    }
+  }, [selectedRows, discoveringSymbols, handleDiscoverSingle])
+
+  const allSelected = coins.length > 0 && selectedRows.size === coins.length
+  const someSelected = selectedRows.size > 0
+
+  return (
+    <div style={{
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      minHeight: 0,
+    }}>
+      {/* Header bar */}
+      <div style={{
+        height: '40px',
+        minHeight: '40px',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 16px',
+        gap: '10px',
+        background: 'var(--color-terminal-panel)',
+        borderBottom: '1px solid var(--color-terminal-border)',
+        fontFamily: 'var(--font-mono)',
+        flexShrink: 0,
+      }}>
+        <span style={{
+          color: 'var(--color-terminal-amber)',
+          fontSize: '13px',
+          fontWeight: 'bold',
+          letterSpacing: '0.15em',
+          flexShrink: 0,
+        }}>
+          DISCOVERY LAB
+        </span>
+
+        <div style={{ flex: 1 }} />
+
+        {someSelected && (
+          <button
+            onClick={handleDiscoverSelected}
+            disabled={discoveringSymbols.size > 0}
+            style={{
+              background: discoveringSymbols.size > 0 ? 'transparent' : 'rgba(0,255,136,0.08)',
+              border: `1px solid ${discoveringSymbols.size > 0 ? 'var(--color-terminal-border)' : 'var(--color-terminal-up)'}`,
+              color: discoveringSymbols.size > 0 ? 'var(--color-terminal-dim)' : 'var(--color-terminal-up)',
+              fontSize: '10px',
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.08em',
+              cursor: discoveringSymbols.size > 0 ? 'not-allowed' : 'pointer',
+              padding: '2px 10px',
+              fontWeight: 'bold',
+              flexShrink: 0,
+            }}
+          >
+            {discoveringSymbols.size > 0 ? `◉ RUNNING (${discoveringSymbols.size})` : `▶ DISCOVER SELECTED (${selectedRows.size})`}
+          </button>
+        )}
+
+        <span style={{
+          color: 'var(--color-terminal-dim)',
+          fontSize: '10px',
+        }}>
+          {coins.length} ASSETS
+        </span>
+      </div>
+
+      {/* Table */}
+      {coinsLoading ? (
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--color-terminal-dim)',
+          fontSize: '11px',
+          fontFamily: 'var(--font-mono)',
+        }}>
+          LOADING MARKET DATA...
+        </div>
+      ) : coinsError ? (
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--color-terminal-down)',
+          fontSize: '11px',
+          fontFamily: 'var(--font-mono)',
+        }}>
+          UPSTREAM ERR: {coinsError}
+        </div>
+      ) : (
+        <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+          {/* Table header */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '36px 36px 70px 1fr 70px 100px 90px 90px',
+            padding: '6px 12px',
+            fontSize: '9px',
+            letterSpacing: '0.08em',
+            color: 'var(--color-terminal-dim)',
+            fontFamily: 'var(--font-mono)',
+            borderBottom: '1px solid var(--color-terminal-border)',
+            background: 'var(--color-terminal-panel)',
+            position: 'sticky',
+            top: 0,
+            zIndex: 1,
+          }}>
+            <span
+              onClick={toggleAll}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <span style={{
+                width: '12px',
+                height: '12px',
+                border: '1px solid var(--color-terminal-border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '8px',
+                color: allSelected ? 'var(--color-terminal-up)' : 'transparent',
+                background: allSelected ? 'rgba(0,255,136,0.1)' : 'transparent',
+              }}>
+                {allSelected ? '✓' : someSelected ? '—' : ''}
+              </span>
+            </span>
+            <span>#</span>
+            <span>SYMBOL</span>
+            <span>PRICE</span>
+            <span style={{ textAlign: 'right' }}>24H%</span>
+            <span style={{ textAlign: 'center' }}>STATUS</span>
+            <span style={{ textAlign: 'right' }}>DISCOVERED</span>
+            <span style={{ textAlign: 'center' }}>ACTION</span>
+          </div>
+
+          {/* Data rows */}
+          {coins.map((coin, i) => {
+            const sym = coin.symbol.toUpperCase().replace(/USDT$|BUSD$|USD$/i, '')
+            const isSelected = selectedRows.has(sym)
+            const status = statuses.get(sym)
+            const isDiscovering = discoveringSymbols.has(sym)
+
+            return (
+              <div
+                key={coin.id}
+                onClick={() => onSelectAsset(sym)}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '36px 36px 70px 1fr 70px 100px 90px 90px',
+                  padding: '5px 12px',
+                  fontSize: '11px',
+                  fontFamily: 'var(--font-mono)',
+                  borderBottom: '1px solid var(--color-terminal-border)',
+                  background: isSelected
+                    ? 'rgba(255,170,0,0.04)'
+                    : i % 2 === 0
+                      ? 'var(--color-terminal-surface)'
+                      : 'var(--color-terminal-panel)',
+                  cursor: 'pointer',
+                  alignItems: 'center',
+                  transition: 'background 0.1s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = isSelected
+                    ? 'rgba(255,170,0,0.04)'
+                    : i % 2 === 0
+                      ? 'var(--color-terminal-surface)'
+                      : 'var(--color-terminal-panel)'
+                }}
+              >
+                {/* Checkbox */}
+                <span
+                  onClick={(e) => { e.stopPropagation(); toggleRow(sym) }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                >
+                  <span style={{
+                    width: '12px',
+                    height: '12px',
+                    border: `1px solid ${isSelected ? 'var(--color-terminal-up)' : 'var(--color-terminal-border)'}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '8px',
+                    color: isSelected ? 'var(--color-terminal-up)' : 'transparent',
+                    background: isSelected ? 'rgba(0,255,136,0.1)' : 'transparent',
+                    transition: 'all 0.1s',
+                  }}>
+                    {isSelected ? '✓' : ''}
+                  </span>
+                </span>
+
+                {/* Rank */}
+                <span style={{ color: 'var(--color-terminal-dim)' }}>{coin.rank}</span>
+
+                {/* Symbol */}
+                <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 'bold', letterSpacing: '0.06em' }}>
+                  {sym}
+                </span>
+
+                {/* Price */}
+                <span style={{ color: 'var(--color-terminal-text)' }}>
+                  {formatPrice(coin.currentPrice)}
+                </span>
+
+                {/* 24h% */}
+                <span style={{
+                  textAlign: 'right',
+                  color: (coin.priceChange24h ?? 0) >= 0 ? 'var(--color-terminal-up)' : 'var(--color-terminal-down)',
+                }}>
+                  {coin.priceChange24h != null ? `${coin.priceChange24h >= 0 ? '+' : ''}${coin.priceChange24h.toFixed(2)}%` : '—'}
+                </span>
+
+                {/* Status */}
+                <span style={{ textAlign: 'center' }}>
+                  {isDiscovering ? (
+                    <span style={{ color: 'var(--color-terminal-amber)', fontSize: '9px', fontWeight: 'bold', animation: 'disc-blink 1.5s infinite' }}>
+                      ◉ SCANNING
+                    </span>
+                  ) : status?.hasData ? (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        background: 'var(--color-terminal-up)',
+                        display: 'inline-block',
+                        boxShadow: '0 0 4px var(--color-terminal-up)66',
+                      }} />
+                      <span style={{ color: 'var(--color-terminal-up)', fontSize: '9px', fontWeight: 'bold', letterSpacing: '0.06em' }}>
+                        DONE
+                      </span>
+                    </span>
+                  ) : statusesLoading ? (
+                    <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px' }}>...</span>
+                  ) : (
+                    <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px' }}>—</span>
+                  )}
+                </span>
+
+                {/* Last Discovered */}
+                <span style={{ textAlign: 'right', color: 'var(--color-terminal-dim)', fontSize: '10px' }}>
+                  {status ? timeAgo(status.discoveredAt) : '—'}
+                </span>
+
+                {/* Action */}
+                <span style={{ textAlign: 'center' }}>
+                  {isDiscovering ? (
+                    <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px' }}>...</span>
+                  ) : (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDiscoverSingle(sym) }}
+                      style={{
+                        background: 'rgba(0,255,136,0.06)',
+                        border: '1px solid var(--color-terminal-up)33',
+                        color: 'var(--color-terminal-up)',
+                        fontSize: '9px',
+                        fontFamily: 'var(--font-mono)',
+                        letterSpacing: '0.06em',
+                        cursor: 'pointer',
+                        padding: '1px 6px',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {status ? '↻' : '▶'}
+                    </button>
+                  )}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      <style>{`
+        @keyframes disc-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ASSET DETAIL VIEW — full detail page for a single asset
+   Main Data (ProjectInfoContent) + Deep Data (raw output + history)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function AssetDetailView({ symbol, onBack }: { symbol: string; onBack: () => void }) {
+  const projectInfo = useProjectInfo(symbol)
   const {
     discovering,
     discoveryElapsed,
     discoveryLogs,
     discoveryHistory,
+    discoveryRawOutput,
     discoveryDialogOpen,
     setDiscoveryDialogOpen,
-    discoveryRawOutput,
+    unified,
     discover,
     cancelDiscovery,
   } = projectInfo
 
-  // Auto-select first tracked asset when loaded
-  useEffect(() => {
-    if (!selectedAsset && trackedSymbols.length > 0) {
-      setSelectedAsset(trackedSymbols[0])
-    }
-  }, [trackedSymbols, selectedAsset])
+  const latestEntry = discoveryHistory[0] ?? null
+  const hasData = !!unified?.hasAiData
 
-  const selectedEntry = selectedHistoryId
-    ? discoveryHistory.find(e => e.id === selectedHistoryId) ?? null
-    : discoveryHistory[0] ?? null
+  // Read model from AI config localStorage
+  const discoverWithStoredModel = useCallback(() => {
+    try {
+      const raw = localStorage.getItem('oculus:agentModelMap')
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed?.discovery) {
+          discover(parsed.discovery)
+          return
+        }
+      }
+    } catch { /* ignore */ }
+    discover()
+  }, [discover])
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0, background: 'var(--color-terminal-bg)', fontFamily: 'var(--font-mono)' }}>
-      {/* Header */}
+    <div style={{
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      minHeight: 0,
+    }}>
+      {/* Detail header */}
       <div style={{
-        height: '40px', minHeight: '40px', display: 'flex', alignItems: 'center',
-        padding: '0 16px', gap: '8px',
-        background: 'var(--color-terminal-panel)', borderBottom: '1px solid var(--color-terminal-border)',
+        height: '40px',
+        minHeight: '40px',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 16px',
+        gap: '10px',
+        background: 'var(--color-terminal-panel)',
+        borderBottom: '1px solid var(--color-terminal-border)',
+        fontFamily: 'var(--font-mono)',
         flexShrink: 0,
       }}>
-        <span style={{ color: 'var(--color-terminal-amber)', fontSize: '13px', fontWeight: 'bold', letterSpacing: '0.15em', marginRight: '8px' }}>
-          DISCOVERY LAB
-        </span>
-
-        {/* Asset buttons */}
-        {assetsLoading ? (
-          <span style={{ color: 'var(--color-terminal-dim)', fontSize: '12px' }}>Loading assets...</span>
-        ) : trackedSymbols.length === 0 ? (
-          <span style={{ color: 'var(--color-terminal-dim)', fontSize: '12px' }}>No tracked assets. Use + in terminal to add.</span>
-        ) : (
-          trackedSymbols.map(asset => (
-            <button
-              key={asset}
-              onClick={() => { setSelectedAsset(asset); setSelectedHistoryId(null) }}
-              style={{
-                background: selectedAsset === asset ? 'rgba(255,170,0,0.1)' : 'transparent',
-                border: `1px solid ${selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-border)'}`,
-                color: selectedAsset === asset ? 'var(--color-terminal-amber)' : 'var(--color-terminal-muted)',
-                fontSize: '12px',
-                fontFamily: 'var(--font-mono)',
-                letterSpacing: '0.08em',
-                cursor: 'pointer',
-                padding: '3px 10px',
-                fontWeight: selectedAsset === asset ? 'bold' : 'normal',
-              }}
-            >
-              {asset}
-            </button>
-          ))
-        )}
-
-        {/* Run discovery button */}
         <button
-          onClick={() => discover()}
-          disabled={discovering}
+          onClick={onBack}
           style={{
-            marginLeft: 'auto',
-            background: discovering ? 'transparent' : 'rgba(0,255,136,0.08)',
-            border: `1px solid ${discovering ? 'var(--color-terminal-border)' : 'var(--color-terminal-up)'}`,
-            color: discovering ? 'var(--color-terminal-dim)' : 'var(--color-terminal-up)',
-            fontSize: '12px',
+            background: 'transparent',
+            border: '1px solid var(--color-terminal-border)',
+            color: 'var(--color-terminal-muted)',
+            fontSize: '10px',
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.1em',
-            cursor: discovering ? 'not-allowed' : 'pointer',
-            padding: '4px 14px',
-            fontWeight: 'bold',
+            cursor: 'pointer',
+            padding: '2px 8px',
+            flexShrink: 0,
           }}
         >
-          {discovering ? `◉ RUNNING ${formatElapsed(discoveryElapsed)}` : '▶ RUN DISCOVERY'}
+          ◂ BACK
         </button>
-        {discovering && (
+
+        <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 'bold', fontSize: '13px', letterSpacing: '0.1em' }}>
+          {symbol}
+        </span>
+
+        {hasData && (
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: 'var(--color-terminal-up)',
+              display: 'inline-block',
+            }} />
+            <span style={{ color: 'var(--color-terminal-up)', fontSize: '10px', letterSpacing: '0.06em' }}>
+              DISCOVERED
+            </span>
+          </span>
+        )}
+
+        <div style={{ flex: 1 }} />
+
+        {!discovering && (
           <button
-            onClick={() => cancelDiscovery()}
+            onClick={discoverWithStoredModel}
             style={{
-              background: 'transparent',
-              border: '1px solid var(--color-terminal-down)44',
-              color: 'var(--color-terminal-down)',
-              fontSize: '12px',
+              background: 'rgba(0,255,136,0.08)',
+              border: '1px solid var(--color-terminal-up)',
+              color: 'var(--color-terminal-up)',
+              fontSize: '10px',
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.1em',
               cursor: 'pointer',
-              padding: '4px 14px',
+              padding: '2px 10px',
               fontWeight: 'bold',
+              flexShrink: 0,
             }}
           >
-            ✕ CANCEL
+            {hasData ? '↻ RE-DISCOVER' : '▶ DISCOVER'}
           </button>
+        )}
+
+        {discovering && (
+          <>
+            <span style={{ color: 'var(--color-terminal-amber)', fontSize: '10px', fontWeight: 'bold', animation: 'disc-blink 1.5s infinite' }}>
+              ◉ {formatElapsed(discoveryElapsed)}
+            </span>
+            <button
+              onClick={() => setDiscoveryDialogOpen(true)}
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--color-terminal-border)',
+                color: 'var(--color-terminal-blue)',
+                fontSize: '10px',
+                fontFamily: 'var(--font-mono)',
+                cursor: 'pointer',
+                padding: '2px 8px',
+              }}
+            >
+              ⊞ FULL
+            </button>
+            <button
+              onClick={() => cancelDiscovery()}
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--color-terminal-down)44',
+                color: 'var(--color-terminal-down)',
+                fontSize: '10px',
+                fontFamily: 'var(--font-mono)',
+                cursor: 'pointer',
+                padding: '2px 6px',
+              }}
+            >
+              ✕ CANCEL
+            </button>
+          </>
         )}
       </div>
 
-      {/* Body: history list + detail */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
-        {/* Left: history list */}
-        <div style={{ width: '280px', minWidth: '240px', flexShrink: 0, borderRight: '1px solid var(--color-terminal-border)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {/* Content: live logs OR main data + deep data */}
+      {discovering ? (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px', gap: '8px', overflow: 'auto', minHeight: 0 }}>
           <div style={{
-            padding: '6px 12px',
-            background: 'var(--color-terminal-panel)', borderBottom: '1px solid var(--color-terminal-border)',
-            color: 'var(--color-terminal-dim)', fontSize: '11px', letterSpacing: '0.1em', flexShrink: 0,
+            flex: 1, overflow: 'auto', background: 'var(--color-terminal-surface)',
+            border: '1px solid var(--color-terminal-border)', padding: '8px', minHeight: 0,
           }}>
-            HISTORY ({discoveryHistory.length})
-          </div>
-          <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
-            {discoveryHistory.length === 0 ? (
-              <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                height: '80px', color: 'var(--color-terminal-dim)', fontSize: '12px',
-              }}>
-                NO RUNS YET
-              </div>
+            {discoveryLogs.length === 0 ? (
+              <span style={{ color: 'var(--color-terminal-dim)', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>Initializing agent...</span>
             ) : (
-              discoveryHistory.map(entry => (
-                <HistoryRow
-                  key={entry.id}
-                  entry={entry}
-                  selected={selectedEntry?.id === entry.id}
-                  onClick={() => setSelectedHistoryId(entry.id)}
-                />
+              discoveryLogs.map((log, i) => (
+                <div key={i} style={{ color: 'var(--color-terminal-muted)', fontSize: '12px', fontFamily: 'var(--font-mono)', lineHeight: 1.6 }}>
+                  {log}
+                </div>
               ))
             )}
           </div>
         </div>
+      ) : (
+        <div style={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
+          {/* ══════ MAIN DATA ══════ */}
+          <ProjectInfoContent symbol={symbol} projectInfo={projectInfo} />
 
-        {/* Right: detail */}
-        <DetailPanel
-          entry={selectedEntry}
-          discovering={discovering}
-          discoveryElapsed={discoveryElapsed}
-          discoveryLogs={discoveryLogs}
-          onOpenDialog={() => setDiscoveryDialogOpen(true)}
-          symbol={selectedAsset}
-          projectInfo={projectInfo}
-          onCancel={() => cancelDiscovery()}
-        />
-      </div>
+          {/* ══════ DEEP DATA SECTION ══════ */}
+          <DiscoveryDeepData entry={latestEntry} history={discoveryHistory} />
+        </div>
+      )}
 
       {/* Fullscreen dialog */}
       <DiscoveryDialog
@@ -380,8 +880,53 @@ function DiscoveryContent() {
         discoveryElapsed={discoveryElapsed}
         discoveryLogs={discoveryLogs}
         rawOutput={discoveryRawOutput}
-        symbol={selectedAsset}
+        symbol={symbol}
       />
+
+      <style>{`
+        @keyframes disc-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN PAGE — view router (table ↔ detail)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function DiscoveryContent() {
+  const [view, setView] = useState<'table' | 'detail'>('table')
+  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null)
+  const { symbols: trackedSymbols } = useTrackedAssets()
+
+  const handleSelectAsset = useCallback((symbol: string) => {
+    setSelectedSymbol(symbol)
+    setView('detail')
+  }, [])
+
+  const handleBack = useCallback(() => {
+    setView('table')
+  }, [])
+
+  return (
+    <div style={{
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      minHeight: 0,
+      background: 'var(--color-terminal-bg)',
+      fontFamily: 'var(--font-mono)',
+    }}>
+      {view === 'detail' && selectedSymbol ? (
+        <AssetDetailView symbol={selectedSymbol} onBack={handleBack} />
+      ) : (
+        <AssetTableView onSelectAsset={handleSelectAsset} trackedSymbols={trackedSymbols} />
+      )}
     </div>
   )
 }
