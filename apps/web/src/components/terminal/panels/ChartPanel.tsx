@@ -1186,7 +1186,9 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
             <MenuItem
               label={`Copy price ${formatPrice(ctxMenu.price)}`}
               onClick={() => {
-                navigator.clipboard.writeText(String(ctxMenu.price)).catch(() => {})
+                if (navigator.clipboard) {
+                  navigator.clipboard.writeText(String(ctxMenu.price)).catch(() => {})
+                }
                 setCtxMenu(null)
               }}
             />
