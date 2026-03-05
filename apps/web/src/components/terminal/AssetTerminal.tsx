@@ -76,6 +76,10 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
   const [analysisVersion, setAnalysisVersion] = useState(0)
   const { result } = useIntelligence(pair, { refreshKey: analysisVersion })
 
+  // Per-agent model selection — each agent (+ discovery) gets its own model
+  // Keys: agent IDs ('wyckoff', 'elliott-wave', ...) + 'discovery' for discover agent
+  // Values: model IDs ('opencode/big-pickle', 'github-copilot/claude-sonnet-4', ...)
+  const [agentModelMap, setAgentModelMap] = useState<Record<string, string>>({})
   const handleAnalysisComplete = useCallback(() => {
     setAnalysisVersion((v) => v + 1)
   }, [])
@@ -158,7 +162,7 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
             flexDirection: 'column' as const,
           }}
         >
-          <SignalPanel symbol={pair} onAnalysisComplete={handleAnalysisComplete} />
+          <SignalPanel symbol={pair} onAnalysisComplete={handleAnalysisComplete} agentModelMap={agentModelMap} onAgentModelMapChange={setAgentModelMap} />
         </div>
 
         <ResizeHandle direction="horizontal" onDrag={handleSignalResize} />
@@ -186,7 +190,7 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
             display: 'flex',
             flexDirection: 'column' as const,
           }}>
-          <AnalysisStrip symbol={pair} refreshKey={analysisVersion} />
+          <AnalysisStrip symbol={pair} refreshKey={analysisVersion} agentModelMap={agentModelMap} />
         </div>
       </div>
 

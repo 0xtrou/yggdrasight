@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono, Inter } from 'next/font/google'
 import './globals.css'
 
@@ -14,9 +14,125 @@ const inter = Inter({
   display: 'swap',
 })
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://oculus.trading'
+const SITE_NAME = 'Oculus Trading'
+const SITE_TITLE = 'Oculus Trading Terminal'
+const SITE_DESCRIPTION =
+  'AI-powered trading intelligence terminal with real-time market analysis, multi-timeframe signals, and automated execution for crypto and traditional markets.'
+
+export const viewport: Viewport = {
+  themeColor: '#0a0a0a',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  colorScheme: 'dark',
+}
+
 export const metadata: Metadata = {
-  title: 'Oculus Trading Terminal',
-  description: 'Trading Intelligence Terminal',
+  metadataBase: new URL(SITE_URL),
+
+  // ── Core ──────────────────────────────────────────────
+  title: {
+    default: SITE_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    'trading terminal',
+    'crypto trading',
+    'market analysis',
+    'AI trading',
+    'trading signals',
+    'technical analysis',
+    'market intelligence',
+    'options trading',
+    'real-time market data',
+    'automated trading',
+  ],
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: 'finance',
+
+  // ── Icons ─────────────────────────────────────────────
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      { rel: 'mask-icon', url: '/icon-512x512.png', color: '#0a0a0a' },
+    ],
+  },
+
+  // ── PWA / Manifest ────────────────────────────────────
+  manifest: '/manifest.json',
+
+  // ── Open Graph (Facebook, LinkedIn, Discord, etc.) ───
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    locale: 'en_US',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} - AI-Powered Trading Intelligence`,
+        type: 'image/png',
+      },
+    ],
+  },
+
+  // ── Twitter / X ──────────────────────────────────────
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: '/twitter-image.png',
+        width: 1200,
+        height: 600,
+        alt: `${SITE_NAME} - AI-Powered Trading Intelligence`,
+      },
+    ],
+    creator: '@oculustrading',
+  },
+
+  // ── Microsoft ────────────────────────────────────────
+  other: {
+    'msapplication-TileColor': '#0a0a0a',
+    'msapplication-config': '/browserconfig.xml',
+  },
+
+  // ── Robots ────────────────────────────────────────────
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+
+  // ── Alternates ────────────────────────────────────────
+  alternates: {
+    canonical: SITE_URL,
+  },
 }
 
 export default function RootLayout({

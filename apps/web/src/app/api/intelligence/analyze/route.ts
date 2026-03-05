@@ -11,10 +11,11 @@ export async function POST(req: NextRequest) {
     await connectDB()
 
     const body = await req.json()
-    const { symbol, timeframes: requestTimeframes, model, agentIds } = body as {
+    const { symbol, timeframes: requestTimeframes, model, agentModelMap, agentIds } = body as {
       symbol?: string
       timeframes?: string[]
       model?: string
+      agentModelMap?: Record<string, string>
       agentIds?: string[]
     }
 
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
       : ['1h', '4h', '1d']) as Timeframe[]
 
     // Run analysis
-    const result = await runAnalysis(symbol, timeframes, { model, agentIds })
+    const result = await runAnalysis(symbol, timeframes, { model, agentModelMap, agentIds })
 
     // Persist to MongoDB
     const verdict = await IntelligenceVerdict.create({
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
       score: result.score,
       confluence: result.confluence,
       analysts: result.analysts,
-      llmModel: model ?? undefined,
+      llmModel: agentModelMap ? Object.values(agentModelMap)[0] ?? model ?? undefined : model ?? undefined,
     })
 
     // Return the created verdict as JSON

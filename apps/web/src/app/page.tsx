@@ -60,11 +60,12 @@ function TerminalContent() {
   const DEFAULT_SYMBOLS = ['BTC', 'ETH', 'SOL', 'BNB', 'TAO']
   const trackedSymbols = useMemo(() => {
     const syms = new Set(DEFAULT_SYMBOLS)
+    syms.add(selectedSymbol)
     for (const s of customAssets) {
       syms.add(s.toUpperCase())
     }
     return Array.from(syms)
-  }, [customAssets])
+  }, [customAssets, selectedSymbol])
   return (
     <div
       style={{

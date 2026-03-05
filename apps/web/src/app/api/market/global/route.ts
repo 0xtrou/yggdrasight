@@ -31,6 +31,7 @@ export async function GET() {
         market_cap_percentage: { btc: number }
         total_market_cap: { usd: number }
         total_volume: { usd: number }
+        market_cap_change_percentage_24h_usd: number
       }
     } = await globalRes.json()
 
@@ -42,6 +43,7 @@ export async function GET() {
       btcDominance: globalData.data.market_cap_percentage.btc,
       totalMarketCap: globalData.data.total_market_cap.usd,
       totalVolume24h: globalData.data.total_volume.usd,
+      totalMarketCapChange24h: globalData.data.market_cap_change_percentage_24h_usd ?? 0,
       fearGreedValue: Number(fngData.data[0].value),
       fearGreedLabel: fngData.data[0].value_classification,
     })

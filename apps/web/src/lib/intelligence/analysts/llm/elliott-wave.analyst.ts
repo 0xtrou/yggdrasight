@@ -40,8 +40,13 @@ SIGNAL RULES:
 - SHORT: Completing Wave 5 / Starting Wave A-B-C correction
 - NEUTRAL: Mid-wave with unclear count or conflicting timeframe counts
 
-Include your wave count in the indicators (e.g., "currentWave": "Wave 3 of (iii)").`,
-    requiredData: ['candles', 'market-global'],
+Include your wave count in the indicators (e.g., "currentWave": "Wave 3 of (iii)").
+
+ON-CHAIN DATA INTEGRATION:
+- Open interest expansion during Wave 3 confirms the strongest impulse wave
+- Declining OI during Wave 5 + price divergence = exhaustion signal (correction incoming)
+- Extreme funding rates at Wave 5 peaks signal overleveraged crowd — classic wave completion`,
+    requiredData: ['candles', 'market-global', 'on-chain'],
   },
 }
 

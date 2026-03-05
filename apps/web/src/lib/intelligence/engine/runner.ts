@@ -7,6 +7,7 @@ import { buildContext } from './context'
 
 export interface RunAnalysisOptions {
   model?: string
+  agentModelMap?: Record<string, string>
   agentIds?: string[]
   includeDeterministic?: boolean
 }
@@ -17,7 +18,8 @@ export async function runAnalysis(
   options?: RunAnalysisOptions
 ): Promise<ConsensusResult> {
   // Build shared context (lazy-cached data providers)
-  const ctx = buildContext(symbol, timeframes, options?.model)
+  const defaultModel = options?.agentModelMap ? Object.values(options.agentModelMap)[0] : options?.model
+  const ctx = buildContext(symbol, timeframes, defaultModel)
 
 
   const analysts: Analyst[] = []
@@ -28,7 +30,7 @@ export async function runAnalysis(
   }
 
 
-  if (options?.model) {
+  if (options?.model || options?.agentModelMap) {
     const llmAnalysts = getLLMAnalysts(options.agentIds)
     analysts.push(...llmAnalysts)
   }
@@ -39,7 +41,13 @@ export async function runAnalysis(
 
   // Run all analysts in parallel — tolerate individual failures
   const results = await Promise.allSettled(
-    analysts.map((analyst) => analyst.analyze(ctx))
+    analysts.map((analyst) => {
+      const agentModel = options?.agentModelMap?.[analyst.meta.id] || options?.agentModelMap?.['*'] || options?.model || ctx.model
+      if (agentModel && agentModel !== ctx.model) {
+        return analyst.analyze({ ...ctx, model: agentModel })
+      }
+      return analyst.analyze(ctx)
+    })
   )
 
   // Collect successful verdicts, log failures

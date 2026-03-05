@@ -16,7 +16,7 @@ interface UseIntelligenceReturn {
   error: string | null
   history: VerdictRecord[]
   isStale: boolean
-  analyze: (timeframes?: string[], opts?: { model?: string; agentIds?: string[] }) => Promise<void>
+  analyze: (timeframes?: string[], opts?: { agentModelMap?: Record<string, string>; agentIds?: string[] }) => Promise<void>
   /** Manually re-fetch history + latest result from the database. */
   refresh: () => Promise<void>
 }
@@ -54,7 +54,7 @@ export function useIntelligence(symbol: string, options?: UseIntelligenceOptions
   }, [symbol])
 
   const analyze = useCallback(
-    async (timeframes?: string[], opts?: { model?: string; agentIds?: string[] }): Promise<void> => {
+    async (timeframes?: string[], opts?: { agentModelMap?: Record<string, string>; agentIds?: string[] }): Promise<void> => {
       try {
         setLoading(true)
         setError(null)
@@ -64,7 +64,7 @@ export function useIntelligence(symbol: string, options?: UseIntelligenceOptions
           body: JSON.stringify({
             symbol,
             timeframes: timeframes ?? ['1h', '4h', '1d', '1w', '1M'],
-            model: opts?.model,
+            agentModelMap: opts?.agentModelMap,
             agentIds: opts?.agentIds,
           }),
         })

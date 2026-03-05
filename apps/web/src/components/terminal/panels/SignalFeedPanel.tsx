@@ -46,31 +46,31 @@ function SignalRow({ sig, index, onSelect, isSelected }: SignalRowProps) {
     >
       {/* Row 1: symbol + direction + status */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
-        <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-terminal-text)' }}>{sig.symbol}</span>
+        <span style={{ fontSize: '9px', fontWeight: 700, color: 'var(--color-terminal-text)' }}>{sig.symbol}</span>
         <span
           style={{
-            fontSize: '9px',
+            fontSize: '7px',
             padding: '1px 4px',
             background: dirLong ? 'rgba(0,255,136,0.15)' : 'rgba(255,59,59,0.15)',
             color: dirLong ? 'var(--color-terminal-up)' : 'var(--color-terminal-down)',
             border: `1px solid ${dirLong ? 'var(--color-terminal-up)' : 'var(--color-terminal-down)'}`,
           }}
         >
-          {sig.direction.toUpperCase()}
+          {dirLong ? 'BUY' : 'SELL'}
         </span>
-        <span style={{ fontSize: '9px', color: statusColor(sig.status), marginLeft: 'auto' }}>
+        <span style={{ fontSize: '7px', color: statusColor(sig.status), marginLeft: 'auto' }}>
           ● {statusLabel(sig.status)}
         </span>
       </div>
       {/* Row 2: entry / sl */}
-      <div style={{ fontSize: '10px', color: 'var(--color-terminal-muted)', marginBottom: '2px' }}>
+      <div style={{ fontSize: '8px', color: 'var(--color-terminal-muted)', marginBottom: '2px' }}>
         Entry: <span style={{ color: 'var(--color-terminal-text)' }}>{formatPrice(sig.entryPrice)}</span>
         <span style={{ margin: '0 6px', color: 'var(--color-terminal-border)' }}>│</span>
         SL: <span style={{ color: 'var(--color-terminal-down)' }}>{formatPrice(sig.stopLoss)}</span>
       </div>
       {/* Row 3: TPs */}
       {tp1 && (
-        <div style={{ fontSize: '10px', color: 'var(--color-terminal-muted)', marginBottom: '2px' }}>
+        <div style={{ fontSize: '8px', color: 'var(--color-terminal-muted)', marginBottom: '2px' }}>
           TP1: <span style={{ color: 'var(--color-terminal-up)' }}>{formatPrice(tp1.price)}</span>
           {sig.takeProfits[1] && (
             <>
@@ -81,7 +81,7 @@ function SignalRow({ sig, index, onSelect, isSelected }: SignalRowProps) {
         </div>
       )}
       {/* Row 4: source / tf */}
-      <div style={{ fontSize: '9px', color: 'var(--color-terminal-dim)' }}>
+      <div style={{ fontSize: '7px', color: 'var(--color-terminal-dim)' }}>
         {sig.source} · {sig.timeframe}
       </div>
     </div>
@@ -112,7 +112,7 @@ export function SignalFeedPanel({ onSelectSymbol, selectedSymbol }: SignalFeedPa
           padding: '4px 10px',
           background: 'var(--color-terminal-panel)',
           borderBottom: '1px solid var(--color-terminal-border)',
-          fontSize: '9px',
+          fontSize: '7px',
           letterSpacing: '0.12em',
           color: 'var(--color-terminal-muted)',
           fontFamily: 'var(--font-mono)',
@@ -135,7 +135,7 @@ export function SignalFeedPanel({ onSelectSymbol, selectedSymbol }: SignalFeedPa
             style={{
               padding: '20px 10px',
               textAlign: 'center',
-              fontSize: '10px',
+              fontSize: '8px',
               color: 'var(--color-terminal-dim)',
               fontFamily: 'var(--font-mono)',
             }}
@@ -149,7 +149,7 @@ export function SignalFeedPanel({ onSelectSymbol, selectedSymbol }: SignalFeedPa
             style={{
               padding: '20px 10px',
               textAlign: 'center',
-              fontSize: '10px',
+              fontSize: '8px',
               color: 'var(--color-terminal-down)',
               fontFamily: 'var(--font-mono)',
             }}
@@ -163,7 +163,7 @@ export function SignalFeedPanel({ onSelectSymbol, selectedSymbol }: SignalFeedPa
             style={{
               padding: '30px 10px',
               textAlign: 'center',
-              fontSize: '10px',
+              fontSize: '8px',
               color: 'var(--color-terminal-dim)',
               fontFamily: 'var(--font-mono)',
               lineHeight: 1.8,
@@ -171,7 +171,7 @@ export function SignalFeedPanel({ onSelectSymbol, selectedSymbol }: SignalFeedPa
           >
             NO SIGNALS
             <br />
-            <span style={{ color: 'var(--color-terminal-muted)', fontSize: '9px' }}>
+            <span style={{ color: 'var(--color-terminal-muted)', fontSize: '7px' }}>
               Press + to create your first signal
             </span>
           </div>

@@ -1,62 +1,227 @@
-import { execFile } from 'child_process'
+import { execFile, spawn } from 'child_process'
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
+import path from 'path'
 import type { AvailableModel } from '../types'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const OPENCODE_BIN = process.env.OPENCODE_BIN ?? 'opencode'
 const DEFAULT_TIMEOUT_MS = 120_000 // 2 minutes per agent call
-const MODELS_CACHE_TTL_MS = 300_000 // 5 minutes
+// Search multiple candidate paths for the models cache file
+const MODELS_CACHE_CANDIDATES = [
+  path.join(process.cwd(), 'data', 'models-cache.json'),
+  path.join(process.cwd(), 'apps', 'web', 'data', 'models-cache.json'),
+  path.resolve(__dirname, '..', '..', '..', '..', 'data', 'models-cache.json'),
+]
+function resolveModelsCachePath(): string {
+  for (const p of MODELS_CACHE_CANDIDATES) {
+    if (existsSync(p)) return p
+  }
+  return MODELS_CACHE_CANDIDATES[0] // default write location
+}
+const MODELS_CACHE_FILE = resolveModelsCachePath()
+const MODELS_CACHE_TTL_MS = 3_600_000 // 1 hour before async background refresh
+
+// ── Hardcoded fallback models ────────────────────────────────────────────────
+// Used immediately on first load while CLI refresh runs in background.
+// These cover all known github-copilot provider models.
+
+const FALLBACK_MODELS: AvailableModel[] = [
+  // Anthropic via github-copilot
+  { id: 'github-copilot/claude-sonnet-4', provider: 'github-copilot', name: 'claude-sonnet-4' },
+  { id: 'github-copilot/claude-opus-4', provider: 'github-copilot', name: 'claude-opus-4' },
+  { id: 'github-copilot/claude-3.5-sonnet', provider: 'github-copilot', name: 'claude-3.5-sonnet' },
+  { id: 'github-copilot/claude-3.7-sonnet', provider: 'github-copilot', name: 'claude-3.7-sonnet' },
+  // Google via github-copilot
+  { id: 'github-copilot/gemini-2.5-pro', provider: 'github-copilot', name: 'gemini-2.5-pro' },
+  { id: 'github-copilot/gemini-2.0-flash', provider: 'github-copilot', name: 'gemini-2.0-flash' },
+  // OpenAI via github-copilot
+  { id: 'github-copilot/gpt-4.1', provider: 'github-copilot', name: 'gpt-4.1' },
+  { id: 'github-copilot/gpt-4.1-mini', provider: 'github-copilot', name: 'gpt-4.1-mini' },
+  { id: 'github-copilot/gpt-4o', provider: 'github-copilot', name: 'gpt-4o' },
+  { id: 'github-copilot/gpt-4o-mini', provider: 'github-copilot', name: 'gpt-4o-mini' },
+  { id: 'github-copilot/o3-mini', provider: 'github-copilot', name: 'o3-mini' },
+  { id: 'github-copilot/o4-mini', provider: 'github-copilot', name: 'o4-mini' },
+  // xAI via github-copilot
+  { id: 'github-copilot/grok-3', provider: 'github-copilot', name: 'grok-3' },
+  { id: 'github-copilot/grok-3-mini', provider: 'github-copilot', name: 'grok-3-mini' },
+]
 
 // ── Models cache ─────────────────────────────────────────────────────────────
 
 let modelsCache: AvailableModel[] | null = null
 let modelsCacheTime = 0
+let backgroundRefreshRunning = false
 
 /**
- * Fetch available models from `opencode models`.
- * Results are cached for 5 minutes.
+ * Read models from the JSON cache file on disk.
+ */
+function readModelsCacheFile(): { models: AvailableModel[]; timestamp: number } | null {
+  try {
+    if (!existsSync(MODELS_CACHE_FILE)) {
+      console.log(`[opencode] Cache file not found: ${MODELS_CACHE_FILE}`)
+      return null
+    }
+    const raw = readFileSync(MODELS_CACHE_FILE, 'utf-8')
+    const parsed = JSON.parse(raw) as { models: AvailableModel[]; timestamp: number }
+    if (!Array.isArray(parsed.models) || parsed.models.length === 0) {
+      console.log('[opencode] Cache file has no models array')
+      return null
+    }
+    console.log(`[opencode] Read ${parsed.models.length} models from ${MODELS_CACHE_FILE}`)
+    return parsed
+  } catch (err) {
+    console.error('[opencode] Error reading cache file:', err)
+    return null
+  }
+}
+
+/**
+ * Write models to the JSON cache file on disk.
+ */
+function writeModelsCacheFile(models: AvailableModel[]): void {
+  try {
+    mkdirSync(path.dirname(MODELS_CACHE_FILE), { recursive: true })
+    writeFileSync(MODELS_CACHE_FILE, JSON.stringify({ models, timestamp: Date.now() }, null, 2))
+    console.log(`[opencode] Wrote ${models.length} models to ${MODELS_CACHE_FILE}`)
+  } catch (err) {
+    console.error('[opencode] Failed to write models cache file:', err)
+  }
+}
+
+/**
+ * Try to fetch models from CLI using spawn with streaming stdout.
+ * Times out after 20s. Returns parsed models or null on failure.
+ */
+function fetchModelsFromCLI(): Promise<AvailableModel[] | null> {
+  return new Promise((resolve) => {
+    const child = spawn(OPENCODE_BIN, ['models'], {
+      env: { ...process.env },
+      stdio: ['pipe', 'pipe', 'pipe'],
+    })
+
+    let stdout = ''
+    let resolved = false
+    const timeout = setTimeout(() => {
+      if (!resolved) {
+        resolved = true
+        child.kill('SIGTERM')
+        // Try to parse whatever we got so far
+        const partial = parseModelsOutput(stdout)
+        resolve(partial.length > 0 ? partial : null)
+      }
+    }, 20_000)
+
+    child.stdout.on('data', (chunk: Buffer) => { stdout += chunk.toString() })
+    child.stderr.on('data', () => { /* ignore */ })
+
+    child.on('close', () => {
+      clearTimeout(timeout)
+      if (!resolved) {
+        resolved = true
+        const models = parseModelsOutput(stdout)
+        resolve(models.length > 0 ? models : null)
+      }
+    })
+
+    child.on('error', () => {
+      clearTimeout(timeout)
+      if (!resolved) {
+        resolved = true
+        resolve(null)
+      }
+    })
+
+    child.stdin?.end()
+  })
+}
+
+/**
+ * Parse the raw stdout from `opencode models` into AvailableModel[].
+ */
+function parseModelsOutput(stdout: string): AvailableModel[] {
+  return stdout
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && line.includes('/'))
+    .map((id) => {
+      const slashIdx = id.indexOf('/')
+      return {
+        id,
+        provider: id.substring(0, slashIdx),
+        name: id.substring(slashIdx + 1),
+      }
+    })
+}
+
+/**
+ * Kick off a background refresh of the models list from CLI.
+ * Writes to both in-memory cache and JSON file on disk.
+ * Does NOT block the caller.
+ */
+function refreshModelsInBackground(): void {
+  if (backgroundRefreshRunning) return
+  backgroundRefreshRunning = true
+  console.log('[opencode] Starting background models refresh...')
+
+  fetchModelsFromCLI()
+    .then((models) => {
+      if (models && models.length > 0) {
+        modelsCache = models
+        modelsCacheTime = Date.now()
+        writeModelsCacheFile(models)
+        console.log(`[opencode] Background refresh: found ${models.length} models`)
+      } else {
+        console.log('[opencode] Background refresh: CLI returned no models (timeout or error)')
+      }
+    })
+    .catch((err) => {
+      console.error('[opencode] Background refresh error:', err)
+    })
+    .finally(() => {
+      backgroundRefreshRunning = false
+    })
+}
+
+/**
+ * Fetch available models — stale-while-revalidate pattern.
+ *
+ * 1. If in-memory cache is fresh → return immediately
+ * 2. If JSON file cache exists → return from file, kick background refresh if stale
+ * 3. If nothing cached → return hardcoded fallbacks, kick background refresh
+ *
+ * The CLI `opencode models` command is known to hang indefinitely,
+ * so we NEVER block on it. Background refresh with 20s timeout only.
  */
 export async function listModels(forceRefresh = false): Promise<AvailableModel[]> {
   const now = Date.now()
+
+  // 1. Fresh in-memory cache → return immediately
   if (!forceRefresh && modelsCache && now - modelsCacheTime < MODELS_CACHE_TTL_MS) {
     return modelsCache
   }
 
-  try {
-    const models = await new Promise<AvailableModel[]>((resolve, reject) => {
-      const child = execFile(OPENCODE_BIN, ['models'], {
-        timeout: 15_000,
-        env: { ...process.env },
-      }, (err, stdout) => {
-        if (err) {
-          reject(err)
-          return
-        }
-        const parsed: AvailableModel[] = stdout
-          .split('\n')
-          .map((line) => line.trim())
-          .filter((line) => line.length > 0 && line.includes('/'))
-          .map((id) => {
-            const slashIdx = id.indexOf('/')
-            return {
-              id,
-              provider: id.substring(0, slashIdx),
-              name: id.substring(slashIdx + 1),
-            }
-          })
-        resolve(parsed)
-      })
-      child.stdin?.end()
-    })
+  // 2. Try JSON file cache
+  const fileCached = readModelsCacheFile()
+  if (fileCached) {
+    modelsCache = fileCached.models
+    modelsCacheTime = fileCached.timestamp
 
-    modelsCache = models
-    modelsCacheTime = now
-    return models
-  } catch (err) {
-    console.error('[opencode] Failed to list models:', err)
-    // Return cached results if available, otherwise empty
-    return modelsCache ?? []
+    // If file cache is stale, kick background refresh
+    if (forceRefresh || now - fileCached.timestamp > MODELS_CACHE_TTL_MS) {
+      refreshModelsInBackground()
+    }
+
+    return fileCached.models
   }
+
+  // 3. No cache at all → return fallbacks, start background refresh
+  modelsCache = FALLBACK_MODELS
+  modelsCacheTime = now
+  writeModelsCacheFile(FALLBACK_MODELS) // Seed the file so backend can read it
+  refreshModelsInBackground()
+
+  return FALLBACK_MODELS
 }
 
 // ── JSON event parsing ───────────────────────────────────────────────────────
@@ -84,11 +249,26 @@ interface OpenCodeJsonEvent {
 }
 
 /**
- * Extract the assistant's text response from OpenCode JSON events.
+ * Parsed result from extracting OpenCode JSON events.
+ */
+interface ExtractedResponse {
+  /** The assistant's final text response */
+  text: string
+  /** File paths that the agent read via tool_use events (absolute paths) */
+  filesRead: string[]
+  /** URLs the agent fetched via webfetch/websearch tool_use events */
+  urlsFetched: string[]
+  /** Total number of tool calls made by the agent */
+  toolCallCount: number
+}
+
+/**
+ * Extract the assistant's text response and tool usage from OpenCode JSON events.
  *
  * When `--format json` is used, OpenCode emits newline-delimited JSON events:
  * - { type: 'step_start', part: { type: 'step-start' } }  — session init
  * - { type: 'text', part: { text: '...' } }               — response text
+ * - { type: 'tool_use', part: { tool: 'read', state: { input: { filePath: '...' } } } } — file read
  * - { type: 'step_finish', part: { reason: 'stop' } }     — completion
  * - { type: 'error', error: { ... } }                     — error
  *
@@ -207,10 +387,16 @@ function sanitizeJsonString(raw: string): string {
   return result
 }
 
-function extractResponseText(stdout: string): string {
+function extractResponse(stdout: string): ExtractedResponse {
   const jsonStrings = extractJsonObjects(stdout)
 
-  const textParts: string[] = []
+  // Track text parts per step — we want the LAST step's text
+  // because in agentic mode, earlier steps may be tool calls or preamble
+  const allTextParts: string[] = []
+  const stepTextParts: string[][] = [[]]
+  const filesRead: string[] = []
+  const urlsFetched: string[] = []
+  let toolCallCount = 0
   let hasJsonEvents = false
 
   for (const jsonStr of jsonStrings) {
@@ -218,9 +404,37 @@ function extractResponseText(stdout: string): string {
       const event = JSON.parse(sanitizeJsonString(jsonStr)) as OpenCodeJsonEvent
       hasJsonEvents = true
 
+      // Track step boundaries
+      if (event.type === 'step_start') {
+        stepTextParts.push([])
+      }
+
       // Extract text from 'text' type events — content is in part.text
       if (event.type === 'text' && event.part?.text) {
-        textParts.push(event.part.text)
+        const currentStep = stepTextParts[stepTextParts.length - 1]
+        currentStep.push(event.part.text)
+        allTextParts.push(event.part.text)
+      }
+
+      // Capture tool_use events — track files read and URLs fetched
+      if (event.type === 'tool_use' && event.part) {
+        toolCallCount++
+        const part = event.part as {
+          tool?: string
+          state?: {
+            status?: string
+            input?: { filePath?: string; url?: string; query?: string }
+          }
+        }
+        if (part.tool === 'read' && part.state?.status === 'completed' && part.state.input?.filePath) {
+          filesRead.push(part.state.input.filePath)
+        }
+        if (part.tool === 'webfetch' && part.state?.status === 'completed' && part.state.input?.url) {
+          urlsFetched.push(part.state.input.url)
+        }
+        if (part.tool === 'websearch_web_search_exa' && part.state?.status === 'completed' && part.state.input?.query) {
+          urlsFetched.push(`search:${part.state.input.query}`)
+        }
       }
 
       // Check for error events
@@ -230,8 +444,8 @@ function extractResponseText(stdout: string): string {
           ? err
           : err.data?.message ?? err.message ?? 'Unknown error'
         // If we have no text yet, use the error as the response
-        if (textParts.length === 0) {
-          return `Error: ${errorMsg}`
+        if (allTextParts.length === 0) {
+          return { text: `Error: ${errorMsg}`, filesRead, urlsFetched, toolCallCount }
         }
       }
     } catch {
@@ -239,25 +453,35 @@ function extractResponseText(stdout: string): string {
     }
   }
 
+  // Prefer text from the last step (most likely the actual response)
+  // But fall back to all text if the last step has nothing
+  const lastStepText = stepTextParts[stepTextParts.length - 1]
+  if (lastStepText.length > 0) {
+    return { text: lastStepText.join(''), filesRead, urlsFetched, toolCallCount }
+  }
+
   // Concatenate all text chunks
-  if (textParts.length > 0) {
-    return textParts.join('')
+  if (allTextParts.length > 0) {
+    return { text: allTextParts.join(''), filesRead, urlsFetched, toolCallCount }
   }
 
   // If we parsed JSON events but found no text, return empty
   if (hasJsonEvents) {
-    return ''
+    return { text: '', filesRead, urlsFetched, toolCallCount }
   }
 
   // Fallback: no JSON events found — return raw stdout (plain text mode)
-  return stdout.trim()
+    return { text: stdout.trim(), filesRead, urlsFetched: [], toolCallCount }
 }
 
 // ── Core execution ───────────────────────────────────────────────────────────
 
 export interface RunOpenCodeOptions {
   model: string
+  /** Short message to send as the CLI prompt (points agent to files) */
   prompt: string
+  /** Working directory containing data files for the agent to read */
+  workDir?: string
   timeoutMs?: number
 }
 
@@ -266,15 +490,26 @@ export interface RunOpenCodeResult {
   text: string
   error?: string
   durationMs: number
+  /** File paths the agent read via its `read` tool (from tool_use events) */
+  filesRead: string[]
+  /** URLs fetched/searched via webfetch/websearch tools */
+  urlsFetched: string[]
+  /** Total number of tool calls the agent made */
+  toolCallCount: number
 }
 
 /**
- * Run an OpenCode CLI prompt with a specific model and return the text response.
+ * Run OpenCode CLI as a coding agent that reads files from a work directory.
  *
- * Uses `opencode run -m <model> --format json "<prompt>"` for structured output parsing.
+ * When `workDir` is provided, the agent runs with `--dir <workDir>` so it can
+ * use its built-in `read` tool to access structured data files — just like
+ * a coding agent reviewing a codebase. This avoids ARG_MAX limits and lets
+ * the LLM naturally process structured data.
+ *
+ * Falls back to inline prompt if no workDir is provided.
  */
 export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenCodeResult> {
-  const { model, prompt, timeoutMs = DEFAULT_TIMEOUT_MS } = options
+  const { model, prompt, workDir, timeoutMs = DEFAULT_TIMEOUT_MS } = options
   const startTime = Date.now()
 
   try {
@@ -282,8 +517,20 @@ export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenC
       'run',
       '-m', model,
       '--format', 'json',
-      prompt,
     ]
+
+    // If a work directory is provided, tell OpenCode to run in that directory
+    // so it can read the data files with its built-in tools
+    if (workDir) {
+      args.push('--dir', workDir)
+    }
+
+    args.push(prompt)
+
+    const promptDesc = workDir
+      ? `workDir=${workDir} (${(prompt.length / 1024).toFixed(1)}KB msg)`
+      : `inline (${(prompt.length / 1024).toFixed(1)}KB)`
+    console.log(`[opencode] Running ${model} — ${promptDesc}`)
 
     const { stdout, stderr } = await new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
       const child = execFile(OPENCODE_BIN, args, {
@@ -302,9 +549,6 @@ export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenC
     })
 
     // Filter known harmless stderr noise from OpenCode CLI
-    // - @opencode-ai/plugin resolution errors (bun install noise)
-    // - config-context warnings (getConfigContext before init)
-    // - "Resolving dependencies" / "Resolved, downloaded" (bun install progress)
     if (stderr) {
       const significantStderr = stderr
         .split('\n')
@@ -326,39 +570,65 @@ export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenC
       }
     }
 
-    const text = extractResponseText(stdout)
+    const { text, filesRead, urlsFetched, toolCallCount } = extractResponse(stdout)
+    const trimmedText = text.trim()
     const durationMs = Date.now() - startTime
 
-    if (!text) {
+    // Audit logging — show which files the agent read
+    console.log(`[opencode] stdout: ${stdout.length}B, text: ${text.length}B, trimmed: ${trimmedText.length}B, duration: ${durationMs}ms`)
+    console.log(`[opencode] Agent read ${filesRead.length} files, fetched ${urlsFetched.length} URLs (${toolCallCount} tool calls): ${filesRead.map(f => f.split('/').slice(-2).join('/')).join(', ') || 'none'}`)
+    if (urlsFetched.length > 0) console.log(`[opencode] URLs fetched: ${urlsFetched.join(', ')}`)
+    if (!trimmedText) {
+      console.warn(`[opencode] Empty response. stdout preview: ${stdout.substring(0, 500)}`)
+    }
+
+    if (!trimmedText) {
       return {
         success: false,
         text: '',
         error: 'Empty response from OpenCode CLI',
         durationMs,
+        filesRead,
+        urlsFetched,
+        toolCallCount,
       }
     }
-
-    return { success: true, text, durationMs }
+    return { success: true, text: trimmedText, durationMs, filesRead, urlsFetched, toolCallCount }
   } catch (err) {
     const durationMs = Date.now() - startTime
     const errorMsg = err instanceof Error ? err.message : 'Unknown error'
 
-    // Check for timeout
     if (errorMsg.includes('TIMEOUT') || errorMsg.includes('timed out')) {
       return {
         success: false,
         text: '',
         error: `OpenCode CLI timed out after ${timeoutMs}ms`,
         durationMs,
+        filesRead: [],
+        urlsFetched: [],
+        toolCallCount: 0,
       }
     }
-
+    if (errorMsg.includes('E2BIG') || errorMsg.includes('Argument list too long')) {
+      return {
+        success: false,
+        text: '',
+        error: `Prompt too long for CLI (${(prompt.length / 1024).toFixed(1)}KB)`,
+        durationMs,
+        filesRead: [],
+        urlsFetched: [],
+        toolCallCount: 0,
+      }
+    }
     console.error('[opencode] Execution failed:', errorMsg)
     return {
       success: false,
       text: '',
       error: errorMsg,
       durationMs,
+      filesRead: [],
+      urlsFetched: [],
+      toolCallCount: 0,
     }
   }
 }

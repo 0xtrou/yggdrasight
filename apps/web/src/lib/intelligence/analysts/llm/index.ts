@@ -4,6 +4,7 @@ import { elliottWaveAnalyst, elliottWaveDefinition } from './elliott-wave.analys
 import { sorosReflexivityAnalyst, sorosReflexivityDefinition } from './soros-reflexivity.analyst'
 import { onChainAnalysisAnalyst, onChainAnalysisDefinition } from './on-chain.analyst'
 import { warrenBuffettAnalyst, warrenBuffettDefinition } from './warren-buffett.analyst'
+import { longTermConvictionAnalyst, longTermConvictionDefinition } from './long-term-conviction.analyst'
 import type { LLMAnalystDefinition } from '../../types'
 
 /**
@@ -16,6 +17,7 @@ export const LLM_ANALYSTS: Analyst[] = [
   sorosReflexivityAnalyst,
   onChainAnalysisAnalyst,
   warrenBuffettAnalyst,
+  longTermConvictionAnalyst,
 ]
 
 /**
@@ -27,6 +29,7 @@ export const LLM_ANALYST_DEFINITIONS: LLMAnalystDefinition[] = [
   sorosReflexivityDefinition,
   onChainAnalysisDefinition,
   warrenBuffettDefinition,
+  longTermConvictionDefinition,
 ]
 
 /**
@@ -45,4 +48,5 @@ export {
   sorosReflexivityAnalyst,
   onChainAnalysisAnalyst,
   warrenBuffettAnalyst,
+  longTermConvictionAnalyst,
 }

@@ -1,0 +1,642 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e1521]:
+      - generic [ref=e1522]:
+        - generic [ref=e1523]:
+          - generic [ref=e1524]: OCULUS
+          - generic [ref=e1525]: TERMINAL
+        - button "TAO ▾" [ref=e1528] [cursor=pointer]:
+          - generic [ref=e1529]: TAO
+          - generic [ref=e1530]: ▾
+        - button "+" [ref=e1531] [cursor=pointer]
+        - generic [ref=e1533]:
+          - generic [ref=e1534]: Bittensor
+          - generic [ref=e1535]: TAO
+          - link "bittensor.com" [ref=e1536] [cursor=pointer]:
+            - /url: https://bittensor.com/
+          - link "@opentensor" [ref=e1537] [cursor=pointer]:
+            - /url: https://x.com/opentensor
+          - link "GitHub" [ref=e1538] [cursor=pointer]:
+            - /url: https://github.com/opentensor/BitTensor
+      - generic [ref=e1539]:
+        - generic [ref=e1540]: $186.60
+        - generic [ref=e1541]: ▼ 2.61%
+      - generic [ref=e1542]:
+        - generic [ref=e1543]: 15:56:46
+        - generic [ref=e1546]: LIVE
+    - generic [ref=e1547]:
+      - generic [ref=e1548]:
+        - generic [ref=e1550]:
+          - generic [ref=e1551]:
+            - generic [ref=e1552]: SIGNAL
+            - generic [ref=e1553]:
+              - button "⊞" [ref=e1554] [cursor=pointer]
+              - generic [ref=e1555]: TAOUSDT
+          - generic [ref=e1556]:
+            - generic [ref=e1557]: TIMEFRAME
+            - generic [ref=e1558]:
+              - generic [ref=e1559]: 1H
+              - generic [ref=e1560]: BUY ▲
+            - generic [ref=e1561]:
+              - generic [ref=e1562]: 4H
+              - generic [ref=e1563]: BUY ▲
+            - generic [ref=e1564]:
+              - generic [ref=e1565]: 1D
+              - generic [ref=e1566]: SELL ▼
+            - generic [ref=e1567]:
+              - generic [ref=e1568]: 1W
+              - generic [ref=e1569]: SELL ▼
+            - generic [ref=e1570]:
+              - generic [ref=e1571]: 1M
+              - generic [ref=e1572]: NEUTRAL —
+            - generic [ref=e1573]: VERDICT
+            - generic [ref=e1574]:
+              - generic [ref=e1575]:
+                - generic [ref=e1576]: — NEUTRAL
+                - generic [ref=e1577]: "0.1"
+              - generic [ref=e1578]:
+                - generic [ref=e1579]: CONF
+                - generic [ref=e1582]: 20%
+              - generic [ref=e1583]:
+                - generic [ref=e1584]: CONFLUENCE
+                - generic [ref=e1585]: "0.6666666666666666"
+            - generic [ref=e1586]: HISTORY
+            - generic [ref=e1587]:
+              - generic [ref=e1588]: — NEUTRAL
+              - generic [ref=e1589]:
+                - generic [ref=e1590]: 20%
+                - generic [ref=e1591]: 03/05 15:26
+            - generic [ref=e1592]:
+              - generic [ref=e1593]: — NEUTRAL
+              - generic [ref=e1594]:
+                - generic [ref=e1595]: 20%
+                - generic [ref=e1596]: 03/05 15:26
+            - generic [ref=e1597]:
+              - generic [ref=e1598]: — NEUTRAL
+              - generic [ref=e1599]:
+                - generic [ref=e1600]: 24%
+                - generic [ref=e1601]: 03/05 10:52
+            - generic [ref=e1602]:
+              - generic [ref=e1603]: — NEUTRAL
+              - generic [ref=e1604]:
+                - generic [ref=e1605]: 24%
+                - generic [ref=e1606]: 03/05 10:52
+            - generic [ref=e1607]:
+              - generic [ref=e1608]: — NEUTRAL
+              - generic [ref=e1609]:
+                - generic [ref=e1610]: 25%
+                - generic [ref=e1611]: 03/05 10:12
+          - generic [ref=e1612]:
+            - generic [ref=e1613] [cursor=pointer]:
+              - generic [ref=e1614]: AI CONFIG
+              - generic [ref=e1615]: ▾
+            - generic [ref=e1616]:
+              - generic [ref=e1618]:
+                - generic [ref=e1619]: SET ALL AGENTS
+                - button "SET ALL" [ref=e1620] [cursor=pointer]
+              - generic [ref=e1621]:
+                - generic [ref=e1622]:
+                  - button "Wyckoff Method" [ref=e1624] [cursor=pointer]
+                  - button "big-pickle ▼" [ref=e1626] [cursor=pointer]:
+                    - generic [ref=e1627]: big-pickle
+                    - generic [ref=e1628]: ▼
+                - generic [ref=e1629]:
+                  - button "Elliott Wave Theory" [ref=e1631] [cursor=pointer]
+                  - button "big-pickle ▼" [ref=e1633] [cursor=pointer]:
+                    - generic [ref=e1634]: big-pickle
+                    - generic [ref=e1635]: ▼
+                - generic [ref=e1636]:
+                  - button "Soros Reflexivity" [ref=e1638] [cursor=pointer]
+                  - button "big-pickle ▼" [ref=e1640] [cursor=pointer]:
+                    - generic [ref=e1641]: big-pickle
+                    - generic [ref=e1642]: ▼
+                - generic [ref=e1643]:
+                  - button "On-Chain Analysis" [ref=e1645] [cursor=pointer]
+                  - button "big-pickle ▼" [ref=e1647] [cursor=pointer]:
+                    - generic [ref=e1648]: big-pickle
+                    - generic [ref=e1649]: ▼
+                - generic [ref=e1650]:
+                  - button "Warren Buffett Value Investing" [ref=e1652] [cursor=pointer]
+                  - button "big-pickle ▼" [ref=e1654] [cursor=pointer]:
+                    - generic [ref=e1655]: big-pickle
+                    - generic [ref=e1656]: ▼
+                - generic [ref=e1657]:
+                  - button "Long-Term Conviction" [ref=e1659] [cursor=pointer]
+                  - button "big-pickle ▼" [ref=e1661] [cursor=pointer]:
+                    - generic [ref=e1662]: big-pickle
+                    - generic [ref=e1663]: ▼
+                - generic [ref=e1664]:
+                  - generic [ref=e1666]: DISCOVERY
+                  - button "big-pickle ▼" [ref=e2501] [cursor=pointer]:
+                    - generic [ref=e1669]: big-pickle
+                    - generic [ref=e1670]: ▼
+          - button "ANALYZE" [ref=e1936] [cursor=pointer]
+        - generic [ref=e1939]:
+          - generic [ref=e1940]:
+            - generic [ref=e1941]: TAO/USDT
+            - generic [ref=e1942]: ▼ -2.61%
+            - generic [ref=e1943]:
+              - button "1m" [ref=e1944] [cursor=pointer]
+              - button "5m" [ref=e1945] [cursor=pointer]
+              - button "15m" [ref=e1946] [cursor=pointer]
+              - button "1h" [ref=e1947] [cursor=pointer]
+              - button "4h" [ref=e1948] [cursor=pointer]
+              - button "1d" [ref=e1949] [cursor=pointer]
+              - button "1w" [ref=e1950] [cursor=pointer]
+            - button "⊞" [ref=e1951] [cursor=pointer]
+          - generic [ref=e1952]:
+            - generic [ref=e1953]: 2026/02/28 03:00
+            - generic [ref=e1954]: O
+            - generic [ref=e1955]: "174.70"
+            - generic [ref=e1956]: H
+            - generic [ref=e1957]: "176.50"
+            - generic [ref=e1958]: L
+            - generic [ref=e1959]: "171.60"
+            - generic [ref=e1960]: C
+            - generic [ref=e1961]: "176.20"
+            - generic [ref=e1962]: Chg
+            - generic [ref=e1963]: "-4.71%"
+            - generic [ref=e1964]: Rng
+            - generic [ref=e1965]: 2.86%
+            - generic [ref=e1966]: Vol
+            - generic [ref=e1967]: 8.9K
+          - generic [ref=e1968]:
+            - generic [ref=e1969]: MA(7)
+            - generic [ref=e1970]: —
+            - generic [ref=e1971]: MA(25)
+            - generic [ref=e1972]: —
+            - generic [ref=e1973]: MA(99)
+            - generic [ref=e1974]: —
+          - generic [ref=e1975]:
+            - generic [ref=e1976]: NEUTRAL — 20%
+            - generic [ref=e2502]:
+              - generic [ref=e2503] [cursor=pointer]:
+                - generic [ref=e2504]:
+                  - generic [ref=e2505]: ↩
+                  - generic [ref=e2506]: Reset chart view
+                - generic [ref=e2507]: ⌥R
+              - generic [ref=e2511] [cursor=pointer]: Create Alert at 180.7871
+              - generic [ref=e2514] [cursor=pointer]: Copy price 180.7871
+              - generic [ref=e2515] [cursor=pointer]:
+                - generic [ref=e2517]: Paste
+                - generic [ref=e2518]: ⌘V
+              - generic [ref=e2522] [cursor=pointer]: Lock vertical cursor line by time
+              - generic [ref=e2526] [cursor=pointer]: Remove all indicators
+              - generic [ref=e2529] [cursor=pointer]: Hide marks on bars
+              - generic [ref=e2532] [cursor=pointer]:
+                - generic [ref=e2533]: ⚙
+                - generic [ref=e2534]: Settings...
+        - generic [ref=e2001]:
+          - generic [ref=e2002]:
+            - button "ANALYSIS (6)" [ref=e2003] [cursor=pointer]
+            - button "ACTIVITIES (21)" [ref=e2004] [cursor=pointer]
+            - button "PROJECT INFO" [ref=e2005] [cursor=pointer]
+            - generic [ref=e2006]: — NEUTRAL
+            - generic [ref=e2007]: 20% conf
+            - generic [ref=e2008]: ×0.67
+            - generic [ref=e2009]:
+              - button "☰" [ref=e2010] [cursor=pointer]
+              - button "⊞" [ref=e2011] [cursor=pointer]
+            - button "⊞" [ref=e2012] [cursor=pointer]
+          - generic [ref=e2013]:
+            - generic [ref=e2014]:
+              - generic [ref=e2015]: MARKET CONTEXT
+              - generic [ref=e2016]: F&G
+              - generic [ref=e2017]: 22 EXTREME FEAR
+              - generic [ref=e2018]: BTC Dom
+              - generic [ref=e2019]: 57.4%
+              - generic [ref=e2020]: MCap
+              - generic [ref=e2021]: $2.52T
+              - generic [ref=e2022]: 24h Vol
+              - generic [ref=e2023]: $167.03B
+            - generic [ref=e2024]:
+              - generic [ref=e2025]: SIGNAL STATS
+              - generic [ref=e2026]: 0 signals
+              - generic [ref=e2027]: ↑0% (0)
+              - generic [ref=e2028]: ↓0% (0)
+              - generic [ref=e2029]: Win Rate
+              - generic [ref=e2030]: 0%
+            - generic [ref=e2031]:
+              - generic [ref=e2032]: CATEGORY STATS
+              - generic [ref=e2033]:
+                - generic [ref=e2034]: TECHNICAL ANALYSIS
+                - generic [ref=e2035]: NEUTRAL
+                - generic [ref=e2036]: 38%
+                - generic [ref=e2037]: (4)
+              - generic [ref=e2038]:
+                - generic [ref=e2039]: QUANTITATIVE
+                - generic [ref=e2040]: NEUTRAL
+                - generic [ref=e2041]: 15%
+                - generic [ref=e2042]: (1)
+              - generic [ref=e2043]:
+                - generic [ref=e2044]: MACRO & SENTIMENT
+                - generic [ref=e2045]: BUY
+                - generic [ref=e2046]: 40%
+                - generic [ref=e2047]: (1)
+            - generic [ref=e2048]:
+              - generic [ref=e2049]:
+                - generic [ref=e2050]: TECHNICAL ANALYSIS
+                - generic [ref=e2051]: NEUTRAL
+                - generic [ref=e2053]: "4"
+              - generic [ref=e2055] [cursor=pointer]:
+                - generic [ref=e2056]: ▶
+                - generic [ref=e2057]: TREND & MOMENTUM
+                - generic [ref=e2058]: — NEUTRAL
+                - generic [ref=e2062]: 30%
+                - generic [ref=e2063]: RSI(14)=44.0 | EMA20 above EMA50 | neutral
+                - generic [ref=e2064]: w:1.5
+              - generic [ref=e2066] [cursor=pointer]:
+                - generic [ref=e2067]: ▶
+                - generic [ref=e2068]: VOLUME PROFILE
+                - generic [ref=e2069]: — NEUTRAL
+                - generic [ref=e2073]: 30%
+                - generic [ref=e2074]: "OBV flat | Vol ratio: 0.49x avg"
+                - generic [ref=e2075]: w:1.2
+              - generic [ref=e2077] [cursor=pointer]:
+                - generic [ref=e2078]: ▶
+                - generic [ref=e2079]: KEY LEVELS
+                - generic [ref=e2080]: ▲ BUY
+                - generic [ref=e2084]: 50%
+                - generic [ref=e2085]: "Resistance: $186 (+0.3%) | Support: $185 (-0.1%)"
+                - generic [ref=e2086]: w:1.3
+              - generic [ref=e2088] [cursor=pointer]:
+                - generic [ref=e2089]: ▶
+                - generic [ref=e2090]: MTF ALIGNMENT
+                - generic [ref=e2091]: — NEUTRAL
+                - generic [ref=e2095]: 43%
+                - generic [ref=e2096]: H1:bullish H4:bullish D1:bearish W1:bearish MN:n/a | 2/4 aligned
+                - generic [ref=e2097]: w:1.4
+            - generic [ref=e2098]:
+              - generic [ref=e2099]:
+                - generic [ref=e2100]: QUANTITATIVE
+                - generic [ref=e2101]: NEUTRAL
+                - generic [ref=e2103]: "1"
+              - generic [ref=e2105] [cursor=pointer]:
+                - generic [ref=e2106]: ▶
+                - generic [ref=e2107]: SIGNAL CONSENSUS
+                - generic [ref=e2108]: — NEUTRAL
+                - generic [ref=e2112]: 15%
+                - generic [ref=e2113]: No recent signals
+                - generic [ref=e2114]: w:1
+            - generic [ref=e2115]:
+              - generic [ref=e2116]:
+                - generic [ref=e2117]: MACRO & SENTIMENT
+                - generic [ref=e2118]: BUY
+                - generic [ref=e2120]: "1"
+              - generic [ref=e2122] [cursor=pointer]:
+                - generic [ref=e2123]: ▶
+                - generic [ref=e2124]: MARKET REGIME
+                - generic [ref=e2125]: ▲ BUY
+                - generic [ref=e2129]: 40%
+                - generic [ref=e2130]: "F&G: 22 (Extreme Fear) | BTC Dom: 57.3%"
+                - generic [ref=e2131]: w:0.8
+      - generic [ref=e2134]:
+        - generic [ref=e2135]:
+          - button "NEWS" [ref=e2136] [cursor=pointer]
+          - button "SOCIAL" [ref=e2137] [cursor=pointer]
+          - button "ON-CHAIN" [ref=e2138] [cursor=pointer]
+          - button "AGGREGATED" [ref=e2139] [cursor=pointer]
+          - generic [ref=e2140]:
+            - generic [ref=e2141]: 50 ITEMS
+            - button "↻" [ref=e2142] [cursor=pointer]
+            - button "⊞" [ref=e2143] [cursor=pointer]
+        - generic [ref=e2144]:
+          - generic [ref=e2145]: TIME
+          - generic [ref=e2146]: SRC
+          - generic [ref=e2147]: HEADLINE
+        - generic [ref=e2148]:
+          - generic [ref=e2149] [cursor=pointer]:
+            - generic [ref=e2150]: 15:50:11
+            - generic [ref=e2151]: BITCOI
+            - generic [ref=e2152]:
+              - generic [ref=e2154]: "TRIA Token Deposit: Revealing $1M Strategic Transfer from Suspected Team Address to Bitget"
+              - generic [ref=e2155]: ↗
+          - generic [ref=e2156] [cursor=pointer]:
+            - generic [ref=e2157]: 15:45:11
+            - generic [ref=e2158]: BITCOI
+            - generic [ref=e2159]:
+              - generic [ref=e2161]: "Bitcoin Price Prediction: Analyst Reveals Critical March Rebound Pattern Before Potential April-May Weakness"
+              - generic [ref=e2162]: ↗
+          - generic [ref=e2163] [cursor=pointer]:
+            - generic [ref=e2164]: 15:40:11
+            - generic [ref=e2165]: BITCOI
+            - generic [ref=e2166]:
+              - generic [ref=e2168]: "Bitcoin Price Analysis: The Critical Pivot Zone That Could Spark a Massive Trend Shift"
+              - generic [ref=e2169]: ↗
+          - generic [ref=e2170] [cursor=pointer]:
+            - generic [ref=e2171]: 15:35:54
+            - generic [ref=e2172]: ZYCRYP
+            - generic [ref=e2173]:
+              - generic [ref=e2175]: Cardano’s ADA Gears Up for Breakout as USDCx Ignites Institutional DEFI Push
+              - generic [ref=e2176]: ↗
+          - generic [ref=e2177] [cursor=pointer]:
+            - generic [ref=e2178]: 15:35:11
+            - generic [ref=e2179]: BITCOI
+            - generic [ref=e2180]:
+              - generic [ref=e2182]: "AUD/USD Forecast: Critical Breakdown Below 9-Day EMA Sparks Market Caution as Pair Hovers at 0.7050"
+              - generic [ref=e2183]: ↗
+          - generic [ref=e2184] [cursor=pointer]:
+            - generic [ref=e2185]: 15:34:21
+            - generic [ref=e2186]: COINOT
+            - generic [ref=e2187]:
+              - generic [ref=e2189]: "DOT Technical Analysis March 5, 2026: Weekly Strategy"
+              - generic [ref=e2190]: ↗
+          - generic [ref=e2191] [cursor=pointer]:
+            - generic [ref=e2192]: 15:31:54
+            - generic [ref=e2193]: TIMEST
+            - generic [ref=e2194]:
+              - generic [ref=e2196]: Ripple Could Have Sold Part Of XRP Escrow To Ray Dalio
+              - generic [ref=e2197]: ↗
+          - generic [ref=e2198] [cursor=pointer]:
+            - generic [ref=e2199]: 15:31:37
+            - generic [ref=e2200]: CRYPTO
+            - generic [ref=e2201]:
+              - generic [ref=e2203]: "Vitalik Drops Ethereum Endgame Bombshell: ETH USD to $3,000?"
+              - generic [ref=e2204]: ↗
+          - generic [ref=e2205] [cursor=pointer]:
+            - generic [ref=e2206]: 15:30:58
+            - generic [ref=e2207]: BITCOI
+            - generic [ref=e2208]:
+              - generic [ref=e2210]: Eight Sleep Secures Strategic Investment From Tether to Reach $1.5B Valuation
+              - generic [ref=e2211]: ↗
+          - generic [ref=e2212] [cursor=pointer]:
+            - generic [ref=e2213]: 15:30:46
+            - generic [ref=e2214]: COINTU
+            - generic [ref=e2215]:
+              - generic [ref=e2217]: Bitwise’s Annual Bitcoin ETF Donation Draws Attention As Developer Grants Rise
+              - generic [ref=e2218]: ↗
+          - generic [ref=e2219] [cursor=pointer]:
+            - generic [ref=e2220]: 15:30:20
+            - generic [ref=e2221]: CRYPTO
+            - generic [ref=e2222]:
+              - generic [ref=e2224]: LBank Achieves ISO/IEC 27001:2022 Certification, Accelerating Its Security Advancement
+              - generic [ref=e2225]: ↗
+          - generic [ref=e2226] [cursor=pointer]:
+            - generic [ref=e2227]: 15:30:11
+            - generic [ref=e2228]: BITCOI
+            - generic [ref=e2229]:
+              - generic [ref=e2231]: "Bitcoin Price Plummets: BTC Falls Below $72,000 Amid Market Uncertainty"
+              - generic [ref=e2232]: ↗
+          - generic [ref=e2233] [cursor=pointer]:
+            - generic [ref=e2234]: 15:25:11
+            - generic [ref=e2235]: BITCOI
+            - generic [ref=e2236]:
+              - generic [ref=e2238]: "US Dollar Safe-Haven Status: The Critical Conflict Premium Debate Reshaping 2025 Markets"
+              - generic [ref=e2239]: ↗
+          - generic [ref=e2240] [cursor=pointer]:
+            - generic [ref=e2241]: 15:20:12
+            - generic [ref=e2242]: BITCOI
+            - generic [ref=e2243]:
+              - generic [ref=e2245]: "USD/INR Plummets: Indian Rupee Stages Dramatic Recovery After RBI’s Decisive Intervention"
+              - generic [ref=e2246]: ↗
+          - generic [ref=e2247] [cursor=pointer]:
+            - generic [ref=e2248]: 15:19:18
+            - generic [ref=e2249]: COINOT
+            - generic [ref=e2250]:
+              - generic [ref=e2252]: "CC Technical Analysis March 5, 2026: Will It Rise or Fall?"
+              - generic [ref=e2253]: ↗
+          - generic [ref=e2254] [cursor=pointer]:
+            - generic [ref=e2255]: 15:17:28
+            - generic [ref=e2256]: COINTE
+            - generic [ref=e2257]:
+              - generic [ref=e2259]: Bitcoin ETFs pull in $462M as BTC briefly tops $73K
+              - generic [ref=e2260]: ↗
+          - generic [ref=e2261] [cursor=pointer]:
+            - generic [ref=e2262]: 15:15:29
+            - generic [ref=e2263]: TIMEST
+            - generic [ref=e2264]:
+              - generic [ref=e2266]: "Time Traveler: I Would Hate to Buy XRP At $20. Here’s why"
+              - generic [ref=e2267]: ↗
+          - generic [ref=e2268] [cursor=pointer]:
+            - generic [ref=e2269]: 15:15:11
+            - generic [ref=e2270]: BITCOI
+            - generic [ref=e2271]:
+              - generic [ref=e2273]: "Oil Supply Risk: Critical Warning on Strategic Reserve Vulnerabilities in 2025"
+              - generic [ref=e2274]: ↗
+          - generic [ref=e2275] [cursor=pointer]:
+            - generic [ref=e2276]: 15:11:30
+            - generic [ref=e2277]: CRYPTO
+            - generic [ref=e2278]:
+              - generic [ref=e2280]: "New Critical iPhone Exploit, Morgan Stanley Taps Coinbase, a16z to Raise $2 Billion: The Last 24 Hours in Crypto"
+              - generic [ref=e2281]: ↗
+          - generic [ref=e2282] [cursor=pointer]:
+            - generic [ref=e2283]: 15:10:10
+            - generic [ref=e2284]: BITCOI
+            - generic [ref=e2285]:
+              - generic [ref=e2287]: "1inch Network Token (1INCH) Price Prediction 2026-2030: The Astonishing DeFi Resurgence Potential"
+              - generic [ref=e2288]: ↗
+          - generic [ref=e2289] [cursor=pointer]:
+            - generic [ref=e2290]: 15:05:12
+            - generic [ref=e2291]: BITCOI
+            - generic [ref=e2292]:
+              - generic [ref=e2294]: Asian Stocks Recover Strongly After Middle East War-Led Bloodbath, KOSPI Leads Remarkable Rebound
+              - generic [ref=e2295]: ↗
+          - generic [ref=e2296] [cursor=pointer]:
+            - generic [ref=e2297]: 15:02:02
+            - generic [ref=e2298]: TIMEST
+            - generic [ref=e2299]:
+              - generic [ref=e2301]: "Analyst: Historically, XRP Spikes Like This Come Before Big Moves"
+              - generic [ref=e2302]: ↗
+          - generic [ref=e2303] [cursor=pointer]:
+            - generic [ref=e2304]: 15:00:20
+            - generic [ref=e2305]: NEWSBT
+            - generic [ref=e2306]:
+              - generic [ref=e2308]: Bitcoin Reclaims $73,000 Amid Iran War Volatility, But Analyst Issues Key Warning
+              - generic [ref=e2309]: ↗
+          - generic [ref=e2310] [cursor=pointer]:
+            - generic [ref=e2311]: 15:00:12
+            - generic [ref=e2312]: BITCOI
+            - generic [ref=e2313]:
+              - generic [ref=e2315]: "Swiss Franc Stability: The Critical Clash Between Oil Price Surges and SNB Defensive Strategy"
+              - generic [ref=e2316]: ↗
+          - generic [ref=e2317] [cursor=pointer]:
+            - generic [ref=e2318]: 15:00:06
+            - generic [ref=e2319]: AMB CR
+            - generic [ref=e2320]:
+              - generic [ref=e2322]: "Western Union launches USDPT on Solana: March rally for SOL?"
+              - generic [ref=e2323]: ↗
+          - generic [ref=e2324] [cursor=pointer]:
+            - generic [ref=e2325]: 15:00:00
+            - generic [ref=e2326]: COINPA
+            - generic [ref=e2327]:
+              - generic [ref=e2329]: Trump and banks clash over stalled US crypto bills GENIUS and CLARITY
+              - generic [ref=e2330]: ↗
+          - generic [ref=e2331] [cursor=pointer]:
+            - generic [ref=e2332]: 14:58:13
+            - generic [ref=e2333]: COINOT
+            - generic [ref=e2334]:
+              - generic [ref=e2336]: "TON Technical Analysis March 5, 2026: Market Commentary Support Resistance and Price Targets"
+              - generic [ref=e2337]: ↗
+          - generic [ref=e2338] [cursor=pointer]:
+            - generic [ref=e2339]: 14:55:11
+            - generic [ref=e2340]: BITCOI
+            - generic [ref=e2341]:
+              - generic [ref=e2343]: "SaharaAI Agentic AppChain Mainnet Launch: A Pioneering Leap into Decentralized AI’s Consumer Future"
+              - generic [ref=e2344]: ↗
+          - generic [ref=e2345] [cursor=pointer]:
+            - generic [ref=e2346]: 14:50:12
+            - generic [ref=e2347]: BITCOI
+            - generic [ref=e2348]:
+              - generic [ref=e2350]: "iPhone Malware Crisis: Google’s Urgent Warning About Coruna’s Crypto-Stealing Threat"
+              - generic [ref=e2351]: ↗
+          - generic [ref=e2352] [cursor=pointer]:
+            - generic [ref=e2353]: 14:49:00
+            - generic [ref=e2354]: COINDE
+            - generic [ref=e2355]:
+              - generic [ref=e2357]: "Bitcoin traders, alert: The rally is nearing a two-year 'make or break' price zone"
+              - generic [ref=e2358]: ↗
+          - generic [ref=e2359] [cursor=pointer]:
+            - generic [ref=e2360]: 14:49:00
+            - generic [ref=e2361]: U.TODA
+            - generic [ref=e2362]:
+              - generic [ref=e2364]: Bitcoin Pioneer Nick Szabo Warns Against Using Blockchain for Messages
+              - generic [ref=e2365]: ↗
+          - generic [ref=e2366] [cursor=pointer]:
+            - generic [ref=e2367]: 14:47:39
+            - generic [ref=e2368]: COINTE
+            - generic [ref=e2369]:
+              - generic [ref=e2371]: "Anthropic reopens Pentagon talks as tech groups push Trump to drop risk tag: FT"
+              - generic [ref=e2372]: ↗
+          - generic [ref=e2373] [cursor=pointer]:
+            - generic [ref=e2374]: 14:45:11
+            - generic [ref=e2375]: BITCOI
+            - generic [ref=e2376]:
+              - generic [ref=e2378]: Anonymous Trader Nets Astounding $991K Profit from Short-Term ETH Trade
+              - generic [ref=e2379]: ↗
+          - generic [ref=e2380] [cursor=pointer]:
+            - generic [ref=e2381]: 14:44:11
+            - generic [ref=e2382]: INVEST
+            - generic [ref=e2383]:
+              - generic [ref=e2385]: Bybit EU’s Crypto Card and Exchange Platform Recognized at Crypto Expo Europe 2026
+              - generic [ref=e2386]: ↗
+          - generic [ref=e2387] [cursor=pointer]:
+            - generic [ref=e2388]: 14:41:48
+            - generic [ref=e2389]: INVEST
+            - generic [ref=e2390]:
+              - generic [ref=e2392]: Threshold Launches All-in-One Bitcoin Liquidity App
+              - generic [ref=e2393]: ↗
+          - generic [ref=e2394] [cursor=pointer]:
+            - generic [ref=e2395]: 14:40:45
+            - generic [ref=e2396]: INVEST
+            - generic [ref=e2397]:
+              - generic [ref=e2399]: BitGo expands crypto service to european economic area
+              - generic [ref=e2400]: ↗
+          - generic [ref=e2401] [cursor=pointer]:
+            - generic [ref=e2402]: 14:40:21
+            - generic [ref=e2403]: CRYPTO
+            - generic [ref=e2404]:
+              - generic [ref=e2406]: SEC Chair Atkins vows to deploy AI against criminals misusing AI
+              - generic [ref=e2407]: ↗
+          - generic [ref=e2408] [cursor=pointer]:
+            - generic [ref=e2409]: 14:40:13
+            - generic [ref=e2410]: BITCOI
+            - generic [ref=e2411]:
+              - generic [ref=e2413]: World Liberty Financial Stuns Market with $1.74M WLFI Deposit to OKX, Signaling Strategic Pivot
+              - generic [ref=e2414]: ↗
+          - generic [ref=e2415] [cursor=pointer]:
+            - generic [ref=e2416]: 14:38:19
+            - generic [ref=e2417]: INVEST
+            - generic [ref=e2418]:
+              - generic [ref=e2420]: Byreal Launches First AI Copy Farming Skillset, Becoming Most Agent-Native on Solana DEX
+              - generic [ref=e2421]: ↗
+          - generic [ref=e2422] [cursor=pointer]:
+            - generic [ref=e2423]: 14:37:24
+            - generic [ref=e2424]: COINOT
+            - generic [ref=e2425]:
+              - generic [ref=e2427]: "WLFI Technical Analysis March 5, 2026: Weekly Strategy"
+              - generic [ref=e2428]: ↗
+          - generic [ref=e2429] [cursor=pointer]:
+            - generic [ref=e2430]: 14:37:16
+            - generic [ref=e2431]: INVEST
+            - generic [ref=e2432]:
+              - generic [ref=e2434]: Transacta Partners with CryptoJets to Support Growing Demand for Crypto Payments in Private Aviation
+              - generic [ref=e2435]: ↗
+          - generic [ref=e2436] [cursor=pointer]:
+            - generic [ref=e2437]: 14:36:04
+            - generic [ref=e2438]: U.TODA
+            - generic [ref=e2439]:
+              - generic [ref=e2441]: Bitcoin Remains in 'Extreme Fear' Territory Despite Relief Rally
+              - generic [ref=e2442]: ↗
+          - generic [ref=e2443] [cursor=pointer]:
+            - generic [ref=e2444]: 14:35:11
+            - generic [ref=e2445]: BITCOI
+            - generic [ref=e2446]:
+              - generic [ref=e2448]: "Altcoins Rally Predicted as Bitcoin’s Explosive Surge Shows Signs of Cooling: Expert Analysis"
+              - generic [ref=e2449]: ↗
+          - generic [ref=e2450] [cursor=pointer]:
+            - generic [ref=e2451]: 14:34:56
+            - generic [ref=e2452]: INVEST
+            - generic [ref=e2453]:
+              - generic [ref=e2455]: "Smart Investing Starts Here: Unlocking 55,000 USDT in Rewards with DCA Strategy on Bybit"
+              - generic [ref=e2456]: ↗
+          - generic [ref=e2457] [cursor=pointer]:
+            - generic [ref=e2458]: 14:33:50
+            - generic [ref=e2459]: INVEST
+            - generic [ref=e2460]:
+              - generic [ref=e2462]: Bitcoin slips, hovers near $68k as traders shun risk assets amid Iran conflict
+              - generic [ref=e2463]: ↗
+          - generic [ref=e2464] [cursor=pointer]:
+            - generic [ref=e2465]: 14:31:50
+            - generic [ref=e2466]: CRYPTO
+            - generic [ref=e2467]:
+              - generic [ref=e2469]: Bitcoin’s Next Big Price Targets Revealed as Analysts Expect Fresh Rally
+              - generic [ref=e2470]: ↗
+          - generic [ref=e2471] [cursor=pointer]:
+            - generic [ref=e2472]: 14:31:28
+            - generic [ref=e2473]: INVEST
+            - generic [ref=e2474]:
+              - generic [ref=e2476]: Ethereum Climbs 10% As Investors Gain Confidence
+              - generic [ref=e2477]: ↗
+          - generic [ref=e2478] [cursor=pointer]:
+            - generic [ref=e2479]: 14:30:21
+            - generic [ref=e2480]: INVEST
+            - generic [ref=e2481]:
+              - generic [ref=e2483]: Bitcoin upbeat at $72k, leads broader crypto rally as risk appetite improves
+              - generic [ref=e2484]: ↗
+          - generic [ref=e2485] [cursor=pointer]:
+            - generic [ref=e2486]: 14:30:11
+            - generic [ref=e2487]: BITCOI
+            - generic [ref=e2488]:
+              - generic [ref=e2490]: "Bithumb Forced Liquidations Spark Urgent Scrutiny: $19.5M Monthly Losses Reveal Crypto Lending Peril"
+              - generic [ref=e2491]: ↗
+          - generic [ref=e2492] [cursor=pointer]:
+            - generic [ref=e2493]: 14:30:07
+            - generic [ref=e2494]: BITCOI
+            - generic [ref=e2495]:
+              - generic [ref=e2497]: AI Models Overwhelmingly Choose Bitcoin as Preferred Monetary Instrument
+              - generic [ref=e2498]: ↗
+          - generic [ref=e2500]: ── CryptoCompare real-time news aggregation · 50 entries · auto-refresh 2min ──
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e104]: ●
+          - generic [ref=e105]: CONNECTED
+        - generic [ref=e106]:
+          - generic [ref=e107]: ◉
+          - generic [ref=e108]: "MongoDB: Ready"
+      - generic [ref=e109]:
+        - generic [ref=e110]:
+          - generic [ref=e111]: BTC
+          - generic [ref=e365]: $72,310
+          - generic [ref=e366]: +2.07%
+        - generic [ref=e113]:
+          - generic [ref=e114]: │
+          - generic [ref=e115]: ETH
+          - generic [ref=e367]: $2,116
+          - generic [ref=e368]: +3.01%
+        - generic [ref=e117]:
+          - generic [ref=e118]: │
+          - generic [ref=e119]: SOL
+          - generic [ref=e369]: $90.63
+          - generic [ref=e370]: +1.41%
+        - generic [ref=e121]:
+          - generic [ref=e122]: │
+          - generic [ref=e123]: BNB
+          - generic [ref=e371]: $652.60
+          - generic [ref=e372]: +0.48%
+      - generic [ref=e125]:
+        - generic [ref=e126]: OCULUS v0.1.0-alpha
+        - generic [ref=e127]: 2026-03-04
+  - button "Open Next.js Dev Tools" [ref=e133] [cursor=pointer]:
+    - img [ref=e134]
+  - alert [ref=e139]: Oculus Trading Terminal

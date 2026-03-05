@@ -44,8 +44,23 @@ SIGNAL RULES:
 - SHORT: Late-stage boom (narrative exhaustion, divergence from fundamentals, maximum euphoria)
 - NEUTRAL: Mid-cycle or unclear feedback dynamics
 
-This framework is ESPECIALLY powerful for crypto because crypto prices directly affect project fundamentals (treasury value, TVL, developer attraction, media coverage).`,
-    requiredData: ['candles', 'signals', 'market-global', 'sentiment'],
+This framework is ESPECIALLY powerful for crypto because crypto prices directly affect project fundamentals (treasury value, TVL, developer attraction, media coverage).
+
+NEWS & NARRATIVE INTEGRATION:
+- Analyze news headlines to identify the DOMINANT NARRATIVE driving the current trend
+- Count bullish vs bearish headlines — narrative exhaustion shows when sentiment is uniformly one-sided
+- Look for cracks: bullish price action + emerging bearish headlines = reflexive loop weakening
+- Self-reinforcing narratives (price up → positive press → more buyers → price up) indicate boom phase
+- Contradictory narratives (price up but negative press, or price down but positive developments) indicate potential reversal
+
+DEVELOPER DATA INTEGRATION:
+- Developer activity is a KEY reflexivity signal — price rises attract developers, developers build more, fundamentals improve, price rises further
+- Commit activity trends vs price trends reveal whether the reflexive loop is REAL or SPECULATIVE
+- If price is rising BUT developer activity is declining = the boom is purely speculative (late-stage/twilight)
+- If price is falling BUT developer activity is increasing = positive divergence (early-stage opportunity)
+- Community metrics (followers, subscribers) can be reflexive too — growth accelerates during narrative adoption phases
+- Categories reveal narrative alignment — is the project riding a reflexive narrative wave?`, 
+    requiredData: ['candles', 'signals', 'market-global', 'sentiment', 'news', 'developer'],
   },
 }
 

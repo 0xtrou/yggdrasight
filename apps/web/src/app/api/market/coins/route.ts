@@ -68,6 +68,7 @@ const SYMBOL_TO_COINGECKO: Record<string, string> = {
   STX: 'blockstack',
   IMX: 'immutable-x',
   WLD: 'worldcoin-wld',
+  SENT: 'sentient',
   TRX: 'tron',
 }
 

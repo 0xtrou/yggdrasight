@@ -34,8 +34,14 @@ SIGNAL RULES:
 - SHORT: Distribution phase confirmed (Upthrust, SOW, LPSY) — confidence based on phase clarity
 - NEUTRAL: Unclear phase, mid-markup, or mid-markdown without clear entry
 
-Analyze the provided price/volume data and identify the current Wyckoff phase with specific evidence.`,
-    requiredData: ['candles', 'signals', 'market-global'],
+Analyze the provided price/volume data and identify the current Wyckoff phase with specific evidence.
+
+ON-CHAIN DATA INTEGRATION:
+- Use funding rate and open interest to confirm institutional positioning
+- High OI + positive funding = longs crowded (potential distribution)
+- Declining OI + negative funding = shorts covering (potential accumulation end)
+- Use long/short ratios to gauge retail vs institutional positioning`,
+    requiredData: ['candles', 'signals', 'market-global', 'on-chain'],
   },
 }
 

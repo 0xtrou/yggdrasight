@@ -50,8 +50,20 @@ SIGNAL RULES:
 - SHORT: Exchange inflows + MVRV > 3 + whale distribution + extreme positive funding
 - NEUTRAL: Mixed signals or insufficient on-chain data
 
-If on-chain data is unavailable, analyze the available price data through an on-chain analyst's lens, noting what metrics you WOULD check and what the price/volume action suggests about underlying on-chain dynamics.`,
-    requiredData: ['candles', 'market-global', 'on-chain', 'signals'],
+If on-chain data is unavailable, analyze the available price data through an on-chain analyst's lens, noting what metrics you WOULD check and what the price/volume action suggests about underlying on-chain dynamics.
+
+NEWS INTEGRATION:
+- Cross-reference news headlines about whale movements, exchange hacks, regulatory actions
+- News about exchange listings/delistings directly impacts on-chain flows
+- Regulatory news can trigger large exchange inflows (panic selling) or outflows (self-custody)
+
+DEFI DATA INTEGRATION:
+- TVL is a fundamental on-chain metric — it measures actual capital locked in the protocol
+- TVL trends (24h/7d changes) reveal capital flow direction — declining TVL = capital flight
+- Fee and revenue data show real protocol usage — fees generated = actual on-chain economic activity
+- Chain TVL (for L1/L2) shows ecosystem health — more TVL = more on-chain activity
+- Compare TVL trends with price action — divergence between price and TVL signals potential reversal`, 
+    requiredData: ['candles', 'market-global', 'on-chain', 'signals', 'news', 'defi'],
   },
 }
 
