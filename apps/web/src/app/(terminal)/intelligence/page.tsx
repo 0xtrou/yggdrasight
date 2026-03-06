@@ -590,6 +590,225 @@ function formatElapsed(secs: number) {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DISCOVERY OUTPUT VIEW — shown while discovery agents are running
+   Full-screen agent output with live logs and per-agent status
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function DiscoveryOutputView({
+  discoverLogs,
+  agentResults,
+  discoverElapsed,
+}: {
+  discoverLogs: string[]
+  agentResults: Record<string, {
+    agentId: string
+    status: 'completed' | 'failed'
+    projectsFound: number
+    rawOutput: string | null
+    error: string | null
+    durationMs: number
+  }> | null
+  discoverElapsed: number
+}) {
+  const logsEndRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll logs to bottom
+  useEffect(() => {
+    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [discoverLogs.length])
+
+  const completedCount = agentResults
+    ? Object.values(agentResults).filter(r => r.status === 'completed').length
+    : 0
+  const totalAgents = agentResults ? Object.keys(agentResults).length : 0
+  const totalProjectsFound = agentResults
+    ? Object.values(agentResults).reduce((sum, r) => sum + r.projectsFound, 0)
+    : 0
+
+  return (
+    <div style={{
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: 0,
+      overflow: 'hidden',
+      fontFamily: 'var(--font-mono)',
+    }}>
+      {/* Status bar */}
+      <div style={{
+        padding: '12px 16px',
+        borderBottom: '1px solid var(--color-terminal-border)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px',
+        flexShrink: 0,
+        background: 'rgba(0,0,0,0.2)',
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}>
+          <span style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: '#00ddcc',
+            animation: 'intl-blink 1.5s infinite',
+            boxShadow: '0 0 8px #00ddcc66',
+          }} />
+          <span style={{
+            fontSize: '11px',
+            color: '#00ddcc',
+            fontWeight: 'bold',
+            letterSpacing: '0.1em',
+          }}>
+            AGENTS RUNNING
+          </span>
+        </div>
+        <span style={{
+          fontSize: '10px',
+          color: 'var(--color-terminal-dim)',
+        }}>
+          {formatElapsed(discoverElapsed)} elapsed
+        </span>
+        {totalAgents > 0 && (
+          <span style={{
+            fontSize: '10px',
+            color: completedCount === totalAgents ? '#00ff88' : 'var(--color-terminal-dim)',
+          }}>
+            {completedCount}/{totalAgents} agents complete
+          </span>
+        )}
+        {totalProjectsFound > 0 && (
+          <span style={{
+            fontSize: '10px',
+            color: '#00ff88',
+          }}>
+            {totalProjectsFound} projects discovered
+          </span>
+        )}
+      </div>
+
+      {/* Agent results grid */}
+      {agentResults && Object.keys(agentResults).length > 0 && (
+        <div style={{
+          padding: '10px 16px',
+          borderBottom: '1px solid var(--color-terminal-border)',
+          display: 'flex',
+          gap: '6px',
+          flexWrap: 'wrap',
+          flexShrink: 0,
+        }}>
+          {Object.values(agentResults).map((r) => (
+            <div key={r.agentId} style={{
+              padding: '4px 10px',
+              background: r.status === 'completed'
+                ? 'rgba(0,255,136,0.06)'
+                : r.status === 'failed'
+                  ? 'rgba(255,59,59,0.06)'
+                  : 'rgba(255,255,255,0.02)',
+              border: `1px solid ${
+                r.status === 'completed' ? '#00ff8833'
+                : r.status === 'failed' ? '#ff3b3b33'
+                : 'var(--color-terminal-border)'
+              }`,
+              fontSize: '10px',
+              color: r.status === 'completed' ? '#00ff88'
+                : r.status === 'failed' ? '#ff3b3b'
+                : 'var(--color-terminal-dim)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}>
+              <span style={{
+                width: '5px',
+                height: '5px',
+                borderRadius: '50%',
+                background: r.status === 'completed' ? '#00ff88'
+                  : r.status === 'failed' ? '#ff3b3b'
+                  : 'var(--color-terminal-amber)',
+              }} />
+              <span style={{ fontWeight: 'bold', letterSpacing: '0.06em' }}>
+                {r.agentId}
+              </span>
+              {r.projectsFound > 0 && (
+                <span style={{ opacity: 0.7 }}>
+                  {r.projectsFound} found
+                </span>
+              )}
+              {r.durationMs > 0 && (
+                <span style={{ opacity: 0.5 }}>
+                  {(r.durationMs / 1000).toFixed(1)}s
+                </span>
+              )}
+              {r.error && (
+                <span style={{ color: '#ff3b3b', opacity: 0.8 }}>
+                  ✕
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Live log output */}
+      <div style={{
+        flex: 1,
+        minHeight: 0,
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        padding: '12px 16px',
+        background: 'rgba(0,0,0,0.3)',
+      }}>
+        {discoverLogs.length === 0 ? (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: 'var(--color-terminal-dim)',
+            fontSize: '11px',
+            opacity: 0.5,
+          }}>
+            Waiting for agent output...
+          </div>
+        ) : (
+          <div style={{
+            fontSize: '11px',
+            lineHeight: 1.7,
+            color: 'var(--color-terminal-dim)',
+          }}>
+            {discoverLogs.map((line, i) => (
+              <div key={i} style={{
+                color: line.includes('Done:') || line.includes('succeeded') || line.includes('Completed')
+                  ? '#00ff88'
+                  : line.includes('FAILED') || line.includes('ERROR') || line.includes('error')
+                    ? '#ff3b3b'
+                    : line.includes('Phase') || line.includes('Starting') || line.includes('Launching')
+                      ? 'var(--color-terminal-amber)'
+                      : line.includes('found') || line.includes('projects')
+                        ? '#88bb88'
+                        : 'var(--color-terminal-dim)',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+              }}>
+                <span style={{ color: 'var(--color-terminal-muted)', marginRight: '8px', opacity: 0.4, fontSize: '9px' }}>
+                  {String(i + 1).padStart(3, '0')}
+                </span>
+                {line}
+              </div>
+            ))}
+            <div ref={logsEndRef} />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    INTELLIGENCE DASHBOARD — resizable 2×2 grid with 4 panels
 
@@ -613,6 +832,8 @@ function IntelligenceDashboard() {
     loading: discoveryLoading,
     discovering,
     discoverElapsed,
+    discoverLogs,
+    agentResults,
     discover,
     cancelDiscovery,
   } = useGlobalDiscovery()
@@ -919,6 +1140,12 @@ function IntelligenceDashboard() {
             ▸ LAUNCH DISCOVERY
           </button>
         </div>
+      ) : discovering ? (
+        <DiscoveryOutputView
+          discoverLogs={discoverLogs}
+          agentResults={agentResults}
+          discoverElapsed={discoverElapsed}
+        />
       ) : (
         <>
           {/* ── TOP ROW ── */}
