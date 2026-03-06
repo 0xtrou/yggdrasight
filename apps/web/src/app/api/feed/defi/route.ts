@@ -78,7 +78,7 @@ async function fetchProtocol(slug: string): Promise<DefiLlamaProtocol | null> {
       tvl: typeof data.tvl === 'number' ? data.tvl : null,
       tvlPrevDay: typeof data.tvlPrevDay === 'number' ? data.tvlPrevDay : null,
       tvlPrevWeek: typeof data.tvlPrevWeek === 'number' ? data.tvlPrevWeek : null,
-      category: data.category as string,
+      mcap: typeof data.mcap === 'number' ? data.mcap : null,
       category: data.category as string,
       chains: data.chains as string[],
     }
@@ -175,9 +175,13 @@ export async function GET(request: Request) {
       protocolSlug: protocolData?.slug ?? slug ?? null,
       tvl: protocolData?.tvl ?? null,
       tvlChange24h:
-        protocolData ? computeTvlChange(protocolData.tvl, protocolData.tvlPrevDay) : null,
+        protocolData && protocolData.tvl != null && protocolData.tvlPrevDay != null
+          ? computeTvlChange(protocolData.tvl, protocolData.tvlPrevDay)
+          : null,
       tvlChange7d:
-        protocolData ? computeTvlChange(protocolData.tvl, protocolData.tvlPrevWeek) : null,
+        protocolData && protocolData.tvl != null && protocolData.tvlPrevWeek != null
+          ? computeTvlChange(protocolData.tvl, protocolData.tvlPrevWeek)
+          : null,
       mcapToTvl:
         protocolData?.mcap && protocolData.tvl
           ? protocolData.mcap / protocolData.tvl

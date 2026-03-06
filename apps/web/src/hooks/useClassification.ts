@@ -253,7 +253,7 @@ export function useClassification(symbol: string): ClassificationHook {
             setResult(json.latest.classification)
           }
           // Fetch job data for subAgentResults if we have a jobId
-          const jobId = (json.latest as Record<string, unknown>)?.jobId as string | undefined
+          const jobId = (json.latest as unknown as Record<string, unknown>)?.jobId as string | undefined
           if (jobId && !cancelled) {
             try {
               const jobRes = await fetch(`/api/intelligence/classify/${jobId}`)

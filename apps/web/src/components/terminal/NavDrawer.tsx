@@ -15,6 +15,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { id: 'terminal', label: 'TERMINAL', icon: '⊞', path: '/', description: 'Trading Terminal' },
+  { id: 'assets', label: 'ASSETS', icon: '⬡', path: '/assets', description: 'Asset Management' },
   { id: 'feeds', label: 'DATA FEEDS', icon: '◉', path: '/feeds', description: 'Market Data Feeds' },
   { id: 'intelligence', label: 'INTELLIGENCE', icon: '◈', path: '/intelligence', description: 'Global Intelligence' },
   { id: 'signals', label: 'SIGNALS', icon: '⚡', path: '/signals', description: 'Signal History' },

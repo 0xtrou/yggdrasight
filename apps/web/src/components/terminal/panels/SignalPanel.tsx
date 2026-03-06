@@ -185,60 +185,8 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
           </div>
         )}
 
-        {/* TIMEFRAME SIGNALS */}
         {hasData && (
           <>
-            <div
-              style={{
-                padding: '4px 8px 2px',
-                fontSize: '11px',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--color-terminal-dim)',
-                letterSpacing: '0.5px',
-                borderBottom: '1px solid var(--color-terminal-border)',
-              }}
-            >
-              TIMEFRAME
-            </div>
-            {TIMEFRAMES.map((tf) => {
-              const value = indicators?.[tf.key] ?? 'n/a'
-              const color = directionColor(value)
-              const { text, arrow } = directionLabel(value)
-
-              return (
-                <div
-                  key={tf.key}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '4px 8px',
-                    borderBottom: '1px solid var(--color-terminal-border)',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '12px',
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--color-terminal-muted)',
-                    }}
-                  >
-                    {tf.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '12px',
-                      fontFamily: 'var(--font-mono)',
-                      color,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {text} {arrow}
-                  </span>
-                </div>
-              )
-            })}
-
             {/* VERDICT */}
             <div
               style={{
@@ -370,6 +318,58 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
                 </span>
               </div>
             </div>
+
+            {/* TIMEFRAME */}
+            <div
+              style={{
+                padding: '4px 8px 2px',
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--color-terminal-dim)',
+                letterSpacing: '0.5px',
+                borderBottom: '1px solid var(--color-terminal-border)',
+              }}
+            >
+              TIMEFRAME
+            </div>
+            {TIMEFRAMES.map((tf) => {
+              const value = indicators?.[tf.key] ?? 'n/a'
+              const color = directionColor(value)
+              const { text, arrow } = directionLabel(value)
+
+              return (
+                <div
+                  key={tf.key}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '4px 8px',
+                    borderBottom: '1px solid var(--color-terminal-border)',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--color-terminal-muted)',
+                    }}
+                  >
+                    {tf.label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontFamily: 'var(--font-mono)',
+                      color,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {text} {arrow}
+                  </span>
+                </div>
+              )
+            })}
 
             {/* HISTORY */}
             {history.length > 0 && (

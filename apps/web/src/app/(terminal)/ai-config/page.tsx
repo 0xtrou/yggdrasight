@@ -23,11 +23,10 @@ interface AgentInfo {
    CONSTANTS
 ───────────────────────────────────────────────────────────────────────────── */
 
-const INTELLIGENCE_DEFAULT_MODEL = 'github-copilot/gpt-4.1'
+const INTELLIGENCE_DEFAULT_MODEL = 'opencode/big-pickle'
 const DEFAULT_ANALYSIS_MODEL = 'opencode/big-pickle'
 const DEFAULT_DISCOVERY_MODEL = 'opencode/big-pickle'
 
-const AGENT_MODEL_MAP_KEY = 'oculus:agentModelMap'
 const DEFAULT_MODEL = DEFAULT_ANALYSIS_MODEL
 const RECOMMENDED_PROVIDERS = ['github-copilot', 'opencode']
 
@@ -416,13 +415,16 @@ export default function AIConfigPage() {
   const [setAllOpen, setSetAllOpen] = useState(false)
   const [setAllModel, setSetAllModel] = useState('')
 
-  // Load models + agents from API
+  // Load models + agents + persisted modelMap from API
   useEffect(() => {
     fetch('/api/intelligence/models')
       .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
       .then((data) => {
         setModels(data.models ?? [])
         setAgents(data.agents ?? [])
+        if (data.modelMap && typeof data.modelMap === 'object') {
+          setAgentModelMap(data.modelMap)
+        }
         setLoading(false)
       })
       .catch((err) => {
@@ -431,30 +433,15 @@ export default function AIConfigPage() {
       })
   }, [])
 
-  // Load persisted agentModelMap from localStorage
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(AGENT_MODEL_MAP_KEY)
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        if (parsed && typeof parsed === 'object') {
-          setAgentModelMap(parsed)
-        }
-      }
-    } catch {
-      // ignore
-    }
-  }, [])
-
   const handleModelChange = useCallback(
     (agentId: string, modelId: string) => {
       setAgentModelMap((prev) => {
         const next = { ...prev, [agentId]: modelId }
-        try {
-          localStorage.setItem(AGENT_MODEL_MAP_KEY, JSON.stringify(next))
-        } catch {
-          // ignore
-        }
+        fetch('/api/intelligence/models', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ modelMap: next }),
+        }).catch((err) => console.warn('[AIConfigPage] Failed to save model config:', err))
         return next
       })
     },
@@ -479,13 +466,16 @@ export default function AIConfigPage() {
       next[key] = setAllModel
     }
     setAgentModelMap(next)
-    try {
-      localStorage.setItem(AGENT_MODEL_MAP_KEY, JSON.stringify(next))
-    } catch {
-      // ignore
-    }
-    setSaved(true)
-    setTimeout(() => setSaved(false), 1500)
+    fetch('/api/intelligence/models', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ modelMap: next }),
+    })
+      .then(() => {
+        setSaved(true)
+        setTimeout(() => setSaved(false), 1500)
+      })
+      .catch((err) => console.warn('[AIConfigPage] Failed to save model config:', err))
     setSetAllOpen(false)
     setSetAllModel('')
   }, [agents, setAllModel])

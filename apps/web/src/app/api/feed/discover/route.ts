@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import { connectDB } from '@oculus/db'
 import { DiscoveryJob } from '@/lib/intelligence/models/discovery-job.model'
+import { getAgentModelMap } from '@/lib/intelligence/models/agent-model-config.model'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,14 +30,16 @@ function findMonorepoRoot(): string {
 // Creates a DiscoveryJob in MongoDB, spawns a detached worker, returns jobId immediately.
 export async function POST(request: Request) {
   try {
-    const body = await request.json() as { symbol?: string; model?: string }
+    const body = await request.json() as { symbol?: string }
     const symbol = (body.symbol ?? 'BTC').toUpperCase()
-    const model = body.model ?? 'opencode/big-pickle'
+
+    // Connect to DB and fetch model config from MongoDB
+    await connectDB()
+    const agentModelMap = await getAgentModelMap()
+    const model = agentModelMap['discovery'] ?? agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? 'opencode/big-pickle'
 
     console.log(`[discover] Creating job for ${symbol} with model ${model}`)
 
-    // Connect to DB and create the job
-    await connectDB()
     const job = await DiscoveryJob.create({
       symbol,
       modelId: model,

@@ -536,6 +536,7 @@ export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
             direction: SignalDirection.NEUTRAL,
             confidence: 0.1,
             reason: `OpenCode CLI error: ${result.error}`,
+            output: result.text,
             indicators: { durationMs: result.durationMs },
           }
         }
@@ -548,7 +549,8 @@ export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
             meta,
             direction: SignalDirection.NEUTRAL,
             confidence: 0.1,
-            reason: `Failed to parse LLM response: ${result.text.substring(0, 200)}`,
+            reason: 'Failed to parse LLM response',
+            output: result.text,
             indicators: { durationMs: result.durationMs, rawLength: result.text.length },
           }
         }
@@ -568,6 +570,7 @@ export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
           direction: directionMap[verdict.direction] ?? SignalDirection.NEUTRAL,
           confidence: Math.min(0.95, Math.max(0.05, verdict.confidence)),
           reason: verdict.reason,
+          output: result.text,
           indicators: {
             ...verdict.indicators,
             durationMs: result.durationMs,

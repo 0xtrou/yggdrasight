@@ -527,6 +527,10 @@ export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenC
       'run', '--rm',
       '--network', 'host',
       '-v', `${HOME_DIR}/.opencode:/root/.opencode:ro`,
+      // Mount XDG config dir for github-copilot and other provider config
+      '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
+      // Mount auth credentials (API keys, provider tokens)
+      '-v', `${HOME_DIR}/.local/share/opencode/auth.json:/root/.local/share/opencode/auth.json:ro`,
       '-e', 'HOME=/root',
     ]
 

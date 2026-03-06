@@ -56,7 +56,8 @@ export interface AnalystVerdict {
   meta: AnalystMeta
   direction: SignalDirection   // LONG | SHORT | NEUTRAL
   confidence: number           // 0.0 – 1.0 (capped, never raw)
-  reason: string               // Human-readable explanation
+  reason: string               // Human-readable explanation (structured result only)
+  output?: string              // Raw LLM response text — persisted for auditing, never displayed in UI
   indicators?: Record<string, number | string>  // optional raw indicator values for display
 }
 

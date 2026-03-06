@@ -16,11 +16,6 @@
       "name": "minimax-m2.5-free"
     },
     {
-      "id": "opencode/trinity-large-preview-free",
-      "provider": "opencode",
-      "name": "trinity-large-preview-free"
-    },
-    {
       "id": "github-copilot/claude-haiku-4.5",
       "provider": "github-copilot",
       "name": "claude-haiku-4.5"
@@ -124,6 +119,11 @@
       "id": "github-copilot/gpt-5.2-codex",
       "provider": "github-copilot",
       "name": "gpt-5.2-codex"
+    },
+    {
+      "id": "github-copilot/gpt-5.3-codex",
+      "provider": "github-copilot",
+      "name": "gpt-5.3-codex"
     },
     {
       "id": "github-copilot/grok-code-fast-1",
@@ -861,6 +861,21 @@
       "name": "openai/gpt-5.2-pro"
     },
     {
+      "id": "openrouter/openai/gpt-5.3-codex",
+      "provider": "openrouter",
+      "name": "openai/gpt-5.3-codex"
+    },
+    {
+      "id": "openrouter/openai/gpt-5.4",
+      "provider": "openrouter",
+      "name": "openai/gpt-5.4"
+    },
+    {
+      "id": "openrouter/openai/gpt-5.4-pro",
+      "provider": "openrouter",
+      "name": "openai/gpt-5.4-pro"
+    },
+    {
       "id": "openrouter/openai/gpt-oss-120b",
       "provider": "openrouter",
       "name": "openai/gpt-oss-120b"
@@ -1241,5 +1256,5 @@
       "name": "glm-5"
     }
   ],
-  "timestamp": 1772714970908
+  "timestamp": 1772768806112
 }

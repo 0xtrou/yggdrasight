@@ -15,6 +15,7 @@ import {
   type ClassificationResult,
   type SubAgentResult,
   type AgentType,
+  type CategoryMigration,
 } from '@/lib/intelligence/classification'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -463,7 +464,7 @@ function SubAgentCard({ agentType, agent, expanded, onToggle }: {
         </span>
       </div>
 
-      {expanded && agent.result && (
+      {expanded && !!agent.result && (
         <div style={{
           padding: '8px 10px 10px 26px',
           borderTop: '1px solid var(--color-terminal-border)',
@@ -472,7 +473,7 @@ function SubAgentCard({ agentType, agent, expanded, onToggle }: {
           lineHeight: 1.6,
           color: 'var(--color-terminal-muted)',
         }}>
-          <AgentResultContent agentType={agentType} result={agent.result} />
+          <AgentResultContent agentType={agentType} result={agent.result as Record<string, unknown>} />
           {agent.urlsFetched.length > 0 && (
             <div style={{ marginTop: '6px', color: 'var(--color-terminal-dim)', fontSize: '9px' }}>
               SOURCES: {agent.urlsFetched.length} URLs fetched • {agent.toolCallCount} tool calls
@@ -868,7 +869,7 @@ function ClassificationHistory({
   migrations,
 }: {
   history: ClassificationHistoryEntry[]
-  migrations: { from: ClassificationCategory; to: ClassificationCategory; detectedAt: string }[]
+  migrations: CategoryMigration[]
 }) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null)
 
@@ -893,12 +894,12 @@ function ClassificationHistory({
             }}>
               <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 'bold' }}>⚡ MIGRATION</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <span style={{ color: CATEGORY_COLORS[m.from] }}>CAT {m.from}</span>
+                <span style={{ color: CATEGORY_COLORS[m.from_primary] }}>CAT {m.from_primary}</span>
                 <span style={{ color: 'var(--color-terminal-dim)' }}>→</span>
-                <span style={{ color: CATEGORY_COLORS[m.to] }}>CAT {m.to}</span>
+                <span style={{ color: CATEGORY_COLORS[m.to_primary] }}>CAT {m.to_primary}</span>
               </span>
               <span style={{ color: 'var(--color-terminal-dim)', marginLeft: 'auto', fontSize: '9px' }}>
-                {timeAgo(m.detectedAt)}
+                {timeAgo(m.detected_at)}
               </span>
             </div>
           ))}
@@ -1553,6 +1554,12 @@ function AssetTableView({
       })
 
       if (!res.ok) {
+        setClassifyingSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
+        return
+      }
+
+      const json = await res.json()
+      if (!json.jobId) {
         setClassifyingSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
         return
       }

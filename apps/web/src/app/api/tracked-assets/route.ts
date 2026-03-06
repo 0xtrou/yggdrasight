@@ -40,6 +40,10 @@ export async function POST(req: NextRequest) {
       { upsert: true, new: true, lean: true },
     )
 
+    if (!doc) {
+      return NextResponse.json({ error: 'Failed to upsert asset' }, { status: 500 })
+    }
+
     return NextResponse.json({
       symbol: doc.symbol,
       name: doc.name ?? null,

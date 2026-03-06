@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import { connectDB } from '@oculus/db'
 import { ClassificationJob } from '@/lib/intelligence/models/classification-job.model'
+import { getAgentModelMap } from '@/lib/intelligence/models/agent-model-config.model'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,19 +30,20 @@ function findMonorepoRoot(): string {
 // Creates a ClassificationJob in MongoDB, spawns a detached worker, returns jobId immediately.
 export async function POST(request: Request) {
   try {
-    const body = await request.json() as { symbol?: string; model?: string; agentModels?: Record<string, string> }
+    const body = await request.json() as { symbol?: string }
     const symbol = (body.symbol ?? 'BTC').toUpperCase()
-    const model = body.model ?? 'github-copilot/gpt-4.1'
-    const agentModels = (body.agentModels && typeof body.agentModels === 'object') ? body.agentModels : null
+
+    // Connect to DB and fetch model config from MongoDB
+    await connectDB()
+    const agentModelMap = await getAgentModelMap()
+    const model = agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? 'github-copilot/gpt-4.1'
 
     console.log(`[classify] Creating job for ${symbol} with model ${model}`)
 
-    // Connect to DB and create the job
-    await connectDB()
     const job = await ClassificationJob.create({
       symbol,
       modelId: model,
-      agentModels,
+      agentModels: Object.keys(agentModelMap).length > 0 ? agentModelMap : null,
       status: 'pending',
       startedAt: new Date(),
     })
