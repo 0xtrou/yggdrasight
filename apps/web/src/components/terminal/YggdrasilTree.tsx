@@ -66,6 +66,7 @@ interface ProjectNode {
   id: string
   name: string
   symbol: string | null
+  logoUrl: string | null
   categoryId: number
   sector: string
   signalStrength: number
@@ -232,6 +233,7 @@ function transformReportToTreeData(report: GlobalDiscoveryFullReport | null, mar
               id: `${categoryId}:${sectorIndex}:${projectIndex}:${project.name}:${project.symbol ?? ''}`,
               name: project.name,
               symbol: project.symbol,
+              logoUrl: project.logoUrl ?? null,
               categoryId,
               sector,
               signalStrength: clamp01(project.signalStrength),
@@ -1285,14 +1287,68 @@ function createSymbolTexture(symbol: string, color: string): THREE.CanvasTexture
   return tex
 }
 
-/** Render project symbol sprites at each leaf globe position */
+/** Load a project logo from URL and draw it onto a canvas texture with glow styling */
+function loadLogoTexture(logoUrl: string, color: string): Promise<THREE.CanvasTexture> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const size = 128
+      const canvas = document.createElement('canvas')
+      canvas.width = size
+      canvas.height = size
+      const ctx = canvas.getContext('2d')!
+
+      // Glow background (same style as symbol textures)
+      ctx.clearRect(0, 0, size, size)
+      const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
+      gradient.addColorStop(0, `${color}44`)
+      gradient.addColorStop(0.6, `${color}18`)
+      gradient.addColorStop(1, 'transparent')
+      ctx.fillStyle = gradient
+      ctx.beginPath()
+      ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2)
+      ctx.fill()
+
+      // Draw logo centered, with padding
+      const padding = 20
+      const drawSize = size - padding * 2
+      const aspect = img.width / img.height
+      let dw = drawSize
+      let dh = drawSize
+      if (aspect > 1) {
+        dh = drawSize / aspect
+      } else {
+        dw = drawSize * aspect
+      }
+      const dx = (size - dw) / 2
+      const dy = (size - dh) / 2
+
+      // Subtle shadow behind logo
+      ctx.shadowColor = color
+      ctx.shadowBlur = 10
+      ctx.drawImage(img, dx, dy, dw, dh)
+
+      const tex = new THREE.CanvasTexture(canvas)
+      tex.needsUpdate = true
+      resolve(tex)
+    }
+    img.onerror = () => reject(new Error(`Failed to load logo: ${logoUrl}`))
+    img.src = logoUrl
+  })
+}
+
+/** Render project symbol sprites at each leaf globe position — loads logos async with text fallback */
 const ProjectSymbols = memo(function ProjectSymbols({ leaves }: { leaves: LeafInstanceMeta[] }) {
-  const sprites = useMemo(() => {
+  // Initial sprites with text symbol textures (synchronous, immediate)
+  const initialSprites = useMemo(() => {
     return leaves
-      .filter(leaf => leaf.project.symbol)
+      .filter(leaf => leaf.project.symbol || leaf.project.logoUrl)
       .map(leaf => {
         const color = CATEGORY_COLORS[leaf.project.categoryId] ?? '#79ffe0'
-        const tex = createSymbolTexture(leaf.project.symbol!, color)
+        const tex = leaf.project.symbol
+          ? createSymbolTexture(leaf.project.symbol, color)
+          : createSymbolTexture(leaf.project.name.slice(0, 3), color)
         const mat = new THREE.SpriteMaterial({
           map: tex,
           transparent: true,
@@ -1302,6 +1358,8 @@ const ProjectSymbols = memo(function ProjectSymbols({ leaves }: { leaves: LeafIn
         })
         return {
           id: leaf.project.id,
+          logoUrl: leaf.project.logoUrl,
+          color,
           material: mat,
           position: [leaf.basePosition.x, leaf.basePosition.y + leaf.scale * 3.2, leaf.basePosition.z] as [number, number, number],
           scale: Math.max(0.38, leaf.scale * 3.0),
@@ -1309,19 +1367,59 @@ const ProjectSymbols = memo(function ProjectSymbols({ leaves }: { leaves: LeafIn
       })
   }, [leaves])
 
+  // Track sprite materials in a ref so async logo loads can swap textures in-place
+  const spritesRef = useRef(initialSprites)
+  spritesRef.current = initialSprites
+
+  // Async: load logo textures and swap them into existing sprite materials
+  useEffect(() => {
+    let cancelled = false
+    const logoDisposables: THREE.CanvasTexture[] = []
+
+    for (const sprite of initialSprites) {
+      if (!sprite.logoUrl) continue
+      loadLogoTexture(sprite.logoUrl, sprite.color)
+        .then(logoTex => {
+          if (cancelled) {
+            logoTex.dispose()
+            return
+          }
+          logoDisposables.push(logoTex)
+          // Find the current sprite (it may have been recreated)
+          const current = spritesRef.current.find(s => s.id === sprite.id)
+          if (current) {
+            // Dispose old text texture, swap in logo texture
+            current.material.map?.dispose()
+            current.material.map = logoTex
+            current.material.needsUpdate = true
+          }
+        })
+        .catch(() => {
+          // Logo failed to load — text symbol fallback already in place
+        })
+    }
+
+    return () => {
+      cancelled = true
+      for (const tex of logoDisposables) {
+        tex.dispose()
+      }
+    }
+  }, [initialSprites])
+
   // Cleanup textures and materials on unmount
   useEffect(() => {
     return () => {
-      for (const s of sprites) {
+      for (const s of initialSprites) {
         s.material.map?.dispose()
         s.material.dispose()
       }
     }
-  }, [sprites])
+  }, [initialSprites])
 
   return (
     <group>
-      {sprites.map(s => (
+      {initialSprites.map(s => (
         <sprite
           key={s.id}
           material={s.material}

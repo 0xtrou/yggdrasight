@@ -158,19 +158,23 @@ async function waitForMongo(containerName: string, timeoutMs = 30_000): Promise<
  * @returns UserMongoContainer with connection details
  */
 export async function ensureUserMongo(sessionId: string): Promise<UserMongoContainer> {
-  // Check in-memory registry first
   const cached = containerRegistry.get(sessionId)
   if (cached) {
     const running = await isContainerRunning(cached.containerName)
     if (running) {
       return { ...cached, running: true }
     }
-    // Container exists but stopped — start it
-    await exec(DOCKER_BIN, ['start', cached.containerName])
-    await waitForMongo(cached.containerName)
-    const updated = { ...cached, running: true }
-    containerRegistry.set(sessionId, updated)
-    return updated
+    // Container exists but stopped — try to start it
+    const exists = await containerExists(cached.containerName)
+    if (exists) {
+      await exec(DOCKER_BIN, ['start', cached.containerName])
+      await waitForMongo(cached.containerName)
+      const updated = { ...cached, running: true }
+      containerRegistry.set(sessionId, updated)
+      return updated
+    }
+    // Container was removed (e.g. by logout) — clear stale cache and fall through to recreation
+    containerRegistry.delete(sessionId)
   }
 
   const containerName = `${CONTAINER_PREFIX}${sessionId}`
