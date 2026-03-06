@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { connectDB, TrackedAsset } from '@oculus/db'
+import { withAuth } from '@/lib/auth/middleware'
 
 export const dynamic = 'force-dynamic'
 
@@ -86,59 +86,60 @@ function resolveSymbolsToIds(symbols: string[]): string {
 // GET /api/market/coins?symbols=BTC,ETH,TAO,PENDLE
 // Also still supports ?ids=bitcoin,ethereum for backwards compat
 export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const symbolsParam = searchParams.get('symbols')
-    const idsParam = searchParams.get('ids')
+  return withAuth(async (ctx) => {
+    try {
+      const { searchParams } = new URL(request.url)
+      const symbolsParam = searchParams.get('symbols')
+      const idsParam = searchParams.get('ids')
 
-    let ids: string
-    if (symbolsParam) {
-      // New path: accept trading symbols (BTC, TAO, PENDLE) and resolve to CoinGecko IDs
-      ids = resolveSymbolsToIds(symbolsParam.split(','))
-    } else if (idsParam) {
-      // Legacy/direct: accept CoinGecko IDs directly
-      ids = idsParam
-    } else {
-      // Default: return only tracked assets from DB
-      await connectDB()
-      const tracked = await TrackedAsset.find({}).lean()
-      if (tracked.length > 0) {
-        ids = resolveSymbolsToIds(tracked.map(a => a.symbol))
+      let ids: string
+      if (symbolsParam) {
+        // New path: accept trading symbols (BTC, TAO, PENDLE) and resolve to CoinGecko IDs
+        ids = resolveSymbolsToIds(symbolsParam.split(','))
+      } else if (idsParam) {
+        // Legacy/direct: accept CoinGecko IDs directly
+        ids = idsParam
       } else {
-        // No tracked assets — return empty
-        return NextResponse.json([])
+        // Default: return only tracked assets from DB
+        const tracked = await ctx.models.TrackedAsset.find({}).lean()
+        if (tracked.length > 0) {
+          ids = resolveSymbolsToIds(tracked.map(a => a.symbol))
+        } else {
+          // No tracked assets — return empty
+          return NextResponse.json([])
+        }
       }
-    }
 
-    const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`,
-      {
-        headers: { 'User-Agent': 'oculus-trading/1.0' },
-        next: { revalidate: 60 },
-      },
-    )
+      const res = await fetch(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`,
+        {
+          headers: { 'User-Agent': 'oculus-trading/1.0' },
+          next: { revalidate: 60 },
+        },
+      )
 
-    if (!res.ok) {
-      console.error('[GET /api/market/coins] CoinGecko error', res.status)
+      if (!res.ok) {
+        console.error('[GET /api/market/coins] CoinGecko error', res.status)
+        return NextResponse.json({ error: 'upstream unavailable' }, { status: 503 })
+      }
+
+      const raw: CoinGeckoMarket[] = await res.json()
+
+      const coins = raw.map((c) => ({
+        id: c.id,
+        symbol: c.symbol,
+        name: c.name,
+        currentPrice: c.current_price ?? 0,
+        marketCap: c.market_cap ?? 0,
+        volume24h: c.total_volume ?? 0,
+        priceChange24h: c.price_change_percentage_24h ?? 0,
+        rank: c.market_cap_rank ?? 9999,
+      }))
+
+      return NextResponse.json(coins)
+    } catch (err) {
+      console.error('[GET /api/market/coins]', err)
       return NextResponse.json({ error: 'upstream unavailable' }, { status: 503 })
     }
-
-    const raw: CoinGeckoMarket[] = await res.json()
-
-    const coins = raw.map((c) => ({
-      id: c.id,
-      symbol: c.symbol,
-      name: c.name,
-      currentPrice: c.current_price ?? 0,
-      marketCap: c.market_cap ?? 0,
-      volume24h: c.total_volume ?? 0,
-      priceChange24h: c.price_change_percentage_24h ?? 0,
-      rank: c.market_cap_rank ?? 9999,
-    }))
-
-    return NextResponse.json(coins)
-  } catch (err) {
-    console.error('[GET /api/market/coins]', err)
-    return NextResponse.json({ error: 'upstream unavailable' }, { status: 503 })
-  }
+  })
 }

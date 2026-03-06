@@ -1,2 +1,2 @@
-export { connectDB, mongoose } from './connection'
+export { connectDB, getModelsForConnection, mongoose } from './connection'
 export * from './models'

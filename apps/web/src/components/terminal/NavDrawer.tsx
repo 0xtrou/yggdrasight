@@ -57,6 +57,8 @@ export function NavDrawer() {
   const router = useRouter()
   const [collapsed, setCollapsed] = useState(true)
   const [hovered, setHovered] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [logoutHovered, setLogoutHovered] = useState(false)
 
   // Hydrate collapsed state from localStorage
   useEffect(() => {
@@ -66,12 +68,27 @@ export function NavDrawer() {
     } catch { /* ignore */ }
   }, [])
 
+  // Fetch session status
+  useEffect(() => {
+    fetch('/api/auth/session')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data?.sessionId) setSessionId(data.sessionId) })
+      .catch(() => { /* ignore */ })
+  }, [])
+
   const toggleCollapsed = useCallback(() => {
     setCollapsed(prev => {
       const next = !prev
       try { localStorage.setItem(NAV_COLLAPSED_KEY, String(next)) } catch { /* ignore */ }
       return next
     })
+  }, [])
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+    } catch { /* ignore */ }
+    window.location.href = '/'
   }, [])
 
   const isActive = (path: string) => {
@@ -196,6 +213,71 @@ export function NavDrawer() {
             })}
           </div>
         ))}
+      </div>
+
+      {/* Session / Logout */}
+      <div style={{
+        borderTop: '1px solid var(--color-terminal-border)',
+        flexShrink: 0,
+        padding: showExpanded ? '8px 12px' : '8px 0',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '6px',
+        alignItems: showExpanded ? 'stretch' : 'center',
+      }}>
+        {sessionId && showExpanded && (
+          <div style={{
+            fontSize: '8px',
+            fontFamily: 'var(--font-mono)',
+            color: 'var(--color-terminal-dim)',
+            letterSpacing: '0.05em',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}>
+            <span style={{ color: 'var(--color-terminal-muted)', marginRight: '4px' }}>SESSION</span>
+            <span style={{ color: 'var(--color-terminal-green, #4ade80)' }}>{sessionId}</span>
+          </div>
+        )}
+        {sessionId && (
+          <button
+            onClick={handleLogout}
+            onMouseEnter={() => setLogoutHovered(true)}
+            onMouseLeave={() => setLogoutHovered(false)}
+            title="Logout"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: showExpanded ? 'flex-start' : 'center',
+              gap: '8px',
+              padding: showExpanded ? '0 0' : '0',
+              height: '28px',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: 'var(--font-mono)',
+              width: '100%',
+              textAlign: 'left',
+            }}
+          >
+            <span style={{
+              fontSize: '14px',
+              color: logoutHovered ? 'var(--color-terminal-red, #f87171)' : 'var(--color-terminal-dim)',
+              width: '22px',
+              textAlign: 'center',
+              flexShrink: 0,
+              transition: 'color 0.1s ease',
+            }}>⏻</span>
+            {showExpanded && (
+              <span style={{
+                fontSize: '10px',
+                color: logoutHovered ? 'var(--color-terminal-red, #f87171)' : 'var(--color-terminal-muted)',
+                letterSpacing: '0.08em',
+                transition: 'color 0.1s ease',
+              }}>LOGOUT</span>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Bottom: Collapse toggle hint */}

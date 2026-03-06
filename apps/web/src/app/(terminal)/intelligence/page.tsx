@@ -393,16 +393,74 @@ function MarketIntelContent({
   emergingTrends: string[]
   crossPillarInsights: string | null
 }) {
+  const router = useRouter()
+
   if (!marketDirection && emergingTrends.length === 0 && !crossPillarInsights) {
     return (
       <div style={{
+        minHeight: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: '16px',
-        color: 'var(--color-terminal-dim)',
-        fontSize: '11px',
         fontFamily: 'var(--font-mono)',
-        textAlign: 'center',
       }}>
-        Awaiting intelligence data...
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          textAlign: 'center',
+        }}>
+          <div style={{
+            fontSize: '32px',
+            lineHeight: 1,
+            color: 'var(--color-terminal-dim)',
+            opacity: 0.3,
+          }}>
+            ◎
+          </div>
+          <div style={{
+            fontSize: '12px',
+            color: 'var(--color-terminal-dim)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+          }}>
+            NO INTELLIGENCE DATA
+          </div>
+          <div style={{
+            fontSize: '10px',
+            color: 'var(--color-terminal-muted)',
+          }}>
+            Run a global discovery to generate market intelligence
+          </div>
+          <button
+            onClick={() => router.push('/discovery')}
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--color-terminal-up)',
+              color: 'var(--color-terminal-up)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              letterSpacing: '0.1em',
+              padding: '8px 20px',
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+              textTransform: 'uppercase',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+              e.currentTarget.style.borderColor = '#00ff88'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+            }}
+          >
+            ▸ LAUNCH DISCOVERY
+          </button>
+        </div>
       </div>
     )
   }
@@ -803,268 +861,327 @@ function IntelligenceDashboard() {
         )}
       </div>
 
-      {/* ── TOP ROW ── */}
-      <div style={{
-        display: fullscreenPanel ? 'none' : 'flex',
-        height: `calc(${rowSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
-        minHeight: 0,
-        overflow: 'hidden',
-      }}>
-        {/* TOP-LEFT: 3D Expansion Map */}
+      {/* ── EMPTY STATE — no reports yet ── */}
+      {!latestReport && !discovering ? (
         <div style={{
-          ...(fullscreenPanel === 'yggdrasil' ? fullscreenStyle : {
-            width: `calc(${colSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column' as const,
-            overflow: 'hidden',
-            border: '1px solid var(--color-terminal-border)',
-            borderTop: 'none',
-          }),
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '16px',
+          minHeight: 0,
         }}>
-          <PanelHeader
-            icon="◉"
-            title="YGGDRASIL"
-            isFullscreen={fullscreenPanel === 'yggdrasil'}
-            onToggleFullscreen={() => toggleFullscreen('yggdrasil')}
-          />
+          <span style={{ fontSize: '40px', opacity: 0.3 }}>◎</span>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              fontSize: '12px',
+              letterSpacing: '0.1em',
+              color: 'var(--color-terminal-dim)',
+              textTransform: 'uppercase',
+              marginBottom: '6px',
+            }}>
+              NO INTELLIGENCE REPORTS
+            </div>
+            <div style={{
+              fontSize: '10px',
+              color: 'var(--color-terminal-muted)',
+              maxWidth: '340px',
+              lineHeight: 1.6,
+            }}>
+              Launch a global discovery to generate market intelligence.
+              Configure depth and agent count above, then hit LAUNCH DISCOVERY.
+            </div>
+          </div>
+          <button
+            onClick={() => discover(depth, agentCount)}
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--color-terminal-up)',
+              color: 'var(--color-terminal-up)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              letterSpacing: '0.1em',
+              padding: '8px 20px',
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+              textTransform: 'uppercase',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+              e.currentTarget.style.borderColor = '#00ff88'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+            }}
+          >
+            ▸ LAUNCH DISCOVERY
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* ── TOP ROW ── */}
           <div style={{
-            flex: 1,
+            display: fullscreenPanel ? 'none' : 'flex',
+            height: `calc(${rowSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
             minHeight: 0,
-            position: 'relative',
             overflow: 'hidden',
           }}>
-            {fullscreenPanel !== 'yggdrasil' && (
-              <YggdrasilTree
-                report={latestReport}
-                marketGlobal={marketGlobal}
+            {/* TOP-LEFT: 3D Expansion Map */}
+            <div style={{
+              ...(fullscreenPanel === 'yggdrasil' ? fullscreenStyle : {
+                width: `calc(${colSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
+                minWidth: 0,
+                display: 'flex',
+                flexDirection: 'column' as const,
+                overflow: 'hidden',
+                border: '1px solid var(--color-terminal-border)',
+                borderTop: 'none',
+              }),
+            }}>
+              <PanelHeader
+                icon="◉"
+                title="YGGDRASIL"
+                isFullscreen={fullscreenPanel === 'yggdrasil'}
+                onToggleFullscreen={() => toggleFullscreen('yggdrasil')}
               />
-            )}
-          </div>
-        </div>
-
-        {/* Vertical resize handle */}
-        <ResizeHandle
-          direction="vertical"
-          onMouseDown={colHandle.onMouseDown}
-          hovered={colHandle.handleHovered}
-          onHoverChange={colHandle.setHandleHovered}
-          dragging={colHandle.dragging}
-        />
-
-        {/* TOP-RIGHT: Market Intel */}
-        <div style={{
-          ...(fullscreenPanel === 'market-intel' ? fullscreenStyle : {
-            flex: 1,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column' as const,
-            overflow: 'hidden',
-            border: '1px solid var(--color-terminal-border)',
-            borderLeft: 'none',
-            borderTop: 'none',
-          }),
-        }}>
-          <PanelHeader
-            icon="◈"
-            title="MARKET INTEL"
-            isFullscreen={fullscreenPanel === 'market-intel'}
-            onToggleFullscreen={() => toggleFullscreen('market-intel')}
-          />
-          <div style={{
-            flex: 1,
-            minHeight: 0,
-            overflowY: 'auto',
-            overflowX: 'hidden',
-          }}>
-            <MarketIntelContent
-              marketDirection={marketDirection}
-              emergingTrends={emergingTrends}
-              crossPillarInsights={crossPillarInsights}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Horizontal resize handle */}
-      {!fullscreenPanel && (
-        <ResizeHandle
-          direction="horizontal"
-          onMouseDown={rowHandle.onMouseDown}
-          hovered={rowHandle.handleHovered}
-          onHoverChange={rowHandle.setHandleHovered}
-          dragging={rowHandle.dragging}
-        />
-      )}
-
-      {/* ── BOTTOM ROW ── */}
-      <div style={{
-        display: fullscreenPanel ? 'none' : 'flex',
-        flex: 1,
-        minHeight: 0,
-        overflow: 'hidden',
-      }}>
-        {/* BOTTOM-LEFT: Discovery Panel */}
-        <div style={{
-          ...(fullscreenPanel === 'discovery' ? fullscreenStyle : {
-            width: `calc(${colSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column' as const,
-            overflow: 'hidden',
-            border: '1px solid var(--color-terminal-border)',
-            borderTop: 'none',
-          }),
-        }}>
-          <PanelHeader
-            icon="◎"
-            title="DISCOVERY"
-            isFullscreen={fullscreenPanel === 'discovery'}
-            onToggleFullscreen={() => toggleFullscreen('discovery')}
-          />
-          <div style={{
-            flex: 1,
-            minHeight: 0,
-            overflowY: 'auto',
-            overflowX: 'hidden',
-          }}>
-            <GlobalDiscoveryPanel hideHeader />
-          </div>
-        </div>
-
-        {/* Vertical resize handle (reuses same colSplit) */}
-        <ResizeHandle
-          direction="vertical"
-          onMouseDown={colHandle.onMouseDown}
-          hovered={colHandle.handleHovered}
-          onHoverChange={colHandle.setHandleHovered}
-          dragging={colHandle.dragging}
-        />
-
-        {/* BOTTOM-RIGHT: Module Nav */}
-        <div style={{
-          ...(fullscreenPanel === 'modules' ? fullscreenStyle : {
-            flex: 1,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column' as const,
-            overflow: 'hidden',
-            border: '1px solid var(--color-terminal-border)',
-            borderTop: 'none',
-            borderLeft: 'none',
-          }),
-        }}>
-          <PanelHeader
-            icon="⬡"
-            title="MODULES"
-            isFullscreen={fullscreenPanel === 'modules'}
-            onToggleFullscreen={() => toggleFullscreen('modules')}
-          />
-          <div style={{
-            flex: 1,
-            minHeight: 0,
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            padding: '8px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-          }}>
-            {DASHBOARD_CARDS.map((card) => (
-              <DashboardCardButton
-                key={card.id}
-                card={card}
-                onClick={() => handleNavigate(card.path)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Drag overlay — prevents iframe/canvas from eating mouse events during resize */}
-      {anyDragging && (
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 100,
-          cursor: colHandle.dragging ? 'col-resize' : 'row-resize',
-        }} />
-      )}
-
-      {/* ── FULLSCREEN PANELS — rendered outside the grid when active ── */}
-      {fullscreenPanel === 'yggdrasil' && (
-        <div style={fullscreenStyle}>
-          <PanelHeader
-            icon="◉"
-            title="YGGDRASIL"
-            isFullscreen
-            onToggleFullscreen={() => toggleFullscreen('yggdrasil')}
-          />
-          <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                position: 'relative',
+                overflow: 'hidden',
+              }}>
+                {fullscreenPanel !== 'yggdrasil' && (
               <YggdrasilTree report={latestReport} marketGlobal={marketGlobal} />
-          </div>
-        </div>
-      )}
+                )}
+              </div>
+            </div>
 
-      {fullscreenPanel === 'market-intel' && (
-        <div style={fullscreenStyle}>
-          <PanelHeader
-            icon="◈"
-            title="MARKET INTEL"
-            isFullscreen
-            onToggleFullscreen={() => toggleFullscreen('market-intel')}
-          />
-          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
-            <MarketIntelContent
-              marketDirection={marketDirection}
-              emergingTrends={emergingTrends}
-              crossPillarInsights={crossPillarInsights}
+            {/* Vertical resize handle */}
+            <ResizeHandle
+              direction="vertical"
+              onMouseDown={colHandle.onMouseDown}
+              hovered={colHandle.handleHovered}
+              onHoverChange={colHandle.setHandleHovered}
+              dragging={colHandle.dragging}
             />
-          </div>
-        </div>
-      )}
 
-      {fullscreenPanel === 'discovery' && (
-        <div style={fullscreenStyle}>
-          <PanelHeader
-            icon="◎"
-            title="DISCOVERY"
-            isFullscreen
-            onToggleFullscreen={() => toggleFullscreen('discovery')}
-          />
-          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
-            <GlobalDiscoveryPanel hideHeader />
+            {/* TOP-RIGHT: Market Intel */}
+            <div style={{
+              ...(fullscreenPanel === 'market-intel' ? fullscreenStyle : {
+                flex: 1,
+                minWidth: 0,
+                display: 'flex',
+                flexDirection: 'column' as const,
+                overflow: 'hidden',
+                border: '1px solid var(--color-terminal-border)',
+                borderLeft: 'none',
+                borderTop: 'none',
+              }),
+            }}>
+              <PanelHeader
+                icon="◈"
+                title="MARKET INTEL"
+                isFullscreen={fullscreenPanel === 'market-intel'}
+                onToggleFullscreen={() => toggleFullscreen('market-intel')}
+              />
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: 'auto',
+                overflowX: 'hidden',
+              }}>
+                <MarketIntelContent
+                  marketDirection={marketDirection}
+                  emergingTrends={emergingTrends}
+                  crossPillarInsights={crossPillarInsights}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      )}
 
-      {fullscreenPanel === 'modules' && (
-        <div style={fullscreenStyle}>
-          <PanelHeader
-            icon="⬡"
-            title="MODULES"
-            isFullscreen
-            onToggleFullscreen={() => toggleFullscreen('modules')}
-          />
+          {/* Horizontal resize handle */}
+          {!fullscreenPanel && (
+            <ResizeHandle
+              direction="horizontal"
+              onMouseDown={rowHandle.onMouseDown}
+              hovered={rowHandle.handleHovered}
+              onHoverChange={rowHandle.setHandleHovered}
+              dragging={rowHandle.dragging}
+            />
+          )}
+
+          {/* ── BOTTOM ROW ── */}
           <div style={{
+            display: fullscreenPanel ? 'none' : 'flex',
             flex: 1,
             minHeight: 0,
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            padding: '8px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
+            overflow: 'hidden',
           }}>
-            {DASHBOARD_CARDS.map((card) => (
-              <DashboardCardButton
-                key={card.id}
-                card={card}
-                onClick={() => handleNavigate(card.path)}
+            {/* BOTTOM-LEFT: Discovery Panel */}
+            <div style={{
+              ...(fullscreenPanel === 'discovery' ? fullscreenStyle : {
+                width: `calc(${colSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
+                minWidth: 0,
+                display: 'flex',
+                flexDirection: 'column' as const,
+                overflow: 'hidden',
+                border: '1px solid var(--color-terminal-border)',
+                borderTop: 'none',
+              }),
+            }}>
+              <PanelHeader
+                icon="◎"
+                title="DISCOVERY"
+                isFullscreen={fullscreenPanel === 'discovery'}
+                onToggleFullscreen={() => toggleFullscreen('discovery')}
               />
-            ))}
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: 'auto',
+                overflowX: 'hidden',
+              }}>
+                <GlobalDiscoveryPanel hideHeader />
+              </div>
+            </div>
+
+            {/* Vertical resize handle (reuses same colSplit) */}
+            <ResizeHandle
+              direction="vertical"
+              onMouseDown={colHandle.onMouseDown}
+              hovered={colHandle.handleHovered}
+              onHoverChange={colHandle.setHandleHovered}
+              dragging={colHandle.dragging}
+            />
+
+            {/* BOTTOM-RIGHT: Module Nav */}
+            <div style={{
+              ...(fullscreenPanel === 'modules' ? fullscreenStyle : {
+                flex: 1,
+                minWidth: 0,
+                display: 'flex',
+                flexDirection: 'column' as const,
+                overflow: 'hidden',
+                border: '1px solid var(--color-terminal-border)',
+                borderTop: 'none',
+                borderLeft: 'none',
+              }),
+            }}>
+              <PanelHeader
+                icon="⬡"
+                title="MODULES"
+                isFullscreen={fullscreenPanel === 'modules'}
+                onToggleFullscreen={() => toggleFullscreen('modules')}
+              />
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                padding: '8px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+              }}>
+                {DASHBOARD_CARDS.map((card) => (
+                  <DashboardCardButton
+                    key={card.id}
+                    card={card}
+                    onClick={() => handleNavigate(card.path)}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+
+          {/* Drag overlay — prevents iframe/canvas from eating mouse events during resize */}
+          {anyDragging && (
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 100,
+              cursor: colHandle.dragging ? 'col-resize' : 'row-resize',
+            }} />
+          )}
+
+          {/* ── FULLSCREEN PANELS — rendered outside the grid when active ── */}
+          {fullscreenPanel === 'yggdrasil' && (
+            <div style={fullscreenStyle}>
+              <PanelHeader
+                icon="◉"
+                title="YGGDRASIL"
+                isFullscreen
+                onToggleFullscreen={() => toggleFullscreen('yggdrasil')}
+              />
+              <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+                  <YggdrasilTree report={latestReport} marketGlobal={marketGlobal} />
+              </div>
+            </div>
+          )}
+
+          {fullscreenPanel === 'market-intel' && (
+            <div style={fullscreenStyle}>
+              <PanelHeader
+                icon="◈"
+                title="MARKET INTEL"
+                isFullscreen
+                onToggleFullscreen={() => toggleFullscreen('market-intel')}
+              />
+              <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+                <MarketIntelContent
+                  marketDirection={marketDirection}
+                  emergingTrends={emergingTrends}
+                  crossPillarInsights={crossPillarInsights}
+                />
+              </div>
+            </div>
+          )}
+
+          {fullscreenPanel === 'discovery' && (
+            <div style={fullscreenStyle}>
+              <PanelHeader
+                icon="◎"
+                title="DISCOVERY"
+                isFullscreen
+                onToggleFullscreen={() => toggleFullscreen('discovery')}
+              />
+              <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+                <GlobalDiscoveryPanel hideHeader />
+              </div>
+            </div>
+          )}
+
+          {fullscreenPanel === 'modules' && (
+            <div style={fullscreenStyle}>
+              <PanelHeader
+                icon="⬡"
+                title="MODULES"
+                isFullscreen
+                onToggleFullscreen={() => toggleFullscreen('modules')}
+              />
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                padding: '8px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+              }}>
+                {DASHBOARD_CARDS.map((card) => (
+                  <DashboardCardButton
+                    key={card.id}
+                    card={card}
+                    onClick={() => handleNavigate(card.path)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Blink animation for discovery status */}

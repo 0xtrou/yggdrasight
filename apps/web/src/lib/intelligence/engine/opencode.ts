@@ -486,6 +486,8 @@ export interface RunOpenCodeOptions {
   /** Working directory containing data files for the agent to read */
   workDir?: string
   timeoutMs?: number
+  /** Decrypted auth.json path for per-user auth — when provided, overrides HOME_DIR mount */
+  authJsonPath?: string
 }
 
 export interface RunOpenCodeResult {
@@ -512,7 +514,7 @@ export interface RunOpenCodeResult {
  * Falls back to inline prompt if no workDir is provided.
  */
 export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenCodeResult> {
-  const { model, prompt, workDir, timeoutMs = DEFAULT_TIMEOUT_MS } = options
+  const { model, prompt, workDir, timeoutMs = DEFAULT_TIMEOUT_MS, authJsonPath } = options
   const startTime = Date.now()
 
   try {
@@ -526,14 +528,10 @@ export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenC
     const dockerArgs: string[] = [
       'run', '--rm',
       '--network', 'host',
-      '-v', `${HOME_DIR}/.opencode:/root/.opencode:ro`,
-      // Mount XDG config dir for github-copilot and other provider config
-      '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
-      // Mount auth credentials (API keys, provider tokens)
-      '-v', `${HOME_DIR}/.local/share/opencode/auth.json:/root/.local/share/opencode/auth.json:ro`,
+      // Mount auth credentials (API keys, provider tokens) — only file OpenCode needs
+      '-v', `${authJsonPath ?? `${HOME_DIR}/.local/share/opencode/auth.json`}:/root/.local/share/opencode/auth.json:ro`,
       '-e', 'HOME=/root',
     ]
-
     if (workDir) {
       // Mount the pre-built workspace and tell opencode to run from /workspace
       dockerArgs.push('-v', `${workDir}:/workspace:rw`)

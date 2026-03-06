@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 import { spawn } from 'child_process'
 import path from 'path'
 import fs from 'fs'
-import { connectDB } from '@oculus/db'
-import { GlobalDiscoveryJob, GlobalDiscoveryReport } from '@/lib/intelligence/models/global-discovery-job.model'
-import { getAgentModelMap } from '@/lib/intelligence/models/agent-model-config.model'
+import { withAuth } from '@/lib/auth/middleware'
+import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'
+import { getUserMongoUri } from '@/lib/auth/mongo-manager'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,7 +27,7 @@ function findMonorepoRoot(): string {
 // POST /api/intelligence/global-discover
 // Creates a GlobalDiscoveryJob, spawns a detached worker, returns jobId immediately.
 export async function POST(request: Request) {
-  try {
+  return withAuth(async (ctx) => {
     const body = await request.json() as {
       depth?: number
       agentCount?: number
@@ -36,12 +36,11 @@ export async function POST(request: Request) {
     const depth = Math.min(Math.max(Number(body.depth) || 20, 1), 100)
     const agentCount = Math.min(Math.max(Number(body.agentCount) || 5, 1), 20)
 
-    await connectDB()
-    const agentModelMap = await getAgentModelMap()
+    const agentModelMap = await getAgentModelMapFromConnection(ctx.connection)
     const model = agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? 'github-copilot/gpt-4.1'
 
     // Find the latest report for context inheritance
-    const latestReport = await GlobalDiscoveryReport.findOne(
+    const latestReport = await ctx.intelligenceModels.GlobalDiscoveryReport.findOne(
       {},
       { _id: 1 },
       { sort: { createdAt: -1 } },
@@ -49,7 +48,7 @@ export async function POST(request: Request) {
 
     console.log(`[global-discover] Creating job: depth=${depth}, agents=${agentCount}, model=${model}`)
 
-    const job = await GlobalDiscoveryJob.create({
+    const job = await ctx.intelligenceModels.GlobalDiscoveryJob.create({
       depth,
       agentCount,
       modelId: model,
@@ -65,13 +64,16 @@ export async function POST(request: Request) {
     // Spawn the worker as a detached child process
     const projectRoot = findMonorepoRoot()
     const workerScript = path.join(projectRoot, 'scripts', 'global-discovery-worker.ts')
+    const userMongoUri = getUserMongoUri(ctx.sessionId)
+
     const child = spawn(BUN_BIN, [workerScript, jobId], {
       detached: true,
       stdio: ['ignore', 'ignore', 'pipe'],
       cwd: projectRoot,
       env: {
         ...process.env,
-        MONGODB_URI: process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin',
+        ...(userMongoUri ? { OCULUS_MONGODB_URI: userMongoUri } : {}),
+        OCULUS_PASSWORD_HASH: ctx.passwordHash,
         NODE_PATH: [
           path.join(projectRoot, 'packages/db/node_modules'),
           path.join(projectRoot, 'node_modules'),
@@ -92,27 +94,20 @@ export async function POST(request: Request) {
     child.unref()
 
     if (child.pid) {
-      await GlobalDiscoveryJob.updateOne({ _id: job._id }, { $set: { pid: child.pid } })
+      await ctx.intelligenceModels.GlobalDiscoveryJob.updateOne({ _id: job._id }, { $set: { pid: child.pid } })
     }
 
     console.log(`[global-discover] Worker spawned (PID ${child.pid}) for job ${jobId}`)
 
     return NextResponse.json({ jobId })
-  } catch (err) {
-    console.error('[POST /api/intelligence/global-discover]', err)
-    return NextResponse.json(
-      { jobId: null, error: err instanceof Error ? err.message : 'Failed to start global discovery' },
-      { status: 500 }
-    )
-  }
+  })
 }
 
 // GET /api/intelligence/global-discover
 // Returns the most recent active (pending/running) job, if any.
 export async function GET() {
-  try {
-    await connectDB()
-    const job = await GlobalDiscoveryJob.findOne(
+  return withAuth(async (ctx) => {
+    const job = await ctx.intelligenceModels.GlobalDiscoveryJob.findOne(
       { status: { $in: ['pending', 'running'] } },
       { _id: 1, status: 1, depth: 1, agentCount: 1, startedAt: 1 },
       { sort: { startedAt: -1 } },
@@ -131,24 +126,20 @@ export async function GET() {
         startedAt: job.startedAt,
       },
     })
-  } catch (err) {
-    console.error('[GET /api/intelligence/global-discover]', err)
-    return NextResponse.json({ job: null })
-  }
+  })
 }
 
 // DELETE /api/intelligence/global-discover?jobId=xxx
 // Cancels an active global discovery job.
 export async function DELETE(request: Request) {
-  try {
+  return withAuth(async (ctx) => {
     const url = new URL(request.url)
     const jobId = url.searchParams.get('jobId')
     if (!jobId) {
       return NextResponse.json({ ok: false, error: 'Missing jobId' }, { status: 400 })
     }
 
-    await connectDB()
-    const job = await GlobalDiscoveryJob.findById(jobId)
+    const job = await ctx.intelligenceModels.GlobalDiscoveryJob.findById(jobId)
 
     if (!job) {
       return NextResponse.json({ ok: false, error: 'Job not found' }, { status: 404 })
@@ -174,11 +165,5 @@ export async function DELETE(request: Request) {
 
     console.log(`[global-discover] Job ${jobId} cancelled by user`)
     return NextResponse.json({ ok: true })
-  } catch (err) {
-    console.error('[DELETE /api/intelligence/global-discover]', err)
-    return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : 'Failed to cancel' },
-      { status: 500 }
-    )
-  }
+  })
 }

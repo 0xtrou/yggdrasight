@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 import { spawn } from 'child_process'
 import path from 'path'
 import fs from 'fs'
-import { connectDB } from '@oculus/db'
-import { DiscoveryJob } from '@/lib/intelligence/models/discovery-job.model'
-import { getAgentModelMap } from '@/lib/intelligence/models/agent-model-config.model'
+import { withAuth } from '@/lib/auth/middleware'
+import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'
+import { getUserMongoUri } from '@/lib/auth/mongo-manager'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,18 +29,17 @@ function findMonorepoRoot(): string {
 // POST /api/feed/discover
 // Creates a DiscoveryJob in MongoDB, spawns a detached worker, returns jobId immediately.
 export async function POST(request: Request) {
-  try {
+  return withAuth(async (ctx) => {
     const body = await request.json() as { symbol?: string }
     const symbol = (body.symbol ?? 'BTC').toUpperCase()
 
-    // Connect to DB and fetch model config from MongoDB
-    await connectDB()
-    const agentModelMap = await getAgentModelMap()
+    // Fetch model config from user's MongoDB
+    const agentModelMap = await getAgentModelMapFromConnection(ctx.connection)
     const model = agentModelMap['discovery'] ?? agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? 'opencode/big-pickle'
 
     console.log(`[discover] Creating job for ${symbol} with model ${model}`)
 
-    const job = await DiscoveryJob.create({
+    const job = await ctx.intelligenceModels.DiscoveryJob.create({
       symbol,
       modelId: model,
       status: 'pending',
@@ -51,17 +50,18 @@ export async function POST(request: Request) {
     console.log(`[discover] Job created: ${jobId}`)
 
     // Spawn the worker as a detached child process
-    // NOTE: pnpm hoists mongoose into packages/db/node_modules — we must set NODE_PATH
-    // so the standalone worker script can resolve it.
     const projectRoot = findMonorepoRoot()
     const workerScript = path.join(projectRoot, 'scripts', 'discover-worker.ts')
+    const userMongoUri = getUserMongoUri(ctx.sessionId)
+
     const child = spawn(BUN_BIN, [workerScript, jobId], {
       detached: true,
       stdio: ['ignore', 'ignore', 'pipe'], // Capture stderr for debugging
       cwd: projectRoot, // Run worker from monorepo root
       env: {
         ...process.env,
-        MONGODB_URI: process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin',
+        ...(userMongoUri ? { OCULUS_MONGODB_URI: userMongoUri } : {}),
+        OCULUS_PASSWORD_HASH: ctx.passwordHash,
         NODE_PATH: [
           path.join(projectRoot, 'packages/db/node_modules'),
           path.join(projectRoot, 'node_modules'),
@@ -85,33 +85,26 @@ export async function POST(request: Request) {
 
     // Save the PID so we can kill it on cancel
     if (child.pid) {
-      await DiscoveryJob.updateOne({ _id: job._id }, { $set: { pid: child.pid } })
+      await ctx.intelligenceModels.DiscoveryJob.updateOne({ _id: job._id }, { $set: { pid: child.pid } })
     }
 
     console.log(`[discover] Worker spawned (PID ${child.pid}) for job ${jobId}`)
 
     return NextResponse.json({ jobId })
-  } catch (err) {
-    console.error('[POST /api/feed/discover]', err)
-    return NextResponse.json(
-      { jobId: null, error: err instanceof Error ? err.message : 'Failed to start discovery' },
-      { status: 500 }
-    )
-  }
+  })
 }
 
 // GET /api/feed/discover?symbol=SENT
 // Returns the most recent active (pending/running) job for a symbol, if any.
 export async function GET(request: Request) {
-  try {
+  return withAuth(async (ctx) => {
     const url = new URL(request.url)
     const symbol = url.searchParams.get('symbol')?.toUpperCase()
     if (!symbol) {
       return NextResponse.json({ job: null })
     }
 
-    await connectDB()
-    const job = await DiscoveryJob.findOne(
+    const job = await ctx.intelligenceModels.DiscoveryJob.findOne(
       { symbol, status: { $in: ['pending', 'running'] } },
       { _id: 1, status: 1, startedAt: 1 },
       { sort: { startedAt: -1 } },
@@ -128,24 +121,20 @@ export async function GET(request: Request) {
         startedAt: job.startedAt,
       },
     })
-  } catch (err) {
-    console.error('[GET /api/feed/discover]', err)
-    return NextResponse.json({ job: null })
-  }
+  })
 }
 
 // DELETE /api/feed/discover?jobId=xxx
 // Cancels an active discovery job — marks it as failed, kills the worker process.
 export async function DELETE(request: Request) {
-  try {
+  return withAuth(async (ctx) => {
     const url = new URL(request.url)
     const jobId = url.searchParams.get('jobId')
     if (!jobId) {
       return NextResponse.json({ ok: false, error: 'Missing jobId' }, { status: 400 })
     }
 
-    await connectDB()
-    const job = await DiscoveryJob.findById(jobId)
+    const job = await ctx.intelligenceModels.DiscoveryJob.findById(jobId)
 
     if (!job) {
       return NextResponse.json({ ok: false, error: 'Job not found' }, { status: 404 })
@@ -173,11 +162,5 @@ export async function DELETE(request: Request) {
 
     console.log(`[discover] Job ${jobId} cancelled by user`)
     return NextResponse.json({ ok: true })
-  } catch (err) {
-    console.error('[DELETE /api/feed/discover]', err)
-    return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : 'Failed to cancel' },
-      { status: 500 }
-    )
-  }
+  })
 }

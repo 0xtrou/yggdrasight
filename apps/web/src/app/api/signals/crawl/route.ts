@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { spawn } from 'child_process'
 import path from 'path'
 import fs from 'fs'
-import { connectDB } from '@oculus/db'
-import { SignalCrawlJob } from '@/lib/intelligence/models/signal-crawl-job.model'
-import { getAgentModelMap } from '@/lib/intelligence/models/agent-model-config.model'
+import { withAuth } from '@/lib/auth/middleware'
+import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'
+import { getUserMongoUri } from '@/lib/auth/mongo-manager'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +23,7 @@ function findMonorepoRoot(): string {
 
 // POST /api/signals/crawl — start a new AI signal crawl job
 export async function POST(req: NextRequest) {
-  try {
+  return withAuth(async (ctx) => {
     const body = await req.json() as { symbols?: string[]; screen?: string; agentSlug?: string }
     const raw = body.symbols ?? []
     const screen = typeof body.screen === 'string' && body.screen.trim() ? body.screen.trim() : 'signals'
@@ -36,16 +36,15 @@ export async function POST(req: NextRequest) {
     if (symbols.length === 0) {
       return NextResponse.json({ error: 'No valid symbols provided' }, { status: 400 })
     }
-    await connectDB()
 
     // Resolve model — dedicated signal_crawler key, fall back to opencode/big-pickle
-    const agentModelMap = await getAgentModelMap()
+    const agentModelMap = await getAgentModelMapFromConnection(ctx.connection)
     const model =
       agentModelMap['signal_crawler'] ??
       agentModelMap['*'] ??
       'opencode/big-pickle'
 
-    const job = await SignalCrawlJob.create({
+    const job = await ctx.intelligenceModels.SignalCrawlJob.create({
       screen,
       agentSlug,
       symbols,
@@ -59,11 +58,17 @@ export async function POST(req: NextRequest) {
     // Spawn detached worker
     const projectRoot = findMonorepoRoot()
     const workerScript = path.join(projectRoot, 'scripts', 'signal-crawl-worker.ts')
+    const userMongoUri = getUserMongoUri(ctx.sessionId)
 
     const child = spawn(BUN_BIN, [workerScript, jobId], {
       detached: true,
       stdio: ['ignore', 'ignore', 'pipe'],
       cwd: projectRoot,
+      env: {
+        ...process.env,
+        ...(userMongoUri ? { OCULUS_MONGODB_URI: userMongoUri } : {}),
+        OCULUS_PASSWORD_HASH: ctx.passwordHash,
+      },
     })
 
     child.stderr?.on('data', (data: Buffer) => {
@@ -73,26 +78,19 @@ export async function POST(req: NextRequest) {
     child.unref()
 
     return NextResponse.json({ jobId, symbols, model }, { status: 201 })
-  } catch (err) {
-    console.error('[POST /api/signals/crawl]', err)
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Failed to start crawl job' },
-      { status: 500 },
-    )
-  }
+  })
 }
 
 // GET /api/signals/crawl — list recent crawl jobs
 export async function GET(req: NextRequest) {
-  try {
-    await connectDB()
+  return withAuth(async (ctx) => {
     const filter: Record<string, unknown> = {}
     const screenParam = req.nextUrl.searchParams.get('screen')
     const agentParam = req.nextUrl.searchParams.get('agent')
     if (screenParam) filter.screen = screenParam
     if (agentParam) filter.agentSlug = agentParam
 
-    const jobs = await SignalCrawlJob.find(filter)
+    const jobs = await ctx.intelligenceModels.SignalCrawlJob.find(filter)
       .sort({ startedAt: -1 })
       .limit(50)
       .lean()
@@ -104,8 +102,5 @@ export async function GET(req: NextRequest) {
     })
 
     return NextResponse.json({ jobs: transformed })
-  } catch (err) {
-    console.error('[GET /api/signals/crawl]', err)
-    return NextResponse.json({ error: 'Failed to fetch crawl jobs' }, { status: 500 })
-  }
+  })
 }

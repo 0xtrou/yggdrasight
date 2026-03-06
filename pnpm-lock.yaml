@@ -44,6 +44,9 @@ importers:
       lightweight-charts:
         specifier: ^5.1.0
         version: 5.1.0
+      mongoose:
+        specifier: ^9.2.4
+        version: 9.2.4
       next:
         specifier: ^16.1.6
         version: 16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

@@ -232,6 +232,7 @@ async function runAgent(
   workDir: string,
   agentType: string,
   jobId: string,
+  configPaths?: DecryptedConfigPaths | null,
 ): Promise<AgentRunResult> {
   const HOME_DIR = process.env.HOME ?? '/root'
   const startTime = Date.now()
@@ -239,9 +240,7 @@ async function runAgent(
   const args = [
     'run', '--rm',
     '--network', 'host',
-    '-v', `${HOME_DIR}/.opencode:/root/.opencode:ro`,
-    '-v', `${HOME_DIR}/.local/share/opencode/auth.json:/root/.local/share/opencode/auth.json:ro`,
-    '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
+    '-v', `${configPaths?.authJsonPath ?? `${HOME_DIR}/.local/share/opencode/auth.json`}:/root/.local/share/opencode/auth.json:ro`,
     '-v', `${workDir}:/workspace:rw`,
     '-e', 'HOME=/root',
     OPENCODE_IMAGE,
@@ -496,7 +495,7 @@ async function runClassificationAgents(
     const workDir = buildAgentWorkspace(agentType, symbol, projectName, discoveryData)
     try {
       const agentModel = agentModels?.[agentType] || model
-      const result = await runAgent(agentModel, workDir, agentType, jobId)
+      const result = await runAgent(agentModel, workDir, agentType, jobId, configPaths)
       const parser = PARSER_MAP[agentType]
       const parsed = result.success ? parser(result.text) : null
 
@@ -572,6 +571,19 @@ async function main() {
     process.exit(1)
   }
 
+  // Decrypt per-user config if password hash is provided
+  let configPaths: DecryptedConfigPaths | null = null
+  const passwordHash = process.env.OCULUS_PASSWORD_HASH
+  if (passwordHash) {
+    try {
+      configPaths = await decryptConfigForMount(mongoose.connection, passwordHash)
+      log('Decrypted user config for Docker mounts')
+    } catch (err) {
+      console.error('Failed to decrypt user config:', err)
+      process.exit(1)
+    }
+  }
+
   // Load the job
   const job = await ClassificationJob.findById(jobId)
   if (!job) {
@@ -641,7 +653,7 @@ async function main() {
     let synthesizedResult: ClassificationResult | null = null
 
     try {
-      const synthResult = await runAgent(getModelForAgent('synthesizer'), synthWorkDir, 'synthesizer', jobId)
+      const synthResult = await runAgent(getModelForAgent('synthesizer'), synthWorkDir, 'synthesizer', jobId, configPaths)
       if (synthResult.success) {
         synthesizedResult = parseClassificationResult(synthResult.text)
       }
@@ -717,6 +729,9 @@ async function main() {
       { $set: { status: 'failed', error: errorMsg, completedAt: new Date() } },
     ).catch(() => { /* ignore DB errors during error handling */ })
   }
+
+  // Cleanup decrypted config temp files
+  if (configPaths) cleanupDecryptedConfig(configPaths)
 
   await mongoose.disconnect()
   process.exit(0)

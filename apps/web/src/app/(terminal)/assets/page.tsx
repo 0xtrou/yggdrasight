@@ -41,10 +41,17 @@ function formatVolume(vol: number): string {
    ADD ASSET FORM
 ───────────────────────────────────────────────────────────────────────────── */
 
-function AddAssetForm({ onAdd }: { onAdd: (symbol: string, name?: string) => void }) {
+function AddAssetForm({
+  onAdd,
+  symbolInputRef,
+}: {
+  onAdd: (symbol: string, name?: string) => void
+  symbolInputRef?: React.RefObject<HTMLInputElement | null>
+}) {
   const [symbol, setSymbol] = useState('')
   const [name, setName] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const activeInputRef = symbolInputRef ?? inputRef
 
   const handleSubmit = useCallback(() => {
     const s = symbol.trim().toUpperCase().replace(/USDT$/i, '')
@@ -52,8 +59,8 @@ function AddAssetForm({ onAdd }: { onAdd: (symbol: string, name?: string) => voi
     onAdd(s, name.trim() || undefined)
     setSymbol('')
     setName('')
-    inputRef.current?.focus()
-  }, [symbol, name, onAdd])
+    activeInputRef.current?.focus()
+  }, [symbol, name, onAdd, activeInputRef])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -87,7 +94,7 @@ function AddAssetForm({ onAdd }: { onAdd: (symbol: string, name?: string) => voi
         Add Asset:
       </span>
       <input
-        ref={inputRef}
+        ref={activeInputRef}
         type="text"
         value={symbol}
         onChange={(e) => setSymbol(e.target.value)}
@@ -416,6 +423,7 @@ function ColumnHeaders() {
 
 export default function AssetsPage() {
   const { assets, loading, error, addAsset, removeAsset } = useTrackedAssets()
+  const addAssetInputRef = useRef<HTMLInputElement>(null)
   const symbols = useMemo(() => assets.map((a) => a.symbol), [assets])
   const { coins, loading: coinsLoading } = useMarketCoins(symbols.length > 0 ? symbols : undefined)
 
@@ -511,7 +519,7 @@ export default function AssetsPage() {
       </div>
 
       {/* ── Add Asset Form ── */}
-      <AddAssetForm onAdd={handleAdd} />
+      <AddAssetForm onAdd={handleAdd} symbolInputRef={addAssetInputRef} />
 
       {/* ── Column Headers ── */}
       <ColumnHeaders />
@@ -579,6 +587,34 @@ export default function AssetsPage() {
             >
               Add assets above to start tracking. Prices update automatically from CoinGecko.
             </span>
+            <button
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+                setTimeout(() => addAssetInputRef.current?.focus(), 150)
+              }}
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--color-terminal-up)',
+                color: 'var(--color-terminal-up)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                letterSpacing: '0.1em',
+                padding: '8px 20px',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+                textTransform: 'uppercase',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+                e.currentTarget.style.borderColor = '#00ff88'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+              }}
+            >
+              ▸ ADD YOUR FIRST ASSET
+            </button>
           </div>
         ) : (
           assets.map((asset) => {

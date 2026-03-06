@@ -262,10 +262,57 @@ export function MarketDataPanel({ symbol = '' }: MarketDataPanelProps) {
 
         {/* Empty state */}
         {!loading && !error && entries.length === 0 && (
-          <div style={{ padding: '20px 10px', textAlign: 'center' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-terminal-dim)', letterSpacing: '0.05em' }}>
-              ■ NO {activeTab} DATA AVAILABLE{symbol ? ` FOR ${symbol}` : ''}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 20px',
+            gap: '8px',
+          }}>
+            <span style={{ fontSize: '24px', opacity: 0.3 }}>■</span>
+            <span style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '12px',
+              color: 'var(--color-terminal-dim)',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+            }}>
+              NO {activeTab} DATA AVAILABLE{symbol ? ` FOR ${symbol}` : ''}
             </span>
+            <span style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              color: 'var(--color-terminal-muted)',
+            }}>
+              Data refreshes automatically every 2 minutes
+            </span>
+            <button
+              onClick={refresh}
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--color-terminal-up)',
+                color: 'var(--color-terminal-up)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                letterSpacing: '0.1em',
+                padding: '8px 20px',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+                textTransform: 'uppercase',
+                marginTop: '8px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+                e.currentTarget.style.borderColor = '#00ff88'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+              }}
+            >
+              ▸ REFRESH NOW
+            </button>
           </div>
         )}
 

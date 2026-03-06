@@ -17,9 +17,13 @@ import { mkdirSync, writeFileSync, rmSync } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 
+// ── Per-user config decryption (optional — when OCULUS_PASSWORD_HASH is set) ──
+import { decryptConfigForMount, cleanupDecryptedConfig } from '../apps/web/src/lib/auth/vault'
+import type { DecryptedConfigPaths } from '../apps/web/src/lib/auth/vault'
+
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
+const MONGODB_URI = process.env.OCULUS_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 const WORKER_TIMEOUT_MS = 900_000 // 15 minutes
@@ -297,6 +301,7 @@ async function runOpenCode(
   model: string,
   prompt: string,
   jobId: string,
+  configPaths?: DecryptedConfigPaths | null,
 ): Promise<{ success: boolean; text: string; error?: string }> {
   const HOME_DIR = process.env.HOME ?? '/root'
   const tmpDir = path.join(tmpdir(), `oculus-crawl-${jobId}`)
@@ -306,9 +311,7 @@ async function runOpenCode(
   const args = [
     'run', '--rm',
     '--network', 'host',
-    '-v', `${HOME_DIR}/.opencode:/root/.opencode:ro`,
-    '-v', `${HOME_DIR}/.local/share/opencode/auth.json:/root/.local/share/opencode/auth.json:ro`,
-    '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
+    '-v', `${configPaths?.authJsonPath ?? `${HOME_DIR}/.local/share/opencode/auth.json`}:/root/.local/share/opencode/auth.json:ro`,
     '-v', `${tmpDir}:/workspace:rw`,
     '-e', 'HOME=/root',
     OPENCODE_IMAGE,
@@ -447,6 +450,19 @@ async function main() {
     process.exit(1)
   }
 
+  // Decrypt per-user config if password hash is provided
+  let configPaths: DecryptedConfigPaths | null = null
+  const passwordHash = process.env.OCULUS_PASSWORD_HASH
+  if (passwordHash) {
+    try {
+      configPaths = await decryptConfigForMount(mongoose.connection, passwordHash)
+      log('Decrypted user config for Docker mounts')
+    } catch (err) {
+      console.error('Failed to decrypt user config:', err)
+      process.exit(1)
+    }
+  }
+
   const job = await SignalCrawlJob.findById(jobId)
   if (!job) {
     console.error(`Job ${jobId} not found`)
@@ -466,7 +482,7 @@ async function main() {
 
   try {
     const prompt = buildCrawlPrompt(symbols)
-    const result = await runOpenCode(model, prompt, jobId)
+    const result = await runOpenCode(model, prompt, jobId, configPaths)
 
     if (!result.success || !result.text) {
       await SignalCrawlJob.updateOne(
@@ -566,6 +582,9 @@ async function main() {
       { $set: { status: 'failed', error: msg, completedAt: new Date() } },
     )
   }
+
+  // Cleanup decrypted config temp files
+  if (configPaths) cleanupDecryptedConfig(configPaths)
 
   await mongoose.disconnect()
   process.exit(0)

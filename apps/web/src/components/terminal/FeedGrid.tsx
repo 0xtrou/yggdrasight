@@ -891,6 +891,65 @@ export function FeedGrid() {
             >
               {signals.length > 0 ? 'ADJUST FILTERS OR CLEAR' : 'AWAITING INBOUND SIGNALS'}
             </span>
+            {signals.length === 0 ? (
+              <button
+                onClick={() => setShowNewModal(true)}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid var(--color-terminal-up)',
+                  color: 'var(--color-terminal-up)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '11px',
+                  letterSpacing: '0.1em',
+                  padding: '8px 20px',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                  textTransform: 'uppercase',
+                  marginTop: '8px',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+                  e.currentTarget.style.borderColor = '#00ff88'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+                }}
+              >
+                ▸ CREATE SIGNAL
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setFilterSymbol('')
+                  setFilterStatus('all')
+                  setFilterDirection('all')
+                }}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid var(--color-terminal-up)',
+                  color: 'var(--color-terminal-up)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '11px',
+                  letterSpacing: '0.1em',
+                  padding: '8px 20px',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                  textTransform: 'uppercase',
+                  marginTop: '8px',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+                  e.currentTarget.style.borderColor = '#00ff88'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+                }}
+              >
+                ▸ CLEAR FILTERS
+              </button>
+            )}
           </div>
         )}
         {!loading && !error && filteredSignals.length > 0 && mode === 'LIST' && (

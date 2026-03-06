@@ -834,7 +834,7 @@ function ResultView({
    EMPTY STATE — no result, not classifying
    ═══════════════════════════════════════════════════════════════════════════ */
 
-function EmptyState({ symbol }: { symbol: string }) {
+function EmptyState({ symbol, onClassify }: { symbol: string; onClassify: () => void }) {
   return (
     <div style={{
       flex: 1,
@@ -855,6 +855,32 @@ function EmptyState({ symbol }: { symbol: string }) {
         <div style={{ fontSize: '10px' }}>
           Run ▶ CLASSIFY to scan this project&apos;s consciousness
         </div>
+        <button
+          onClick={onClassify}
+          style={{
+            background: 'transparent',
+            border: '1px solid var(--color-terminal-up)',
+            color: 'var(--color-terminal-up)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            letterSpacing: '0.1em',
+            padding: '8px 20px',
+            cursor: 'pointer',
+            transition: 'all 0.15s',
+            textTransform: 'uppercase',
+            marginTop: '8px',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+            e.currentTarget.style.borderColor = '#00ff88'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+          }}
+        >
+          ▸ RUN CLASSIFICATION
+        </button>
       </div>
     </div>
   )
@@ -1245,13 +1271,13 @@ function DetailPanel({
   if (history.length > 0) {
     return (
       <div style={{ flex: 1, overflow: 'auto', minHeight: 0, padding: '16px' }}>
-        <EmptyState symbol={symbol} />
+        <EmptyState symbol={symbol} onClassify={hook.classify} />
         <ClassificationHistory history={history} migrations={migrations} />
       </div>
     )
   }
 
-  return <EmptyState symbol={symbol} />
+  return <EmptyState symbol={symbol} onClassify={hook.classify} />
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

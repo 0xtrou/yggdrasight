@@ -727,6 +727,7 @@ function AssetDetailView({ symbol, onBack }: { symbol: string; onBack: () => voi
 
   const latestEntry = discoveryHistory[0] ?? null
   const hasData = !!unified?.hasAiData
+  const showPageEmptyState = !unified?.hasApiData && !unified?.hasAiData && !latestEntry
 
   // Read model from AI config localStorage
   const discoverWithStoredModel = useCallback(() => {
@@ -878,11 +879,82 @@ function AssetDetailView({ symbol, onBack }: { symbol: string; onBack: () => voi
         </div>
       ) : (
         <div style={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
-          {/* ══════ MAIN DATA ══════ */}
-          <ProjectInfoContent symbol={symbol} projectInfo={projectInfo} />
+          {showPageEmptyState ? (
+            <div style={{
+              height: '100%',
+              minHeight: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px',
+              fontFamily: 'var(--font-mono)',
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textAlign: 'center',
+              }}>
+                <div style={{
+                  fontSize: '32px',
+                  lineHeight: 1,
+                  color: 'var(--color-terminal-dim)',
+                  opacity: 0.3,
+                }}>
+                  ◎
+                </div>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'var(--color-terminal-dim)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                }}>
+                  NO DISCOVERY DATA
+                </div>
+                <div style={{
+                  fontSize: '10px',
+                  color: 'var(--color-terminal-muted)',
+                }}>
+                  Run AI discovery to research this project
+                </div>
+                <button
+                  onClick={discoverWithStoredModel}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--color-terminal-up)',
+                    color: 'var(--color-terminal-up)',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    letterSpacing: '0.1em',
+                    padding: '8px 20px',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
+                    textTransform: 'uppercase',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(0,255,136,0.08)'
+                    e.currentTarget.style.borderColor = '#00ff88'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.borderColor = 'var(--color-terminal-up)'
+                  }}
+                >
+                  ▸ DISCOVER {symbol}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* ══════ MAIN DATA ══════ */}
+              <ProjectInfoContent symbol={symbol} projectInfo={projectInfo} />
 
-          {/* ══════ DEEP DATA SECTION ══════ */}
-          <DiscoveryDeepData entry={latestEntry} history={discoveryHistory} />
+              {/* ══════ DEEP DATA SECTION ══════ */}
+              <DiscoveryDeepData entry={latestEntry} history={discoveryHistory} />
+            </>
+          )}
         </div>
       )}
 

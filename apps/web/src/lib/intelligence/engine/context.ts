@@ -1,4 +1,5 @@
 import { Timeframe } from '@oculus/core'
+import { cookies } from 'next/headers'
 import type { AnalysisContext, Candle, SignalDoc, MarketGlobal, OnChainData, SentimentData, OrderBookData, NewsData, DeveloperData, DefiProtocolData } from '../types'
 
 export interface BuildContextOptions {
@@ -96,10 +97,21 @@ function toBinancePair(symbol: string): string {
   return `${upper}USDT`
 }
 
+/** Read request cookies and return a header object for internal fetches. */
+async function getInternalHeaders(): Promise<Record<string, string>> {
+  try {
+    const cookieStore = await cookies()
+    const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ')
+    if (cookieHeader) return { Cookie: cookieHeader }
+  } catch { /* not in a request context */ }
+  return {}
+}
+
 async function fetchCandles(symbol: string, tf: Timeframe): Promise<Candle[]> {
   const pair = toBinancePair(symbol)
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/prices/ohlcv?symbol=${encodeURIComponent(pair)}&interval=${tf}`)
+  const headers = await getInternalHeaders()
+  const res = await fetch(`${baseUrl}/api/prices/ohlcv?symbol=${encodeURIComponent(pair)}&interval=${tf}`, { headers })
   if (!res.ok) throw new Error(`OHLCV fetch failed: ${res.status}`)
   const data = await res.json() as { candles: Candle[] }
   return data.candles ?? []
@@ -107,9 +119,9 @@ async function fetchCandles(symbol: string, tf: Timeframe): Promise<Candle[]> {
 
 async function fetchSignals(symbol: string): Promise<SignalDoc[]> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  // Normalize symbol for regex search: BTCUSDT → BTC so it matches BTC/USDT, BTCUSDT, BTC-USDT etc.
   const base = symbol.replace(/USDT$|BUSD$|USD$/i, '')
-  const res = await fetch(`${baseUrl}/api/signals?symbol=${encodeURIComponent(base)}&limit=50`)
+  const headers = await getInternalHeaders()
+  const res = await fetch(`${baseUrl}/api/signals?symbol=${encodeURIComponent(base)}&limit=50`, { headers })
   if (!res.ok) throw new Error(`Signals fetch failed: ${res.status}`)
   const data = await res.json() as { signals: SignalDoc[] }
   return data.signals ?? []
@@ -117,7 +129,8 @@ async function fetchSignals(symbol: string): Promise<SignalDoc[]> {
 
 async function fetchMarketGlobal(): Promise<MarketGlobal> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/market/global`)
+  const headers = await getInternalHeaders()
+  const res = await fetch(`${baseUrl}/api/market/global`, { headers })
   if (!res.ok) throw new Error(`Market global fetch failed: ${res.status}`)
   const raw = await res.json() as {
     btcDominance?: number
@@ -126,7 +139,6 @@ async function fetchMarketGlobal(): Promise<MarketGlobal> {
     fearGreedLabel?: string
     totalMarketCapChange24h?: number
   }
-  // Map API response to MarketGlobal interface
   return {
     btcDominance: raw.btcDominance ?? 50,
     fearGreedIndex: raw.fearGreedValue ?? 50,
@@ -141,7 +153,8 @@ async function fetchOnChainData(symbol: string): Promise<OnChainData | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const base = symbol.replace(/USDT$|BUSD$|USD$/i, '')
-    const res = await fetch(`${baseUrl}/api/feed/onchain?symbol=${encodeURIComponent(base)}`)
+    const headers = await getInternalHeaders()
+    const res = await fetch(`${baseUrl}/api/feed/onchain?symbol=${encodeURIComponent(base)}`, { headers })
     if (!res.ok) return null
     const data = await res.json() as { entries: { headline: string; value?: number; sentiment?: string; source: string }[] }
     const entries = data.entries ?? []
@@ -190,7 +203,8 @@ async function fetchSentimentData(symbol: string): Promise<SentimentData | null>
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const base = symbol.replace(/USDT$|BUSD$|USD$/i, '')
-    const res = await fetch(`${baseUrl}/api/feed/social?symbol=${encodeURIComponent(base)}`)
+    const headers = await getInternalHeaders()
+    const res = await fetch(`${baseUrl}/api/feed/social?symbol=${encodeURIComponent(base)}`, { headers })
     if (!res.ok) return null
     const data = await res.json() as { entries: { id: string; headline: string; value?: number; sentiment?: string; source: string }[] }
     const entries = data.entries ?? []
@@ -279,7 +293,8 @@ async function fetchNewsData(symbol: string): Promise<NewsData | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const base = symbol.replace(/USDT$|BUSD$|USD$/i, '')
-    const res = await fetch(`${baseUrl}/api/feed/news?symbol=${encodeURIComponent(base)}`)
+    const headers = await getInternalHeaders()
+    const res = await fetch(`${baseUrl}/api/feed/news?symbol=${encodeURIComponent(base)}`, { headers })
     if (!res.ok) return null
     const data = await res.json() as { entries: { time: string; source: string; headline: string; sentiment?: 'up' | 'down' | 'neutral' }[] }
     const entries = data.entries ?? []
@@ -317,7 +332,8 @@ async function fetchDeveloperData(symbol: string): Promise<DeveloperData | null>
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const base = symbol.replace(/USDT$|BUSD$|USD$/i, '')
-    const res = await fetch(`${baseUrl}/api/feed/developer?symbol=${encodeURIComponent(base)}`)
+    const headers = await getInternalHeaders()
+    const res = await fetch(`${baseUrl}/api/feed/developer?symbol=${encodeURIComponent(base)}`, { headers })
     if (!res.ok) return null
     const json = await res.json() as { data: DeveloperData | null }
     return json.data ?? null
@@ -330,7 +346,8 @@ async function fetchDefiData(symbol: string): Promise<DefiProtocolData | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const base = symbol.replace(/USDT$|BUSD$|USD$/i, '')
-    const res = await fetch(`${baseUrl}/api/feed/defi?symbol=${encodeURIComponent(base)}`)
+    const headers = await getInternalHeaders()
+    const res = await fetch(`${baseUrl}/api/feed/defi?symbol=${encodeURIComponent(base)}`, { headers })
     if (!res.ok) return null
     const json = await res.json() as { data: DefiProtocolData | null }
     return json.data ?? null

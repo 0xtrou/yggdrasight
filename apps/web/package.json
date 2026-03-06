@@ -12,6 +12,7 @@
   "dependencies": {
     "@oculus/core": "workspace:*",
     "@oculus/db": "workspace:*",
+    "mongoose": "^9.2.4",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^3.0.4",
