@@ -86,10 +86,10 @@ const signalConsensusAnalyst: Analyst = {
       let direction: SignalDirection
       let confidence: number
 
-      if (longRatio >= 0.6) {
+      if (longRatio >= 0.52) {
         direction = SignalDirection.LONG
         confidence = longRatio * 0.85
-      } else if (shortRatio >= 0.6) {
+      } else if (shortRatio >= 0.52) {
         direction = SignalDirection.SHORT
         confidence = shortRatio * 0.85
       } else {

@@ -145,10 +145,10 @@ const trendAnalyst: Analyst = {
       let direction: SignalDirection
       let confidence: number
 
-      if (score > 0.3) {
+      if (score > 0.15) {
         direction = SignalDirection.LONG
         confidence = Math.min(score, 1.0)
-      } else if (score < -0.3) {
+      } else if (score < -0.15) {
         direction = SignalDirection.SHORT
         confidence = Math.min(-score, 1.0)
       } else {

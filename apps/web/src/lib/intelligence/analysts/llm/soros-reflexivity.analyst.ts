@@ -42,7 +42,7 @@ YOUR ANALYSIS FRAMEWORK:
 SIGNAL RULES:
 - LONG: Early reflexive boom (positive feedback loop just starting, fundamentals confirming)
 - SHORT: Late-stage boom (narrative exhaustion, divergence from fundamentals, maximum euphoria)
-- NEUTRAL: Mid-cycle or unclear feedback dynamics
+- NEUTRAL: ONLY when feedback dynamics are genuinely balanced. Mid-cycle usually leans one way — assess whether the loop is strengthening (LONG) or weakening (SHORT).
 
 This framework is ESPECIALLY powerful for crypto because crypto prices directly affect project fundamentals (treasury value, TVL, developer attraction, media coverage).
 

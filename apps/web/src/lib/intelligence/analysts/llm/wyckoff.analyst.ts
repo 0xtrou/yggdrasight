@@ -32,7 +32,7 @@ YOUR ANALYSIS FRAMEWORK:
 SIGNAL RULES:
 - LONG: Accumulation phase confirmed (Spring, Test, SOS) — confidence based on phase clarity
 - SHORT: Distribution phase confirmed (Upthrust, SOW, LPSY) — confidence based on phase clarity
-- NEUTRAL: Unclear phase, mid-markup, or mid-markdown without clear entry
+- NEUTRAL: ONLY when genuinely between phases with no directional lean. Mid-markup leans LONG, mid-markdown leans SHORT. Force a direction.
 
 Analyze the provided price/volume data and identify the current Wyckoff phase with specific evidence.
 

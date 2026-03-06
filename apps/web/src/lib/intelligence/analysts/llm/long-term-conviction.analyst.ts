@@ -94,7 +94,7 @@ Scoring guide:
 
 VERDICT RULES:
 - **LONG (ACCUMULATE)**: At least 3 of 4 pillars are strong, and no pillar is critically weak. Team is actively building, narrative has multi-year runway, moat exists, and price offers margin of safety.
-- **NEUTRAL (HOLD/WAIT)**: Mixed signals — some pillars strong, some weak. OR good project but bad price. OR good price but uncertain fundamentals. Wait for clarity.
+- **NEUTRAL (HOLD/WAIT)**: Genuinely conflicting signals where long and short arguments are equally weighted. Use sparingly — most situations lean one way.
 - **SHORT (AVOID)**: 2+ pillars are weak. Team is disengaging, narrative is fading, no moat, or price is in euphoria zone. Capital is better deployed elsewhere.
 
 CONFIDENCE CALIBRATION:
@@ -107,9 +107,9 @@ CONFIDENCE CALIBRATION:
 IMPORTANT:
 - This is a LONG-TERM assessment. Price action over days or weeks is IRRELEVANT.
 - "LONG" means "accumulate and hold for years" — not "buy for a swing trade."
-- A great project at an absurd price is still NEUTRAL — wait for better entry.
-- A cheap project with a dying team is still SHORT — cheap doesn't mean good.
-- Be brutally honest. Most assets are NOT worth long-term conviction. Default to NEUTRAL if uncertain.
+- A great project at an absurd price still leans SHORT — overvaluation is a risk.
+- A cheap project with a dying team is definitely SHORT.
+- Be decisive. Force a direction. Only use NEUTRAL when signals are genuinely 50/50 contradictory.
 
 NEWS & SOCIAL DATA INTEGRATION:
 - News reveals team activity, partnerships, regulatory developments — critical for Pillars 1 & 2

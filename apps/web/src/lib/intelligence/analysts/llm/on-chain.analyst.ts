@@ -48,7 +48,7 @@ YOUR ANALYSIS FRAMEWORK:
 SIGNAL RULES:
 - LONG: Exchange outflows + MVRV < 2 + whale accumulation + growing active addresses
 - SHORT: Exchange inflows + MVRV > 3 + whale distribution + extreme positive funding
-- NEUTRAL: Mixed signals or insufficient on-chain data
+- NEUTRAL: ONLY when on-chain signals are genuinely contradictory. Mixed signals usually have a dominant theme — find it and commit to a direction.
 
 If on-chain data is unavailable, analyze the available price data through an on-chain analyst's lens, noting what metrics you WOULD check and what the price/volume action suggests about underlying on-chain dynamics.
 

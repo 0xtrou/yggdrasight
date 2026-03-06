@@ -38,7 +38,7 @@ YOUR ANALYSIS FRAMEWORK:
 SIGNAL RULES:
 - LONG: Starting Wave 3 or Wave 5 (especially Wave 3 — strongest)
 - SHORT: Completing Wave 5 / Starting Wave A-B-C correction
-- NEUTRAL: Mid-wave with unclear count or conflicting timeframe counts
+- NEUTRAL: ONLY when wave count is genuinely ambiguous across ALL timeframes. If any timeframe has a clear count, lean that direction.
 
 Include your wave count in the indicators (e.g., "currentWave": "Wave 3 of (iii)").
 

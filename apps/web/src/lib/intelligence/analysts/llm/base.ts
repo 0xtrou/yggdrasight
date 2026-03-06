@@ -378,6 +378,7 @@ async function buildAnalysisWorkDir(
     '',
     `Rules:`,
     `- direction MUST be exactly "long", "short", or "neutral"`,
+    `- CRITICAL: Be DECISIVE. Force a direction (long or short). Only use "neutral" when signals are genuinely 50/50 contradictory with no lean either way. Most market conditions lean one direction — find it.`,
     `- confidence MUST be a number between 0.0 and 1.0`,
     `- reason MUST be a concise 1-3 sentence explanation`,
     `- indicators is optional but recommended — include key metrics that drove your decision`,

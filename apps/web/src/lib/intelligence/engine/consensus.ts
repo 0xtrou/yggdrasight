@@ -20,7 +20,7 @@ function directionToNumeric(direction: SignalDirection): number {
  * Algorithm:
  * 1. Convert each direction to numeric (long=1, short=-1, neutral=0)
  * 2. Calculate weighted raw score: Σ(direction × confidence × weight) / Σ(weight)
- * 3. Apply ±0.2 threshold to determine final direction
+ * 3. Apply ±0.08 threshold to determine final direction (tight band — force binary signals)
  * 4. Calculate confluence: ratio of analysts agreeing with final direction
  * 5. Final confidence: weighted avg of agreeing analysts × confluence, capped [0.15, 0.85]
  * 6. Generate TimeframeAnalysis entries for each timeframe
@@ -61,9 +61,9 @@ export function buildConsensus(
 
   // Step 2: Determine final direction by threshold
   let finalDirection: SignalDirection
-  if (rawScore > 0.2) {
+  if (rawScore > 0.08) {
     finalDirection = SignalDirection.LONG
-  } else if (rawScore < -0.2) {
+  } else if (rawScore < -0.08) {
     finalDirection = SignalDirection.SHORT
   } else {
     finalDirection = SignalDirection.NEUTRAL
