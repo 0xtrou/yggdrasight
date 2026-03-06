@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./apps/web/public/logo.png" alt="Oculus" width="100" />
+  <img src="./apps/web/public/icon-512x512.png" alt="Oculus" width="100" />
   <h1>OCULUS</h1>
   <p><strong>AI-native trading intelligence terminal.</strong><br/>Real-time market data. Multi-agent philosophical analysis. Bloomberg vibes.</p>
   <p>
