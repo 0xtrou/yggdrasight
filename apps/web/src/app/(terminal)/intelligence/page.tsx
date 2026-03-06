@@ -1436,6 +1436,30 @@ function AssetTableView({
   const [statusesLoading, setStatusesLoading] = useState(false)
   const [classifyingSymbols, setClassifyingSymbols] = useState<Set<string>>(new Set())
   const fetchedSymbolsRef = useRef<string>('')
+  const pollUntilDone = useCallback(async (jobId: string, base: string) => {
+    while (true) {
+      await new Promise(r => setTimeout(r, 3000))
+      try {
+        const pollRes = await fetch(`/api/intelligence/classify/${jobId}`)
+        const pollJson = await pollRes.json()
+        if (pollJson.status === 'completed') {
+          if (pollJson.data?.primary_category) {
+            setStatuses(prev => {
+              const next = new Map(prev)
+              next.set(base, {
+                primaryCategory: pollJson.data.primary_category,
+                classifiedAt: new Date().toISOString(),
+              })
+              return next
+            })
+          }
+          break
+        }
+        if (pollJson.status === 'failed') break
+      } catch { /* keep polling */ }
+    }
+    setClassifyingSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
+  }, [])
 
   // Fetch classification status for all coins
   useEffect(() => {
@@ -1468,11 +1492,27 @@ function AssetTableView({
 
       await Promise.all(promises)
       setStatuses(newStatuses)
+
+      // Resume polling for any jobs that are actively running
+      const activePromises = coins.map(async (coin) => {
+        const sym = coin.symbol.toUpperCase().replace(/USDT$|BUSD$|USD$/i, '')
+        if (!sym) return
+        try {
+          const res = await fetch(`/api/intelligence/classify?symbol=${encodeURIComponent(sym)}`)
+          const json = await res.json()
+          if (json.job && (json.job.status === 'pending' || json.job.status === 'running')) {
+            setClassifyingSymbols(prev => new Set(prev).add(sym))
+            pollUntilDone(json.job.id, sym)
+          }
+        } catch { /* ignore */ }
+      })
+      await Promise.all(activePromises)
+
       setStatusesLoading(false)
     }
 
     fetchStatuses()
-  }, [coins])
+  }, [coins, pollUntilDone])
 
   const toggleRow = useCallback((symbol: string) => {
     setSelectedRows(prev => {
@@ -1517,40 +1557,7 @@ function AssetTableView({
         return
       }
 
-      // Poll until done
-      const json = await res.json()
-      if (!json.jobId) {
-        setClassifyingSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
-        return
-      }
-
-      const pollUntilDone = async (jobId: string) => {
-        while (true) {
-          await new Promise(r => setTimeout(r, 3000))
-          try {
-            const pollRes = await fetch(`/api/intelligence/classify/${jobId}`)
-            const pollJson = await pollRes.json()
-            if (pollJson.status === 'completed') {
-              // Update status in table
-              if (pollJson.data?.primary_category) {
-                setStatuses(prev => {
-                  const next = new Map(prev)
-                  next.set(base, {
-                    primaryCategory: pollJson.data.primary_category,
-                    classifiedAt: new Date().toISOString(),
-                  })
-                  return next
-                })
-              }
-              break
-            }
-            if (pollJson.status === 'failed') break
-          } catch { /* keep polling */ }
-        }
-        setClassifyingSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
-      }
-
-      pollUntilDone(json.jobId)
+      pollUntilDone(json.jobId, base)
     } catch {
       setClassifyingSymbols(prev => { const n = new Set(prev); n.delete(base); return n })
     }
