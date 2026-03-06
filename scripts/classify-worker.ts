@@ -21,6 +21,10 @@ import { mkdirSync, writeFileSync, rmSync, readFileSync } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 
+// ── Per-user config decryption (optional — when OCULUS_PASSWORD_HASH is set) ──
+import { decryptConfigForMount, cleanupDecryptedConfig } from '../apps/web/src/lib/auth/vault'
+import type { DecryptedConfigPaths } from '../apps/web/src/lib/auth/vault'
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 import type {
