@@ -36,11 +36,16 @@ CRITICAL EXECUTION CONTEXT:
 - You have ONE job: research, then output the required JSON object as your final message
 
 RESEARCH RULES:
-- Do ALL research YOURSELF using websearch_web_search_exa and webfetch tools DIRECTLY
+- Do ALL research YOURSELF using websearch_web_search_exa tool DIRECTLY
 - Do NOT delegate to sub-agents, do NOT use the Task tool, do NOT spawn background tasks
 - Do NOT use explore, librarian, or any other agent delegation — you must do everything yourself
-- Call websearch_web_search_exa to search the web, then webfetch to read specific pages
-- Search the web extensively — do NOT rely on training data alone
+- Use websearch_web_search_exa as your PRIMARY research tool — it returns compact, LLM-optimized summaries
+- AVOID using webfetch on large pages (CoinGecko, CoinMarketCap, GitHub repos, Medium articles, docs sites)
+  These pages return massive HTML/markdown that will EXCEED your context window and cause errors
+- ONLY use webfetch on small, focused pages (project landing pages, specific blog posts, API endpoints)
+- If websearch results give you enough information about a project, do NOT webfetch the source — use the summary
+- Keep your context lean — you have a LIMITED context window. Prioritize quality over quantity of sources
+- Search the web extensively but EFFICIENTLY — do NOT rely on training data alone
 - Be specific and evidence-based in your reasoning
 - Use null for anything you cannot determine with confidence
 
@@ -184,7 +189,7 @@ ${assignment.search_queries.map(q => `- "${q}"`).join('\n')}
 
 ## Instructions
 
-1. Search the web extensively using the suggested queries AND your own queries
+1. Search the web using websearch_web_search_exa with the suggested queries AND your own queries
 2. Find up to ${depth} crypto projects in your assigned focus area
 3. For each project found, evaluate it against the 6 categories and 9 cracks
 4. Assign a signal strength (0-1) based on how interesting/notable the discovery is:
@@ -193,8 +198,9 @@ ${assignment.search_queries.map(q => `- "${q}"`).join('\n')}
    - 0.5-0.6: Interesting but needs more investigation
    - 0.3-0.4: Probably a Narrative Vessel but worth tracking
    - 0.1-0.2: Low signal, included for completeness
-5. Find the project's LOGO URL — look on their official website, CoinGecko, CoinMarketCap,
-   or GitHub. Use the direct image URL (png/svg/jpg). Use null if not found.
+5. For logo URLs: use websearch to find "[project name] logo" — look for direct image URLs (png/svg/jpg)
+   from CoinGecko CDN (assets.coingecko.com), official sites, or GitHub. Do NOT webfetch CoinGecko pages.
+   Use null if not easily found — do not waste context trying to scrape logos.
 
 ## Projects to SKIP (already known):
 ${avoidList.length > 0 ? avoidList.map(p => `- ${p}`).join('\n') : '- None — discover freely'}
