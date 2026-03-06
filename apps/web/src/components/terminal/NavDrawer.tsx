@@ -13,14 +13,40 @@ interface NavItem {
   description: string
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { id: 'terminal', label: 'TERMINAL', icon: '⊞', path: '/', description: 'Trading Terminal' },
-  { id: 'assets', label: 'ASSETS', icon: '⬡', path: '/assets', description: 'Asset Management' },
-  { id: 'feeds', label: 'DATA FEEDS', icon: '◉', path: '/feeds', description: 'Market Data Feeds' },
-  { id: 'intelligence', label: 'INTELLIGENCE', icon: '◈', path: '/intelligence', description: 'Global Intelligence' },
-  { id: 'signals', label: 'SIGNALS', icon: '⚡', path: '/signals', description: 'Signal History' },
-  { id: 'discovery', label: 'DISCOVERY', icon: '◎', path: '/discovery', description: 'Discovery Lab' },
-  { id: 'ai-config', label: 'AI CONFIG', icon: '⚙', path: '/ai-config', description: 'AI Model Configuration' },
+interface NavGroup {
+  label: string
+  items: NavItem[]
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: 'MARKET',
+    items: [
+      { id: 'terminal', label: 'TERMINAL', icon: '⊞', path: '/', description: 'Trading Terminal' },
+      { id: 'assets', label: 'ASSETS', icon: '⬡', path: '/assets', description: 'Asset Management' },
+      { id: 'feeds', label: 'DATA FEEDS', icon: '◉', path: '/feeds', description: 'Market Data Feeds' },
+    ],
+  },
+  {
+    label: 'INTELLIGENCE',
+    items: [
+      { id: 'intelligence', label: 'INTELLIGENCE', icon: '◈', path: '/intelligence', description: 'Global Intelligence' },
+      { id: 'classification', label: 'CLASSIFICATION', icon: '⬢', path: '/classification', description: 'Asset Classification' },
+      { id: 'discovery', label: 'DISCOVERY', icon: '◎', path: '/discovery', description: 'Discovery Lab' },
+    ],
+  },
+  {
+    label: 'TRADING',
+    items: [
+      { id: 'signals', label: 'SIGNALS', icon: '⚡', path: '/signals', description: 'Signal History' },
+    ],
+  },
+  {
+    label: 'SYSTEM',
+    items: [
+      { id: 'ai-config', label: 'AI CONFIG', icon: '⚙', path: '/ai-config', description: 'AI Model Configuration' },
+    ],
+  },
 ]
 
 const COLLAPSED_WIDTH = 48
@@ -57,7 +83,14 @@ export function NavDrawer() {
   const width = showExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH
 
   return (
-    <nav
+    <>
+      <style>{`
+        @keyframes oculusBorderBlink {
+          0%, 100% { border-color: var(--color-terminal-amber); box-shadow: 0 0 6px rgba(255,170,0,0.4); }
+          50% { border-color: rgba(255,170,0,0.15); box-shadow: none; }
+        }
+      `}</style>
+      <nav
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -76,8 +109,7 @@ export function NavDrawer() {
       }}
     >
       {/* Logo / Brand */}
-      <div
-        style={{
+        <div style={{
           height: '40px',
           minHeight: '40px',
           maxHeight: '40px',
@@ -94,29 +126,76 @@ export function NavDrawer() {
         onClick={toggleCollapsed}
         title={collapsed ? 'Expand navigation' : 'Collapse navigation'}
       >
-        <img src="/logo.png" alt="Oculus" style={{ width: '22px', height: '22px', flexShrink: 0 }} />
+        <div style={{
+          width: '32px',
+          height: '32px',
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: '1px solid var(--color-terminal-amber)',
+          animation: 'oculusBorderBlink 2s ease-in-out infinite',
+        }}>
+          <img src="/logo.png" alt="Oculus" style={{ width: '24px', height: '24px' }} />
+        </div>
         {showExpanded && (
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexShrink: 0 }}>
-            <span style={{ color: '#4ade80', fontWeight: 700, fontSize: '13px', letterSpacing: '0.12em' }}>OCULUS</span>
-            <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', letterSpacing: '0.08em' }}>TERMINAL</span>
+          <div style={{ display: 'flex', alignItems: 'baseline', flexShrink: 0 }}>
+            <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 800, fontSize: '16px', letterSpacing: '0.14em', textShadow: '0 0 8px rgba(255,170,0,0.4)' }}>OCULUS</span>
           </div>
         )}
       </div>
 
-      {/* Nav Items */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '4px 0', gap: '1px' }}>
-        {NAV_ITEMS.map((item) => {
-          const active = isActive(item.path)
-          return (
-            <NavButton
-              key={item.id}
-              item={item}
-              active={active}
-              showLabel={showExpanded}
-              onClick={() => router.push(item.path)}
-            />
-          )
-        })}
+      {/* Nav Groups */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '4px 0', overflowY: 'auto', overflowX: 'hidden' }}>
+        {NAV_GROUPS.map((group, groupIndex) => (
+          <div key={group.label}>
+            {/* Section delimiter */}
+            <div
+              style={{
+                height: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                padding: showExpanded ? '0 12px' : '0',
+                justifyContent: showExpanded ? 'flex-start' : 'center',
+                marginTop: groupIndex === 0 ? '2px' : '6px',
+              }}
+            >
+              {showExpanded ? (
+                <span style={{
+                  fontSize: '8px',
+                  fontFamily: 'var(--font-mono)',
+                  color: 'var(--color-terminal-dim)',
+                  letterSpacing: '0.18em',
+                  fontWeight: 700,
+                  opacity: 0.5,
+                  userSelect: 'none',
+                }}>
+                  {group.label}
+                </span>
+              ) : (
+                <div style={{
+                  width: '18px',
+                  height: '1px',
+                  background: 'var(--color-terminal-border)',
+                  opacity: 0.5,
+                }} />
+              )}
+            </div>
+            {/* Items */}
+            {group.items.map((item) => {
+              const active = isActive(item.path)
+              return (
+                <NavButton
+                  key={item.id}
+                  item={item}
+                  active={active}
+                  showLabel={showExpanded}
+                  onClick={() => router.push(item.path)}
+                />
+              )
+            })}
+          </div>
+        ))}
       </div>
 
       {/* Bottom: Collapse toggle hint */}
@@ -137,6 +216,7 @@ export function NavDrawer() {
         {showExpanded ? '◂ COLLAPSE' : '▸'}
       </div>
     </nav>
+  </>
   )
 }
 

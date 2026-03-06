@@ -75,8 +75,8 @@ CRITICAL OUTPUT RULES:
 - Do NOT wrap in markdown code blocks
 - Do NOT describe what you are going to do — just DO IT and return the JSON
 - Do NOT say "I'm researching..." or "waiting for results..." — complete all research FIRST, then output the JSON
-- Do NOT use the Task tool or launch background agents — do ALL research yourself using websearch/webfetch directly
-- Do NOT delegate to sub-agents — you must complete everything in a single session and return the JSON
+- Use ALL tools at your disposal — websearch, webfetch, Task tool, sub-agents, background research — go as deep as needed
+- You may delegate to sub-agents or launch background tasks if it helps you produce better, more thorough analysis
 - Be specific and evidence-based in your reasoning
 - Use null for anything you cannot determine with confidence
 - Search the web extensively — do NOT rely on training data alone

@@ -12,17 +12,23 @@
   "dependencies": {
     "@oculus/core": "workspace:*",
     "@oculus/db": "workspace:*",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
+    "@react-three/postprocessing": "^3.0.4",
     "klinecharts": "9.8.12",
     "lightweight-charts": "^5.1.0",
     "next": "^16.1.6",
+    "postprocessing": "^6.38.3",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.183.1",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
   }

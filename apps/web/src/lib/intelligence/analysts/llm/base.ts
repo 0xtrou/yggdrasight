@@ -383,13 +383,13 @@ async function buildAnalysisWorkDir(
     `- indicators is optional but recommended — include key metrics that drove your decision`,
     `- Do NOT include any text outside the JSON object`,
     `- Do NOT wrap in markdown code blocks`,
-    `- Do NOT use any tools besides reading the data files listed above`,
+    `- Use ALL tools at your disposal to research deeper — websearch, webfetch, Task tool, sub-agents — go as deep as needed`,
   ].join('\n')
 
   writeFileSync(join(workDir, 'INSTRUCTIONS.md'), instructions, 'utf-8')
 
   // Build the short CLI message that points the agent to the files
-  const message = `Read INSTRUCTIONS.md for your analyst role and output format. Then read each file listed in the data/ directory. Finally, respond with ONLY the JSON verdict as specified in INSTRUCTIONS.md. Do NOT use any tools besides reading the files in this directory.`
+  const message = `Read INSTRUCTIONS.md for your analyst role and output format. Then read each file listed in the data/ directory. Use ALL tools at your disposal — websearch, webfetch, Task tool, sub-agents — to research deeper if needed. Finally, respond with ONLY the JSON verdict as specified in INSTRUCTIONS.md.`
 
   return { workDir, message, dataFiles }
 }

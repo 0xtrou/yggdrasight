@@ -26,6 +26,7 @@ interface AgentInfo {
 const INTELLIGENCE_DEFAULT_MODEL = 'opencode/big-pickle'
 const DEFAULT_ANALYSIS_MODEL = 'opencode/big-pickle'
 const DEFAULT_DISCOVERY_MODEL = 'opencode/big-pickle'
+const DEFAULT_SIGNALS_MODEL = 'opencode/big-pickle'
 
 const DEFAULT_MODEL = DEFAULT_ANALYSIS_MODEL
 const RECOMMENDED_PROVIDERS = ['github-copilot', 'opencode']
@@ -34,6 +35,8 @@ const SECTION_COLORS = {
   discovery: 'var(--color-terminal-amber)',
   analysis: 'var(--color-terminal-blue)',
   intelligence: '#8e7cc3',
+  globalDiscovery: '#00ddcc',
+  signals: '#ff6b35',
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -460,6 +463,8 @@ export default function AIConfigPage() {
       ...agents.map((a) => a.id),
       'crack_mapping', 'visibility', 'narrative_separator', 'power_vector', 'problem_recognition', 'identity_polarity', 'synthesizer',
       'discovery',
+      'master_planner', 'discovery_agent', 'global_synthesizer',
+      'signal_crawler',
     ]
     const next: Record<string, string> = {}
     for (const key of allKeys) {
@@ -497,6 +502,18 @@ export default function AIConfigPage() {
     category: 'discovery',
   }
 
+  const GLOBAL_DISCOVERY_AGENTS: AgentInfo[] = [
+    { id: 'master_planner',     name: 'Master Planner',     category: 'global_discovery', description: 'Reads previous reports, analyzes gaps, and creates search assignments for discovery agents.' },
+    { id: 'discovery_agent',    name: 'Discovery Agent',    category: 'global_discovery', description: 'Template model for all N parallel discovery agents. Each explores assigned sectors and finds new projects.' },
+    { id: 'global_synthesizer', name: 'Synthesizer',        category: 'global_discovery', description: 'Combines all agent findings with previous report into a unified, compounding intelligence report.' },
+  ]
+
+  const signalCrawlerAgent: AgentInfo = {
+    id: 'signal_crawler',
+    name: 'Signal Crawler',
+    description: 'AI agent that researches crypto assets and generates structured trading signals with entry, stop-loss, take-profit and confidence score.',
+    category: 'signals',
+  }
 
   return (
     <div
@@ -742,6 +759,43 @@ export default function AIConfigPage() {
                 models={models}
                 accentColor={SECTION_COLORS.discovery}
               />
+            </section>
+
+            {/* ── SIGNALS section ── */}
+            <section>
+              <SectionHeader
+                icon="◈"
+                label="Signals"
+                color={SECTION_COLORS.signals}
+                description="AI signal generation agents. Crawls assets, applies technical analysis and generates actionable trading signals."
+              />
+              <AgentRow
+                agent={signalCrawlerAgent}
+                modelId={getAgentModel('signal_crawler') || DEFAULT_SIGNALS_MODEL}
+                onModelChange={(m) => handleModelChange('signal_crawler', m)}
+                models={models}
+                accentColor={SECTION_COLORS.signals}
+              />
+            </section>
+
+            {/* ── GLOBAL DISCOVERY section ── */}
+            <section>
+              <SectionHeader
+                icon="◉"
+                label="Global Discovery"
+                color={SECTION_COLORS.globalDiscovery}
+                description="Multi-agent global intelligence pipeline. Master planner assigns sectors, N agents explore in parallel, synthesizer combines into compounding reports."
+              />
+              {GLOBAL_DISCOVERY_AGENTS.map((agent) => (
+                <AgentRow
+                  key={agent.id}
+                  agent={agent}
+                  modelId={getAgentModel(agent.id)}
+                  onModelChange={(m) => handleModelChange(agent.id, m)}
+                  models={models}
+                  accentColor={SECTION_COLORS.globalDiscovery}
+                />
+              ))}
             </section>
           </>
         )}

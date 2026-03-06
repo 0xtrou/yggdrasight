@@ -36,7 +36,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secr
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 // No hard timeout — the agent can take as long as it needs
-const WORKER_TIMEOUT_MS = 600_000 // 10 minutes safety limit
+const WORKER_TIMEOUT_MS = 900_000 // 15 minutes safety limit (agents may do deep research)
 
 // ── Symbol name mappings ──────────────────────────────────────────────────────
 

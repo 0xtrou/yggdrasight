@@ -67,8 +67,8 @@ import {
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
-const WORKER_TIMEOUT_MS = 1_500_000 // 25 minutes safety limit (6 parallel + 1 synthesizer)
-const AGENT_TIMEOUT_MS = 600_000 // 10 minutes per individual agent (matches discover-worker)
+const WORKER_TIMEOUT_MS = 2_400_000 // 40 minutes safety limit (agents may do deep research)
+const AGENT_TIMEOUT_MS = 900_000 // 15 minutes per individual agent (agents may do deep research)
 
 // ── Symbol name mappings (same as discover-worker) ───────────────────────────
 

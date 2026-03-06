@@ -9,7 +9,7 @@ import type { AvailableModel } from '../types'
 const OPENCODE_BIN = process.env.OPENCODE_BIN ?? 'opencode'
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
-const DEFAULT_TIMEOUT_MS = 120_000 // 2 minutes per agent call
+const DEFAULT_TIMEOUT_MS = 600_000 // 10 minutes per agent call (agents may do deep research)
 // Search multiple candidate paths for the models cache file
 const MODELS_CACHE_CANDIDATES = [
   path.join(process.cwd(), 'data', 'models-cache.json'),

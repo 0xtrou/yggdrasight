@@ -102,3 +102,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to create signal' }, { status: 500 })
   }
 }
+
+// DELETE /api/signals — bulk delete by ids
+export async function DELETE(req: NextRequest) {
+  try {
+    await connectDB()
+
+    const body = await req.json()
+    const ids: unknown = body.ids
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return NextResponse.json({ error: 'ids must be a non-empty array' }, { status: 400 })
+    }
+
+    const result = await Signal.deleteMany({ _id: { $in: ids } })
+
+    return NextResponse.json({ deleted: result.deletedCount })
+  } catch (err) {
+    console.error('[DELETE /api/signals]', err)
+    return NextResponse.json({ error: 'Failed to delete signals' }, { status: 500 })
+  }
+}
