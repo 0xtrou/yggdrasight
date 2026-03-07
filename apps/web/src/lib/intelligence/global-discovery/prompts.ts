@@ -35,25 +35,25 @@ CRITICAL EXECUTION CONTEXT:
 - Do NOT say "I detect...", "My approach...", "Should I proceed..." — there is nobody listening
 - You have ONE job: research, then output the required JSON object as your final message
 
-RESEARCH RULES:
-- Do ALL research YOURSELF using websearch_web_search_exa tool DIRECTLY
-- Do NOT delegate to sub-agents, do NOT use the Task tool, do NOT spawn background tasks
-- Do NOT use explore, librarian, or any other agent delegation — you must do everything yourself
-- Use websearch_web_search_exa as your PRIMARY research tool — it returns compact, LLM-optimized summaries
-- AVOID using webfetch on large pages (CoinGecko, CoinMarketCap, GitHub repos, Medium articles, docs sites)
-  These pages return massive HTML/markdown that will EXCEED your context window and cause errors
-- ONLY use webfetch on small, focused pages (project landing pages, specific blog posts, API endpoints)
-- If websearch results give you enough information about a project, do NOT webfetch the source — use the summary
-- Keep your context lean — you have a LIMITED context window. Prioritize quality over quantity of sources
-- Search the web extensively but EFFICIENTLY — do NOT rely on training data alone
-- Be specific and evidence-based in your reasoning
-- Use null for anything you cannot determine with confidence
+CONTEXT EFFICIENCY RULES:
+- You have a LIMITED context window. Treat it as a scarce resource.
+- Search the web EFFICIENTLY: 1-3 targeted queries per topic. Stop when you have enough signal.
+- AVOID webfetch on large pages (CoinGecko, CoinMarketCap, GitHub repos, Medium, docs sites).
+  These return massive HTML that will OVERFLOW your context window and cause errors.
+- Use websearch summaries directly — do NOT follow links unless the summary is insufficient.
+  - When evaluating multiple projects, use a single search per project — don't spiral.
+- Stop researching when you have enough to fill the required JSON fields. Don't over-research.
+- Do NOT delegate to sub-agents, do NOT use the Task tool, do NOT spawn background tasks.
+- Do ALL research YOURSELF using websearch_web_search_exa DIRECTLY.
+- Use null for anything you cannot determine confidently — do not guess.
 
-OUTPUT RULES:
-- Your FINAL message MUST be ONLY a valid JSON object — no prose, no explanation, no markdown
-- Do NOT wrap in code blocks
-- Do NOT include any text before or after the JSON
-`.trim()
+OUTPUT COMPACTION RULES:
+- Your FINAL message MUST be ONLY a valid JSON object — no prose, no explanation, no markdown.
+- Do NOT wrap in code blocks. Do NOT include any text before or after the JSON.
+- description per project: 1-2 sentences max. Functional description only — no marketing language.
+- discoveryReason: 1 sentence max. Why is this notable?
+- sources: max 3 URLs per project. Only include URLs you actually fetched.
+
 
 export function buildMasterPlannerPrompt(
   depth: number,
@@ -240,13 +240,18 @@ export function buildSynthesizerPrompt(
   depth: number,
   agentCount: number,
 ): string {
+  // Compact agent summaries — avoid dumping full project JSON into the synthesizer prompt,
+  // which wastes context. Pass project names + key fields only; full data is in agent files.
   const agentSummaries = agentResults.map(r => `
 ### ${r.agent_id}
 - Projects found: ${r.projects.length}
 - Sector summary: ${r.sector_summary}
 - Notable trends: ${r.notable_trends.join(', ') || 'none'}
-- Projects: ${JSON.stringify(r.projects, null, 2)}
-`).join('\n')
+- Projects: ${JSON.stringify(r.projects.map(p => ({
+    name: p.name, symbol: p.symbol, cat: p.primaryCategory,
+    cracks: p.crackAlignment, signal: p.signalStrength, sector: p.sector,
+    description: p.description, discoveryReason: p.discoveryReason,
+  })))}`).join('\n')
 
   const previousProjectNames = new Set(previousReport?.projects.map(p => p.name.toLowerCase()) ?? [])
 
@@ -254,11 +259,29 @@ export function buildSynthesizerPrompt(
     .flatMap(r => r.projects)
     .filter(p => !previousProjectNames.has(p.name.toLowerCase()))
 
+  // Compute cross-project crack distribution for the synthesizer
+  const crackToProjects: Record<number, string[]> = {}
+  for (const r of agentResults) {
+    for (const p of r.projects) {
+      for (const c of (p.crackAlignment ?? [])) {
+        if (!crackToProjects[c]) crackToProjects[c] = []
+        crackToProjects[c]!.push(p.name)
+      }
+    }
+  }
+  const crackClusterLines = Object.entries(crackToProjects)
+    .sort((a, b) => b[1].length - a[1].length)
+    .map(([crack, names]) => `  Crack ${crack}: ${names.join(', ')}`)
+    .join('\n')
+  const crackClustersBlock = Object.keys(crackToProjects).length > 0
+    ? `## Crack Clusters in This Run\n\n${crackClusterLines}\n\nProjects sharing a crack are NOT independent — they compete at the same expansion point.\nFor each cluster of 2+ projects, crossPillarInsights must explain how they differentiate.`
+    : ''
+
   const reportSchema = {
     projects: ['[ALL projects — inherited + new, deduplicated]'],
     newProjects: ['[Only NEW projects from this run]'],
     marketDirection: 'Assessment of current global crypto market direction and momentum',
-    crossPillarInsights: 'How projects across different categories relate to each other',
+    crossPillarInsights: 'How projects across different categories and shared cracks relate — compare, contrast, and rank projects at the same crack',
     emergingTrends: ['trend 1', 'trend 2', 'trend 3'],
     executiveSummary: 'Comprehensive summary of the global intelligence state — what changed, what matters, what to watch',
   }
@@ -285,15 +308,26 @@ Previous trends: ${previousReport.emergingTrends.join(', ') || 'none'}
 Previous projects: ${previousReport.projects.map(p => p.name).join(', ')}
 ` : 'This is the first report — no previous data.'}
 
+${crackClustersBlock}
+
 ## Synthesis Instructions
 
 1. DEDUPLICATE projects — if multiple agents found the same project, merge their analyses
 2. COMBINE with previous report's projects (if any) — the dataset must GROW over time
 3. For new projects, validate the category assignments against the framework
-4. Identify CROSS-PILLAR patterns — how do projects in different categories relate?
+4. CROSS-CRACK ANALYSIS — for each crack cluster (2+ projects at same crack):
+   - How do these projects differ in their approach to the same crack?
+   - Which has the stronger or more unique resonance? Rank them.
+   - Is one a narrative vessel riding the other's crack? Identify it.
 5. Detect EMERGING TRENDS — what new narratives or sectors are forming?
 6. Assess GLOBAL MARKET DIRECTION — where is the crypto consciousness expanding?
-7. Write an EXECUTIVE SUMMARY that captures the key intelligence from this run
+7. Write an EXECUTIVE SUMMARY that captures key intelligence — changes, what matters, what to watch
+
+**Compaction rules:**
+- crossPillarInsights: focus on RELATIONSHIPS and COMPARISONS, not individual project descriptions.
+  Each project's description is already in the projects array. Don't restate it.
+- executiveSummary: 3-5 sentences max. Synthesize the run — don't list projects.
+- discoveryReason in each project: 1 sentence max.
 
 New projects found this run: ${allNewProjects.length}
 Total projects (inherited + new): ${(previousReport?.projects.length ?? 0) + allNewProjects.length}

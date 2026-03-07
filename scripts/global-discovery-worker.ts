@@ -228,6 +228,7 @@ async function runAgent(
     'run', '--rm',
     '--network', 'host',
     '-v', `${configPaths?.authJsonPath ?? `${HOME_DIR}/.local/share/opencode/auth.json`}:/root/.local/share/opencode/auth.json:ro`,
+    '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
     '-v', `${workDir}:/workspace:rw`,
     '-e', 'HOME=/root',
     OPENCODE_IMAGE,
@@ -603,9 +604,20 @@ async function main() {
           name: p.name,
           sector: p.sector,
           primaryCategory: p.primaryCategory,
+          crackAlignment: p.crackAlignment,
         })),
       } : null,
     )
+    // Also write crack saturation data as a separate file for the master planner
+    if (previousReport) {
+      const crackCounts: Record<number, number> = {}
+      for (const p of previousReport.projects) {
+        for (const c of (p.crackAlignment ?? [])) {
+          crackCounts[c] = (crackCounts[c] ?? 0) + 1
+        }
+      }
+      log(`Crack saturation: ${JSON.stringify(crackCounts)}`)
+    }
 
     let masterPlan: MasterPlanResult | null = null
     try {

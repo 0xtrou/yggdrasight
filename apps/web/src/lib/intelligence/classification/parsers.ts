@@ -18,31 +18,75 @@ import type {
   ClassificationCategory,
 } from './types'
 
-// ── Generic JSON extraction (same as discover-worker) ───────────────────────
+// ── Generic JSON extraction (robust: handles prose + JSON mixed output) ──────
 
 function extractFirstJson(text: string): Record<string, unknown> | null {
-  // Try direct parse
-  try { return JSON.parse(text) } catch { /* nope */ }
+  // 1. Try direct parse (clean output)
+  try {
+    const trimmed = text.trim()
+    if (trimmed.startsWith('{')) {
+      return JSON.parse(trimmed)
+    }
+  } catch { /* nope */ }
 
-  // Try code block extraction
+  // 2. Try code block extraction
   const jsonBlockMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
   if (jsonBlockMatch) {
     try { return JSON.parse(jsonBlockMatch[1]!) } catch { /* nope */ }
   }
 
-  // Try finding a JSON object with a known key
-  const knownKeys = ['crack_ids', 'visibility_direction', 'narrative_dependency', 'power_direction', 'recognition_level', 'polarity', 'categories', 'primary_category']
-  for (const key of knownKeys) {
-    const regex = new RegExp(`\\{[\\s\\S]*"${key}"[\\s\\S]*\\}`)
-    const match = text.match(regex)
-    if (match) {
-      try { return JSON.parse(match[0]) } catch {
-        // Try progressive truncation
-        const str = match[0]
-        for (let end = str.length; end > 50; end--) {
-          try { return JSON.parse(str.substring(0, end) + '}') } catch { continue }
+  // 3. Find JSON by balanced brace matching — scan for { and count braces
+  //    This handles prose before/after JSON correctly
+  const candidates: string[] = []
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '{') {
+      let depth = 0
+      let inString = false
+      let escaped = false
+      for (let j = i; j < text.length; j++) {
+        const ch = text[j]!
+        if (escaped) { escaped = false; continue }
+        if (ch === '\\' && inString) { escaped = true; continue }
+        if (ch === '"' && !escaped) { inString = !inString; continue }
+        if (inString) continue
+        if (ch === '{') depth++
+        if (ch === '}') {
+          depth--
+          if (depth === 0) {
+            candidates.push(text.substring(i, j + 1))
+            break
+          }
         }
       }
+    }
+  }
+
+  // Try candidates from largest to smallest (largest is most likely the full JSON)
+  candidates.sort((a, b) => b.length - a.length)
+  for (const candidate of candidates) {
+    try {
+      const parsed = JSON.parse(candidate)
+      if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+        return parsed
+      }
+    } catch { /* try next */ }
+  }
+
+  // 4. Last resort — try known keys with non-greedy approach
+  const knownKeys = ['crack_ids', 'visibility_direction', 'narrative_dependency', 'power_direction', 'recognition_level', 'polarity', 'categories', 'primary_category']
+  for (const key of knownKeys) {
+    const idx = text.indexOf(`"${key}"`)
+    if (idx === -1) continue
+    // Walk backwards from the key to find the opening brace
+    const braceIdx = text.lastIndexOf('{', idx)
+    if (braceIdx === -1) continue
+    const fragment = text.substring(braceIdx)
+    // Try progressive end-finding
+    for (let end = fragment.length; end > 20; end--) {
+      const slice = fragment.substring(0, end)
+      if (slice.lastIndexOf('}') === -1) continue
+      const trimSlice = slice.substring(0, slice.lastIndexOf('}') + 1)
+      try { return JSON.parse(trimSlice) } catch { continue }
     }
   }
 

@@ -513,8 +513,8 @@ function AgentResultContent({ agentType, result }: { agentType: string; result: 
           <span style={{ color: 'var(--color-terminal-text)' }}>
             {typeof val === 'number' ? (val <= 1 && val >= 0 ? `${(val * 100).toFixed(0)}%` : String(val))
               : typeof val === 'string' ? val
-              : Array.isArray(val) ? val.join(', ')
-              : JSON.stringify(val)}
+              : Array.isArray(val) ? (val.every(v => typeof v === 'object' && v !== null) ? JSON.stringify(val, null, 2) : val.join(', '))
+              : String(val)}
           </span>
         </div>
       ))}
@@ -834,7 +834,7 @@ function ResultView({
    EMPTY STATE — no result, not classifying
    ═══════════════════════════════════════════════════════════════════════════ */
 
-function EmptyState({ symbol, onClassify }: { symbol: string; onClassify: () => void }) {
+function EmptyState({ symbol, onClassify, error }: { symbol: string; onClassify: () => void; error?: string | null }) {
   return (
     <div style={{
       flex: 1,
@@ -881,6 +881,17 @@ function EmptyState({ symbol, onClassify }: { symbol: string; onClassify: () => 
         >
           ▸ RUN CLASSIFICATION
         </button>
+        {error && (
+          <div style={{
+            marginTop: '8px',
+            fontSize: '10px',
+            color: 'var(--color-terminal-down)',
+            maxWidth: '320px',
+            wordBreak: 'break-word',
+          }}>
+            ERR: {error}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -1220,9 +1231,11 @@ function DeepDataSection({
 function DetailPanel({
   symbol,
   hook,
+  onClassify,
 }: {
   symbol: string
   hook: ReturnType<typeof useClassification>
+  onClassify: () => void
 }) {
   const {
     result,
@@ -1234,6 +1247,7 @@ function DetailPanel({
     cancelClassification,
     history,
     migrations,
+    error,
   } = hook
 
   if (classifying) {
@@ -1271,13 +1285,13 @@ function DetailPanel({
   if (history.length > 0) {
     return (
       <div style={{ flex: 1, overflow: 'auto', minHeight: 0, padding: '16px' }}>
-        <EmptyState symbol={symbol} onClassify={hook.classify} />
+        <EmptyState symbol={symbol} onClassify={onClassify} error={error} />
         <ClassificationHistory history={history} migrations={migrations} />
       </div>
     )
   }
 
-  return <EmptyState symbol={symbol} onClassify={hook.classify} />
+  return <EmptyState symbol={symbol} onClassify={onClassify} error={error} />
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1421,7 +1435,7 @@ function AssetDetailView({ symbol, onBack }: { symbol: string; onBack: () => voi
       </div>
 
       {/* Detail panel content */}
-      <DetailPanel symbol={symbol} hook={hook} />
+      <DetailPanel symbol={symbol} hook={hook} onClassify={classifyWithStoredModel} />
 
       {/* Fullscreen dialog */}
       <ClassificationDialog

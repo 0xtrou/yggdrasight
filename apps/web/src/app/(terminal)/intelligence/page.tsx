@@ -899,6 +899,8 @@ function IntelligenceDashboard() {
 
   const toggleFullscreen = useCallback((panelId: PanelId) => {
     setFullscreenPanel(prev => prev === panelId ? null : panelId)
+    // Force R3F Canvas to recalculate viewport bounds after layout shift
+    requestAnimationFrame(() => window.dispatchEvent(new Event('resize')))
   }, [])
 
   // Escape key exits fullscreen
@@ -1150,14 +1152,17 @@ function IntelligenceDashboard() {
         <>
           {/* ── TOP ROW ── */}
           <div style={{
-            display: fullscreenPanel ? 'none' : 'flex',
+            display: (fullscreenPanel && fullscreenPanel !== 'yggdrasil') ? 'none' : 'flex',
             height: `calc(${rowSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
             minHeight: 0,
             overflow: 'hidden',
           }}>
-            {/* TOP-LEFT: 3D Expansion Map */}
+            {/* TOP-LEFT: 3D Expansion Map — single instance, repositioned on fullscreen */
             <div style={{
-              ...(fullscreenPanel === 'yggdrasil' ? fullscreenStyle : {
+              ...(fullscreenPanel === 'yggdrasil' ? {
+                ...fullscreenStyle,
+                flexDirection: 'column' as const,
+              } : {
                 width: `calc(${colSplit * 100}% - ${HANDLE_SIZE / 2}px)`,
                 minWidth: 0,
                 display: 'flex',
@@ -1179,9 +1184,7 @@ function IntelligenceDashboard() {
                 position: 'relative',
                 overflow: 'hidden',
               }}>
-                {fullscreenPanel !== 'yggdrasil' && (
-              <YggdrasilTree report={latestReport} marketGlobal={marketGlobal} />
-                )}
+                <YggdrasilTree report={latestReport} marketGlobal={marketGlobal} />
               </div>
             </div>
 
@@ -1334,19 +1337,7 @@ function IntelligenceDashboard() {
           )}
 
           {/* ── FULLSCREEN PANELS — rendered outside the grid when active ── */}
-          {fullscreenPanel === 'yggdrasil' && (
-            <div style={fullscreenStyle}>
-              <PanelHeader
-                icon="◉"
-                title="YGGDRASIL"
-                isFullscreen
-                onToggleFullscreen={() => toggleFullscreen('yggdrasil')}
-              />
-              <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
-                  <YggdrasilTree report={latestReport} marketGlobal={marketGlobal} />
-              </div>
-            </div>
-          )}
+          {/* Yggdrasil fullscreen handled inline above — no duplicate mount needed */}
 
           {fullscreenPanel === 'market-intel' && (
             <div style={fullscreenStyle}>

@@ -68,7 +68,7 @@ import {
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
+const MONGODB_URI = process.env.OCULUS_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 const WORKER_TIMEOUT_MS = 2_400_000 // 40 minutes safety limit (agents may do deep research)
@@ -245,11 +245,12 @@ async function runAgent(
     'run', '--rm',
     '--network', 'host',
     '-v', `${configPaths?.authJsonPath ?? `${HOME_DIR}/.local/share/opencode/auth.json`}:/root/.local/share/opencode/auth.json:ro`,
+    '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
     '-v', `${workDir}:/workspace:rw`,
     '-e', 'HOME=/root',
     OPENCODE_IMAGE,
     'run', '-m', model, '--format', 'json', '--print-logs', '--log-level', 'WARN', '--dir', '/workspace',
-    'Read INSTRUCTIONS.md for your task. Then read each file in data/ directory. Follow all instructions exactly. Your FINAL output MUST be ONLY the JSON object specified in INSTRUCTIONS.md — no prose, no status updates, no explanations. Complete all research first, then output the raw JSON.',
+    'Read INSTRUCTIONS.md for your task. Read data/ files for context. Do all research silently using tools. Then output ONLY a raw JSON object — no prose, no explanation, no preamble, no markdown. The first character must be { and the last must be }. Any non-JSON text will cause a parse failure.',
   ]
 
   log(`[${agentType}] Starting agent (model: ${model})`)
@@ -490,6 +491,7 @@ async function runClassificationAgents(
   discoveryData: Record<string, unknown> | null,
   jobId: string,
   agentModels: Record<string, string> | null = null,
+  configPaths: DecryptedConfigPaths | null = null,
 ): Promise<Record<ClassificationAgentType, SubAgentResult>> {
   const results: Record<string, SubAgentResult> = {}
 
@@ -623,7 +625,7 @@ async function main() {
     await appendLogs(jobId, [`Discovery data: ${discoveryData ? 'loaded' : 'none — agents will rely on web search'}`])
 
     // ── Phase 1: Run 6 classification agents in parallel ──
-    const subAgentResults = await runClassificationAgents(model, symbol, projectName, discoveryData, jobId, agentModels)
+    const subAgentResults = await runClassificationAgents(model, symbol, projectName, discoveryData, jobId, agentModels, configPaths)
 
     // Check how many succeeded
     const successCount = Object.values(subAgentResults).filter(r => r.status === 'completed').length

@@ -69,20 +69,41 @@ All share one meta-pattern: "You need intermediaries" is the assumed truth.
 | 9 | Identity is rented from institutions  | Private key = self-sovereign identity | Identity subjugation          |
 `.trim()
 
+const CONTEXT_RULES = `
+CONTEXT EFFICIENCY RULES (read before researching):
+- You have a LIMITED context window. Treat it as a scarce resource.
+- Read data/discovery.json FIRST — extract all useful facts before doing any web search.
+- Do NOT re-fetch pages that discovery.json already summarizes. Use the cached data.
+- When searching the web, use 1-2 targeted queries maximum. Stop when you have enough signal.
+- Do NOT webfetch large pages (CoinGecko, GitHub repos, Medium, docs sites) — they overflow context.
+  Use websearch summaries instead. Only webfetch small, specific pages (landing pages, blog posts).
+- If websearch results answer your question, do NOT follow the links — the summary is enough.
+- Compact your findings mentally before writing the JSON: distill, don't dump.
+`.trim()
+
 const OUTPUT_RULES = `
 CRITICAL OUTPUT RULES:
-- Your FINAL message MUST be ONLY a valid JSON object — no prose, no explanation, no status updates
-- Do NOT wrap in markdown code blocks
-- Do NOT describe what you are going to do — just DO IT and return the JSON
-- Do NOT say "I'm researching..." or "waiting for results..." — complete all research FIRST, then output the JSON
+- Your ENTIRE response MUST be a single valid JSON object. Nothing else.
+- Do NOT output ANY text before or after the JSON — no reasoning, no explanation, no status updates, no preamble
+- Do NOT wrap in markdown code blocks (no \`\`\`json)
+- Do NOT say "I will now...", "Next, I will...", "I have clear next steps..." — just output the JSON
+- Do NOT describe your research process — complete all research silently, then output ONLY the JSON
+- The very first character of your response must be { and the very last must be }
 - Use ALL tools at your disposal — websearch, webfetch, Task tool, sub-agents, background research — go as deep as needed
-- You may delegate to sub-agents or launch background tasks if it helps you produce better, more thorough analysis
-- Be specific and evidence-based in your reasoning
+- You may delegate to sub-agents or launch background tasks for thorough analysis
+- Be specific and evidence-based in your reasoning fields
 - Use null for anything you cannot determine with confidence
-- Search the web extensively — do NOT rely on training data alone
+- Search the web efficiently — 1-2 targeted queries, stop when signal is clear, do NOT rely on training data alone
 - Read data/discovery.json first for existing project research data
 - If you cannot complete research, return the JSON with null values — NEVER return prose
-`.trim()
+
+OUTPUT COMPACTION RULES (mandatory — violations waste compute):
+- reasoning: max 3 sentences. State the conclusion + the strongest single piece of evidence. No padding.
+- evidence[]: max 3 items. Each item must be a unique, non-redundant fact. Do NOT repeat what reasoning already says.
+- Do NOT copy phrases from other fields into reasoning or evidence.
+- Prefer concrete specifics over abstract restatements: '40% team token allocation' beats 'centralized tokenomics'.
+
+IMPORTANT: ANY text outside the JSON object will cause a system parse failure. Output ONLY the JSON.`
 
 // ── Agent 1: Crack Mapping ──────────────────────────────────────────────────
 
@@ -143,6 +164,8 @@ Rate resonance_strength from 0 to 1:
 
 Return a JSON object with this exact structure:
 ${JSON.stringify(schema, null, 2)}
+
+${CONTEXT_RULES}
 
 ${OUTPUT_RULES}
 `
@@ -212,6 +235,8 @@ Category 3 (Mirror Builder) or Category 5 (Ego Builder).
 
 Return a JSON object with this exact structure:
 ${JSON.stringify(schema, null, 2)}
+
+${CONTEXT_RULES}
 
 ${OUTPUT_RULES}
 `
@@ -290,6 +315,8 @@ transcends narrative categories.
 
 Return a JSON object with this exact structure:
 ${JSON.stringify(schema, null, 2)}
+
+${CONTEXT_RULES}
 
 ${OUTPUT_RULES}
 `
@@ -374,6 +401,8 @@ and validator set. Functionally a startup with a token.
 Return a JSON object with this exact structure:
 ${JSON.stringify(schema, null, 2)}
 
+${CONTEXT_RULES}
+
 ${OUTPUT_RULES}
 `
 }
@@ -452,6 +481,8 @@ Low coherence is a strong Cat 6 signal.
 Return a JSON object with this exact structure:
 ${JSON.stringify(schema, null, 2)}
 
+${CONTEXT_RULES}
+
 ${OUTPUT_RULES}
 `
 }
@@ -524,6 +555,8 @@ The mirror is valuable — it reveals the assumption — but it's not the next t
 Return a JSON object with this exact structure:
 ${JSON.stringify(schema, null, 2)}
 
+${CONTEXT_RULES}
+
 ${OUTPUT_RULES}
 `
 }
@@ -559,11 +592,21 @@ export function buildSynthesizerPrompt(
 
 ${FRAMEWORK_PREAMBLE}
 
+## Pre-Synthesis Step: Convergence Analysis
+
+Before classifying, identify what the six dimensions AGREE on:
+- Which cracks appear in multiple agents' reasoning? (convergence = stronger signal)
+- Which category is implied by 3+ dimensions simultaneously? (majority vote = primary)
+- Which observations appear in multiple agents verbatim? (these are redundant — use once)
+- Are there contradictions across agents? (name them in overall_assessment)
+
+This step is SILENT — do not output it. Use it to compress redundant inputs before writing JSON.
+
 ## Your Task
 
 You are the synthesizer. Six agents have each examined one dimension of this
 project. Your job is to combine their findings into a final, coherent
-classification.
+classification — not a summary of each agent, but a unified verdict.
 
 ## The Six Dimensions and Their Results
 
@@ -605,6 +648,12 @@ resilient.
 Assign weights to each category (0 to 1). All weights should sum to approximately 1.
 The primary_category is the one with the highest weight.
 
+**Compaction rules for the synthesizer output:**
+- categories[].reasoning: 1-2 sentences max. State which dimensions drove this weight.
+- overall_assessment: 2-3 sentences max. Synthesize the verdict — do NOT restate each pillar's findings.
+- consciousness_contribution: 1 sentence. What specific function does this serve in crypto's expansion?
+- migration_prediction: 1 sentence + the target category. Cite the strongest directional signal.
+- archetype_alignment: name only (e.g. 'Magician') + 1 clause explaining why. No lists.
 ## Inner Council Archetypes
 
 | Archetype  | Manifestation in Crypto                                      |
@@ -630,6 +679,8 @@ Based on the evidence, predict where this project is heading.
 
 Return a JSON object with this exact structure:
 ${JSON.stringify(schema, null, 2)}
+
+${CONTEXT_RULES}
 
 ${OUTPUT_RULES}
 `
