@@ -42,6 +42,23 @@ function timeAgo(iso: string): string {
   return `${Math.floor(h / 24)}d ago`
 }
 
+function formatMarketCap(v: number | null | undefined): string {
+  if (v === null || v === undefined) return '—'
+  if (v >= 1e12) return `$${(v / 1e12).toFixed(2)}T`
+  if (v >= 1e9) return `$${(v / 1e9).toFixed(2)}B`
+  if (v >= 1e6) return `$${(v / 1e6).toFixed(1)}M`
+  if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}K`
+  return `$${v.toFixed(0)}`
+}
+
+function formatVolume(v: number | null | undefined): string {
+  if (v === null || v === undefined) return '—'
+  if (v >= 1e9) return `$${(v / 1e9).toFixed(1)}B`
+  if (v >= 1e6) return `$${(v / 1e6).toFixed(1)}M`
+  if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}K`
+  return `$${v.toFixed(0)}`
+}
+
 // ── Sub-components ───────────────────────────────────────────────────────────
 
 function CategoryBadge({ cat }: { cat: number | null }) {
@@ -99,12 +116,20 @@ function SignalBar({ value }: { value: number }) {
 }
 
 function ProjectTable({ projects, title }: { projects: IGlobalDiscoveredProject[]; title: string }) {
-  const [sortBy, setSortBy] = useState<'signal' | 'category' | 'name'>('signal')
+  const [sortBy, setSortBy] = useState<'marketCap' | 'signal' | 'category' | 'name'>('marketCap')
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const sorted = useMemo(() => {
     const copy = [...projects]
-    if (sortBy === 'signal') copy.sort((a, b) => b.signalStrength - a.signalStrength)
+    if (sortBy === 'marketCap') copy.sort((a, b) => {
+      const am = (a as IGlobalDiscoveredProject & { marketCap?: number | null }).marketCap ?? null
+      const bm = (b as IGlobalDiscoveredProject & { marketCap?: number | null }).marketCap ?? null
+      if (am === null && bm === null) return 0
+      if (am === null) return 1
+      if (bm === null) return -1
+      return bm - am
+    })
+    else if (sortBy === 'signal') copy.sort((a, b) => b.signalStrength - a.signalStrength)
     else if (sortBy === 'category') copy.sort((a, b) => (a.primaryCategory ?? 99) - (b.primaryCategory ?? 99))
     else copy.sort((a, b) => a.name.localeCompare(b.name))
     return copy
@@ -123,7 +148,7 @@ function ProjectTable({ projects, title }: { projects: IGlobalDiscoveredProject[
       {/* Table header */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '30px minmax(0, 1fr) 54px 70px 80px minmax(100px, 1.2fr)',
+        gridTemplateColumns: '30px minmax(0, 1fr) 54px 56px 72px 72px 80px minmax(80px, 1fr)',
         minWidth: 0,
         padding: '4px 8px',
         fontSize: '9px',
@@ -140,6 +165,10 @@ function ProjectTable({ projects, title }: { projects: IGlobalDiscoveredProject[
         <span onClick={() => setSortBy('category')} style={{ cursor: 'pointer' }}>
           CAT {sortBy === 'category' ? '▼' : ''}
         </span>
+        <span onClick={() => setSortBy('marketCap')} style={{ cursor: 'pointer' }}>
+          MCAP {sortBy === 'marketCap' ? '▼' : ''}
+        </span>
+        <span>VOL 24H</span>
         <span onClick={() => setSortBy('signal')} style={{ cursor: 'pointer' }}>
           SIG {sortBy === 'signal' ? '▼' : ''}
         </span>
@@ -155,7 +184,7 @@ function ProjectTable({ projects, title }: { projects: IGlobalDiscoveredProject[
               onClick={() => setExpanded(isExpanded ? null : p.name)}
               style={{
                 display: 'grid',
-                gridTemplateColumns: '30px minmax(0, 1fr) 54px 70px 80px minmax(100px, 1.2fr)',
+                gridTemplateColumns: '30px minmax(0, 1fr) 54px 56px 72px 72px 80px minmax(80px, 1fr)',
                 minWidth: 0,
                 padding: '4px 8px',
                 borderBottom: '1px solid var(--color-terminal-border)',
@@ -171,13 +200,26 @@ function ProjectTable({ projects, title }: { projects: IGlobalDiscoveredProject[
               }}
             >
               <span style={{ color: 'var(--color-terminal-dim)' }}>{i + 1}</span>
-              <span style={{ color: 'var(--color-terminal-text)', fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{p.name}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0 }}>
+                <span style={{ color: 'var(--color-terminal-text)', fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{p.name}</span>
+                {(p as IGlobalDiscoveredProject & { websiteUrl?: string | null }).websiteUrl && (
+                  <a
+                    href={(p as IGlobalDiscoveredProject & { websiteUrl?: string | null }).websiteUrl!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    style={{ color: '#00ddcc', fontSize: '9px', flexShrink: 0, textDecoration: 'none', lineHeight: 1 }}
+                  >↗</a>
+                )}
+              </span>
               <span style={{ color: 'var(--color-terminal-amber)' }}>{p.symbol ?? '—'}</span>
               <CategoryBadge cat={p.primaryCategory} />
+              <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px' }}>{formatMarketCap((p as IGlobalDiscoveredProject & { marketCap?: number | null }).marketCap)}</span>
+              <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px' }}>{formatVolume((p as IGlobalDiscoveredProject & { volume24h?: number | null }).volume24h)}</span>
               <SignalBar value={p.signalStrength} />
               <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px' }}>{p.sector ?? '—'}</span>
-            </div>
 
+            </div>
             {isExpanded && (
               <div style={{
                 padding: '8px 12px 8px 44px',
@@ -190,6 +232,26 @@ function ProjectTable({ projects, title }: { projects: IGlobalDiscoveredProject[
                 <div style={{ color: 'var(--color-terminal-dim)', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                   <strong>Reason:</strong> {p.discoveryReason}
                 </div>
+                {((p as IGlobalDiscoveredProject & { marketCap?: number | null }).marketCap != null || (p as IGlobalDiscoveredProject & { volume24h?: number | null }).volume24h != null) && (
+                  <div style={{ color: 'var(--color-terminal-dim)', marginTop: '2px', display: 'flex', gap: '16px' }}>
+                    <span><strong>MCAP:</strong> {formatMarketCap((p as IGlobalDiscoveredProject & { marketCap?: number | null }).marketCap)}</span>
+                    <span><strong>VOL 24H:</strong> {formatVolume((p as IGlobalDiscoveredProject & { volume24h?: number | null }).volume24h)}</span>
+                  </div>
+                )}
+                {(p as IGlobalDiscoveredProject & { websiteUrl?: string | null }).websiteUrl && (
+                  <div style={{ color: 'var(--color-terminal-dim)', marginTop: '2px' }}>
+                    <strong>Website:</strong>{' '}
+                    <a
+                      href={(p as IGlobalDiscoveredProject & { websiteUrl?: string | null }).websiteUrl!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ color: '#00ddcc', textDecoration: 'none' }}
+                    >
+                      {(p as IGlobalDiscoveredProject & { websiteUrl?: string | null }).websiteUrl!.replace(/^https?:\/\//, '')} ↗
+                    </a>
+                  </div>
+                )}
                 {p.crackAlignment.length > 0 && (
                   <div style={{ color: 'var(--color-terminal-dim)', marginTop: '2px' }}>
                     <strong>Cracks:</strong> {p.crackAlignment.join(', ')}

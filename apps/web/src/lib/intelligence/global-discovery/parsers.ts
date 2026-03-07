@@ -147,6 +147,9 @@ function parseProject(raw: Record<string, unknown>): IGlobalDiscoveredProject | 
     sources: ensureStringArray(raw.sources),
     signalStrength: clamp01(raw.signalStrength),
     logoUrl: typeof raw.logoUrl === 'string' && raw.logoUrl.startsWith('http') ? raw.logoUrl : null,
+    marketCap: typeof raw.marketCap === 'number' ? raw.marketCap : null,
+    volume24h: typeof raw.volume24h === 'number' ? raw.volume24h : null,
+    websiteUrl: typeof raw.websiteUrl === 'string' && raw.websiteUrl.startsWith('http') ? raw.websiteUrl : null,
   }
 }
 

@@ -895,10 +895,8 @@ const LeafSystem = memo(function LeafSystem({
   onOut,
   onSelect,
   sphereGeometry,
-  hitSphereGeometry,
   hoverGeometry,
   instancedRef,
-  hitInstancedRef,
   hoverOrbRef,
 }: {
   leaves: LeafInstanceMeta[]
@@ -907,10 +905,8 @@ const LeafSystem = memo(function LeafSystem({
   onOut: () => void
   onSelect: (node: SelectedNode) => void
   sphereGeometry: THREE.SphereGeometry
-  hitSphereGeometry: THREE.SphereGeometry
   hoverGeometry: THREE.SphereGeometry
   instancedRef: React.MutableRefObject<THREE.InstancedMesh | null>
-  hitInstancedRef: React.MutableRefObject<THREE.InstancedMesh | null>
   hoverOrbRef: React.MutableRefObject<THREE.Mesh | null>
 }) {
   const categoryColors = useMemo(() => {
@@ -939,56 +935,9 @@ const LeafSystem = memo(function LeafSystem({
     instancedRef.current.computeBoundingSphere()
   }, [categoryColors, instancedRef, leaves])
 
-  // Set up hit-target instancedMesh with same positions but larger radius
-  useEffect(() => {
-    if (!hitInstancedRef.current) return
-    for (let i = 0; i < leaves.length; i += 1) {
-      const leaf = leaves[i]
-      _tempObj.position.copy(leaf.basePosition)
-      _tempObj.scale.setScalar(leaf.scale)
-      _tempObj.updateMatrix()
-      hitInstancedRef.current.setMatrixAt(i, _tempObj.matrix)
-    }
-    hitInstancedRef.current.instanceMatrix.needsUpdate = true
-    hitInstancedRef.current.computeBoundingBox()
-    hitInstancedRef.current.computeBoundingSphere()
-  }, [hitInstancedRef, leaves])
-
-  const handleOver = useCallback((e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation()
-    const instanceId = e.instanceId
-    if (instanceId === undefined) return
-    const leaf = leaves[instanceId]
-    if (!leaf) return
-    onHover(`project:${leaf.project.id}`)
-  }, [leaves, onHover])
-
-  const handleMove = useCallback((e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation()
-    const instanceId = e.instanceId
-    if (instanceId === undefined) return
-    const leaf = leaves[instanceId]
-    if (!leaf) return
-    onHover(`project:${leaf.project.id}`)
-  }, [leaves, onHover])
-
-  const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
-    e.stopPropagation()
-    const instanceId = e.instanceId
-    if (instanceId === undefined) return
-    const leaf = leaves[instanceId]
-    if (!leaf) return
-    onSelect({
-      type: 'project',
-      projectId: leaf.project.id,
-      categoryId: leaf.project.categoryId,
-      position: [leaf.basePosition.x, leaf.basePosition.y, leaf.basePosition.z],
-    })
-  }, [leaves, onSelect])
-
   return (
     <group>
-      {/* Visible render mesh — no pointer events */}
+      {/* Visible render mesh — instanced for performance, no pointer events */}
       <instancedMesh
         ref={instancedRef}
         args={[sphereGeometry, undefined, Math.max(1, leaves.length)]}
@@ -999,18 +948,31 @@ const LeafSystem = memo(function LeafSystem({
         <meshStandardMaterial vertexColors emissive="#66ffd9" emissiveIntensity={0.82} roughness={0.34} metalness={0.08} />
       </instancedMesh>
 
-      {/* Invisible hit-target mesh — 3x larger radius, handles all pointer events */}
-      <instancedMesh
-        ref={hitInstancedRef}
-        args={[hitSphereGeometry, undefined, Math.max(1, leaves.length)]}
-        frustumCulled={false}
-        onPointerOver={handleOver}
-        onPointerMove={handleMove}
-        onPointerOut={onOut}
-        onClick={handleClick}
-      >
-        <meshBasicMaterial visible={false} />
-      </instancedMesh>
+      {/* Individual hit-target meshes per leaf — reliable pointer events like branches */}
+      {leaves.map((leaf, i) => (
+        <mesh
+          key={leaf.project.id}
+          position={[leaf.basePosition.x, leaf.basePosition.y, leaf.basePosition.z]}
+          scale={leaf.scale * 3}
+          onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+            e.stopPropagation()
+            onHover(`project:${leaf.project.id}`)
+          }}
+          onPointerOut={onOut}
+          onClick={(e: ThreeEvent<MouseEvent>) => {
+            e.stopPropagation()
+            onSelect({
+              type: 'project',
+              projectId: leaf.project.id,
+              categoryId: leaf.project.categoryId,
+              position: [leaf.basePosition.x, leaf.basePosition.y, leaf.basePosition.z],
+            })
+          }}
+        >
+          <sphereGeometry args={[1, 6, 6]} />
+          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+        </mesh>
+      ))}
 
       <mesh ref={hoverOrbRef} visible={Boolean(hoveredKey?.startsWith('project:'))} geometry={hoverGeometry} raycast={() => null}>
         <meshBasicMaterial color="#d9fff4" transparent opacity={0.22} depthWrite={false} />
@@ -1026,7 +988,6 @@ const MotionSystem = memo(function MotionSystem({
   leafIndexByProject,
   hoveredKey,
   instancedRef,
-  hitInstancedRef,
   hoverOrbRef,
 }: {
   swayRefs: React.MutableRefObject<Array<THREE.Group | null>>
@@ -1034,7 +995,6 @@ const MotionSystem = memo(function MotionSystem({
   leafIndexByProject: Map<string, number>
   hoveredKey: string | null
   instancedRef: React.MutableRefObject<THREE.InstancedMesh | null>
-  hitInstancedRef: React.MutableRefObject<THREE.InstancedMesh | null>
   hoverOrbRef: React.MutableRefObject<THREE.Mesh | null>
 }) {
   useFrame(({ clock }) => {
@@ -1056,14 +1016,8 @@ const MotionSystem = memo(function MotionSystem({
         _tempObj.scale.setScalar(leaf.scale * pulse)
         _tempObj.updateMatrix()
         instancedRef.current.setMatrixAt(i, _tempObj.matrix)
-        if (hitInstancedRef.current) {
-          hitInstancedRef.current.setMatrixAt(i, _tempObj.matrix)
-        }
       }
       instancedRef.current.instanceMatrix.needsUpdate = true
-      if (hitInstancedRef.current) {
-        hitInstancedRef.current.instanceMatrix.needsUpdate = true
-      }
     }
 
     if (hoverOrbRef.current && hoveredKey?.startsWith('project:')) {
@@ -1506,7 +1460,6 @@ function Scene({ data, awaiting, selected, onSelect }: { data: TreeData; awaitin
 
   const swayRefs = useRef<Array<THREE.Group | null>>([])
   const leafInstancedRef = useRef<THREE.InstancedMesh>(null)
-  const leafHitInstancedRef = useRef<THREE.InstancedMesh>(null)
   const hoverOrbRef = useRef<THREE.Mesh>(null)
   const controlsRef = useRef<OrbitControlsRef>(null)
 
@@ -1573,10 +1526,8 @@ function Scene({ data, awaiting, selected, onSelect }: { data: TreeData; awaitin
         onOut={handleOut}
         onSelect={handleSelect}
         sphereGeometry={geometries.leafSphere}
-        hitSphereGeometry={geometries.leafHitSphere}
         hoverGeometry={geometries.hoverSphere}
         instancedRef={leafInstancedRef}
-        hitInstancedRef={leafHitInstancedRef}
         hoverOrbRef={hoverOrbRef}
       />
 
@@ -1586,7 +1537,6 @@ function Scene({ data, awaiting, selected, onSelect }: { data: TreeData; awaitin
         leafIndexByProject={leafIndexByProject}
         hoveredKey={hoveredKey}
         instancedRef={leafInstancedRef}
-        hitInstancedRef={leafHitInstancedRef}
         hoverOrbRef={hoverOrbRef}
       />
 

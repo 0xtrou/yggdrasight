@@ -1157,7 +1157,7 @@ function IntelligenceDashboard() {
             minHeight: 0,
             overflow: 'hidden',
           }}>
-            {/* TOP-LEFT: 3D Expansion Map — single instance, repositioned on fullscreen */
+            {/* TOP-LEFT: 3D Expansion Map — single instance, repositioned on fullscreen */}
             <div style={{
               ...(fullscreenPanel === 'yggdrasil' ? {
                 ...fullscreenStyle,

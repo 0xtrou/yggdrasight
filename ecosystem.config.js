@@ -13,6 +13,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
+      node_args: '--max-old-space-size=1024',
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
@@ -22,6 +23,9 @@ module.exports = {
       error_file: './logs/web-error.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
+      // Log rotation (requires pm2-logrotate module)
+      max_size: '50M',
+      retain: 10,
     },
   ],
 }

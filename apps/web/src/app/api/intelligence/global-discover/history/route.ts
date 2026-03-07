@@ -19,7 +19,20 @@ export async function GET(request: Request) {
           return NextResponse.json({ report: null, error: 'Report not found' }, { status: 404 })
         }
         const { _id, __v, ...rest } = report as unknown as Record<string, unknown>
-        return NextResponse.json({ report: { id: String(_id), ...rest } })
+        const r = { id: String(_id), ...rest } as typeof rest & {
+          projects?: Array<{ marketCap: number | null }>
+          newProjects?: Array<{ marketCap: number | null }>
+        }
+        const sortByMcap = (arr: Array<{ marketCap: number | null }>) =>
+          arr.sort((a, b) => {
+            if (a.marketCap === null && b.marketCap === null) return 0
+            if (a.marketCap === null) return 1
+            if (b.marketCap === null) return -1
+            return b.marketCap - a.marketCap
+          })
+        if (Array.isArray(r.projects)) sortByMcap(r.projects)
+        if (Array.isArray(r.newProjects)) sortByMcap(r.newProjects)
+        return NextResponse.json({ report: r })
       }
 
       // Otherwise return the list of reports (without full project arrays for efficiency)
@@ -58,7 +71,20 @@ export async function GET(request: Request) {
       let latestTransformed = null
       if (latest) {
         const { _id, __v, ...rest } = latest as unknown as Record<string, unknown>
-        latestTransformed = { id: String(_id), ...rest }
+        const r = { id: String(_id), ...rest } as typeof rest & {
+          projects?: Array<{ marketCap: number | null }>
+          newProjects?: Array<{ marketCap: number | null }>
+        }
+        const sortByMcap = (arr: Array<{ marketCap: number | null }>) =>
+          arr.sort((a, b) => {
+            if (a.marketCap === null && b.marketCap === null) return 0
+            if (a.marketCap === null) return 1
+            if (b.marketCap === null) return -1
+            return b.marketCap - a.marketCap
+          })
+        if (Array.isArray(r.projects)) sortByMcap(r.projects)
+        if (Array.isArray(r.newProjects)) sortByMcap(r.newProjects)
+        latestTransformed = r
       }
 
       return NextResponse.json({

@@ -25,7 +25,7 @@ The 9 Cracks (where assumed truth diverges from actual truth):
 7. Revisable history — The ledger is editable vs Immutable record is possible
 8. Liability dependency — Money is someone's liability vs Bitcoin is no one's liability
 9. Identity subjugation — Identity is rented from institutions vs Private key = self-sovereign identity
-`.trim()
+`.trim();
 
 const OUTPUT_RULES = `
 CRITICAL EXECUTION CONTEXT:
@@ -53,7 +53,7 @@ OUTPUT COMPACTION RULES:
 - description per project: 1-2 sentences max. Functional description only — no marketing language.
 - discoveryReason: 1 sentence max. Why is this notable?
 - sources: max 3 URLs per project. Only include URLs you actually fetched.
-
+`.trim();
 
 export function buildMasterPlannerPrompt(
   depth: number,
@@ -165,6 +165,9 @@ export function buildDiscoveryAgentPrompt(
     sources: ['https://example.com'],
     signalStrength: 0.8,
     logoUrl: 'https://example.com/logo.png',
+    websiteUrl: 'https://example.com',  // official project website
+    marketCap: null,
+    volume24h: null,
   }
 
   const outputSchema = {
@@ -201,6 +204,8 @@ ${assignment.search_queries.map(q => `- "${q}"`).join('\n')}
 5. For logo URLs: use websearch to find "[project name] logo" — look for direct image URLs (png/svg/jpg)
    from CoinGecko CDN (assets.coingecko.com), official sites, or GitHub. Do NOT webfetch CoinGecko pages.
    Use null if not easily found — do not waste context trying to scrape logos.
+6. For websiteUrl: include the official project website (e.g. https://pendle.finance). This is usually
+   found in websearch results. Use null if not determinable.
 
 ## Projects to SKIP (already known):
 ${avoidList.length > 0 ? avoidList.map(p => `- ${p}`).join('\n') : '- None — discover freely'}
@@ -351,6 +356,7 @@ ${JSON.stringify({
     sources: ['url strings'],
     signalStrength: 'number (0-1)',
     logoUrl: 'string | null — direct URL to project logo image',
+    websiteUrl: 'string | null — official project website URL (e.g. https://pendle.finance)',
   }, null, 2)}
 
 ${OUTPUT_RULES}

@@ -27,6 +27,12 @@ export interface IGlobalDiscoveredProject {
   signalStrength: number
   /** Project logo URL (scraped by agents) */
   logoUrl: string | null
+  /** Market cap in USD (fetched post-synthesis from CoinGecko, null if unavailable) */
+  marketCap: number | null
+  /** 24h trading volume in USD (fetched post-synthesis from CoinGecko, null if unavailable) */
+  volume24h: number | null
+  /** Official project website URL (scraped by agents) */
+  websiteUrl: string | null
 }
 
 // ── Global Discovery Report (the compounding knowledge artifact) ─────────────
@@ -120,6 +126,9 @@ const GlobalDiscoveredProjectSchema = new mongoose.Schema({
   sources: { type: [String], default: [] },
   signalStrength: { type: Number, default: 0.5, min: 0, max: 1 },
   logoUrl: { type: String, default: null },
+  marketCap: { type: Number, default: null },
+  volume24h: { type: Number, default: null },
+  websiteUrl: { type: String, default: null },
 }, { _id: false })
 
 export const GlobalDiscoveryReportSchema = new mongoose.Schema<IGlobalDiscoveryReport>(

@@ -71,6 +71,10 @@ const GlobalDiscoveredProjectSchema = new mongoose.Schema({
   launchDate: { type: String, default: null },
   sources: { type: [String], default: [] },
   signalStrength: { type: Number, default: 0.5, min: 0, max: 1 },
+  logoUrl: { type: String, default: null },
+  marketCap: { type: Number, default: null },
+  volume24h: { type: Number, default: null },
+  websiteUrl: { type: String, default: null },
 }, { _id: false })
 
 const GlobalDiscoveryReportSchema = new mongoose.Schema({
@@ -799,7 +803,193 @@ async function main() {
       `Direction: ${(synthResult.marketDirection ?? 'unknown').substring(0, 100)}`,
     ])
 
-    // ── Phase 4: Save report and update job ──
+    // ── Phase 4: Enrich with market data (multi-source fallback) ──
+    // Sources tried in order: CoinGecko → CoinPaprika → CoinCap
+    // Each source fills in only the projects still missing data.
+    log('Phase 4: Enriching projects with market data (multi-source)...')
+    await appendLogs(jobId, ['Phase 4: Fetching market data — CoinGecko → CoinPaprika → CoinCap...'])
+    try {
+      // ── Shared symbol map (symbol → CoinGecko ID) ──────────────────────────
+      const SYMBOL_TO_CG: Record<string, string> = {
+        // L1 / major
+        BTC: 'bitcoin', ETH: 'ethereum', SOL: 'solana', BNB: 'binancecoin',
+        ADA: 'cardano', XRP: 'ripple', AVAX: 'avalanche-2', DOT: 'polkadot',
+        ATOM: 'cosmos', TRX: 'tron', MATIC: 'matic-network', SUI: 'sui',
+        APT: 'aptos', SEI: 'sei-network', TON: 'the-open-network',
+        ALPH: 'alephium', SHM: 'shardeum', NEAR: 'near',
+        // L2 / infra
+        ARB: 'arbitrum', OP: 'optimism', IMX: 'immutable-x',
+        STRK: 'starknet', MANTA: 'manta-network',
+        // DeFi
+        AAVE: 'aave', UNI: 'uniswap', MKR: 'maker', LDO: 'lido-dao',
+        PENDLE: 'pendle', GMX: 'gmx', RUNE: 'thorchain', CRV: 'curve-dao-token',
+        MORPHO: 'morpho', KAMINO: 'kamino', HYPE: 'hyperliquid',
+        // AI / compute
+        TAO: 'bittensor', RNDR: 'render-token', RENDER: 'render-token',
+        FET: 'fetch-ai', IO: 'io-net', FLUX: 'zel', GRT: 'the-graph',
+        ICP: 'internet-computer', AKT: 'akash-network',
+        // Storage / infra
+        FIL: 'filecoin', AR: 'arweave',
+        // Interop / oracle
+        LINK: 'chainlink', INJ: 'injective-protocol', TIA: 'celestia',
+        // Identity / social
+        CVC: 'civic', TEL: 'telcoin', MOCA: 'moca-network',
+        // Gaming / other
+        ILV: 'illuvium', HNT: 'helium', MOBILE: 'helium-mobile',
+        WLD: 'worldcoin-wld', SENT: 'sentient',
+      }
+
+      // Build normalized symbol list (strip USDT/USD suffix, take first token)
+      interface SymbolEntry { name: string; symbol: string; idx: number }
+      const symbolsWithIndex: SymbolEntry[] = []
+      synthResult.projects.forEach((p, idx) => {
+        if (p.symbol) {
+          const sym = p.symbol.toUpperCase().split(/[/\s]/)[0]!.replace(/USDT$/i, '').replace(/USD$/i, '').trim()
+          if (sym) symbolsWithIndex.push({ name: p.name, symbol: sym, idx })
+        }
+      })
+
+      if (symbolsWithIndex.length > 0) {
+        // Helper: apply enrichment result to projects array
+        const applyEnrichment = (results: Array<{ symbol: string; marketCap: number | null; volume24h: number | null }>) => {
+          for (const r of results) {
+            const entries = symbolsWithIndex.filter(s => s.symbol === r.symbol)
+            for (const e of entries) {
+              const p = synthResult.projects[e.idx]!
+              if (p.marketCap === null) p.marketCap = r.marketCap
+              if (p.volume24h === null) p.volume24h = r.volume24h
+            }
+          }
+        }
+
+        // ── Source 1: CoinGecko /coins/markets (batch by ID) ──────────────────
+        try {
+          const symbolToIdx: Record<string, number[]> = {}
+          const ids = [...new Set(symbolsWithIndex.map(s => {
+            const cgId = SYMBOL_TO_CG[s.symbol] ?? s.symbol.toLowerCase()
+            if (!symbolToIdx[cgId]) symbolToIdx[cgId] = []
+            symbolToIdx[cgId]!.push(s.idx)
+            return cgId
+          }))]
+          const cgUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids.join(',')}&order=market_cap_desc&per_page=250&page=1&sparkline=false`
+          const cgRes = await fetch(cgUrl, { headers: { 'User-Agent': 'oculus-trading/1.0' }, signal: AbortSignal.timeout(20_000) })
+          if (cgRes.ok) {
+            const cgData = await cgRes.json() as Array<{ id: string; symbol: string; market_cap: number | null; total_volume: number | null }>
+            for (const coin of cgData) {
+              const indices = symbolToIdx[coin.id] ?? symbolToIdx[coin.symbol?.toUpperCase()] ?? []
+              for (const idx of indices) {
+                const p = synthResult.projects[idx]!
+                p.marketCap = coin.market_cap ?? null
+                p.volume24h = coin.total_volume ?? null
+              }
+            }
+            const cgCount = synthResult.projects.filter(p => p.marketCap !== null).length
+            log(`CoinGecko: ${cgCount}/${synthResult.projects.length} projects enriched`)
+          } else {
+            log(`CoinGecko returned ${cgRes.status} — skipping`)
+          }
+        } catch (e) {
+          log(`CoinGecko failed: ${e instanceof Error ? e.message : e}`)
+        }
+
+        // ── Source 2: CoinPaprika /v1/tickers (batch, free) ───────────────────
+        // Fills in projects still missing marketCap after CoinGecko
+        const missingAfterCG = symbolsWithIndex.filter(s => synthResult.projects[s.idx]!.marketCap === null)
+        if (missingAfterCG.length > 0) {
+          try {
+            const paprikaRes = await fetch('https://api.coinpaprika.com/v1/tickers?quotes=USD&limit=2000', {
+              headers: { 'User-Agent': 'oculus-trading/1.0' },
+              signal: AbortSignal.timeout(20_000),
+            })
+            if (paprikaRes.ok) {
+              const paprikaData = await paprikaRes.json() as Array<{
+                symbol: string
+                quotes: { USD: { market_cap: number | null; volume_24h: number | null } }
+              }>
+              // Build a symbol → data map (take the highest market cap entry per symbol)
+              const paprikaMap: Record<string, { marketCap: number | null; volume24h: number | null }> = {}
+              for (const coin of paprikaData) {
+                const sym = coin.symbol?.toUpperCase()
+                if (!sym) continue
+                const mc = coin.quotes?.USD?.market_cap ?? null
+                const existing = paprikaMap[sym]
+                if (!existing || (mc !== null && (existing.marketCap === null || mc > existing.marketCap))) {
+                  paprikaMap[sym] = { marketCap: mc, volume24h: coin.quotes?.USD?.volume_24h ?? null }
+                }
+              }
+              const papResults = missingAfterCG
+                .filter(s => paprikaMap[s.symbol])
+                .map(s => ({ symbol: s.symbol, ...paprikaMap[s.symbol]! }))
+              applyEnrichment(papResults)
+              const papCount = papResults.filter(r => r.marketCap !== null).length
+              log(`CoinPaprika: ${papCount} additional projects enriched`)
+            } else {
+              log(`CoinPaprika returned ${paprikaRes.status} — skipping`)
+            }
+          } catch (e) {
+            log(`CoinPaprika failed: ${e instanceof Error ? e.message : e}`)
+          }
+        }
+
+        // ── Source 3: CoinCap /v2/assets search (per-symbol for remaining) ──
+        const missingAfterPaprika = symbolsWithIndex.filter(s => synthResult.projects[s.idx]!.marketCap === null)
+        if (missingAfterPaprika.length > 0) {
+          const coincapResults: Array<{ symbol: string; marketCap: number | null; volume24h: number | null }> = []
+          // Batch: fetch up to 10 in parallel to avoid hammering the API
+          const BATCH = 10
+          for (let i = 0; i < missingAfterPaprika.length; i += BATCH) {
+            const batch = missingAfterPaprika.slice(i, i + BATCH)
+            const batchResults = await Promise.allSettled(batch.map(async s => {
+              const res = await fetch(`https://api.coincap.io/v2/assets?search=${encodeURIComponent(s.symbol)}&limit=3`, {
+                headers: { 'User-Agent': 'oculus-trading/1.0' },
+                signal: AbortSignal.timeout(10_000),
+              })
+              if (!res.ok) return null
+              const json = await res.json() as { data: Array<{ symbol: string; marketCapUsd: string | null; volumeUsd24Hr: string | null }> }
+              const match = json.data?.find(d => d.symbol?.toUpperCase() === s.symbol)
+              if (!match) return null
+              return {
+                symbol: s.symbol,
+                marketCap: match.marketCapUsd ? parseFloat(match.marketCapUsd) : null,
+                volume24h: match.volumeUsd24Hr ? parseFloat(match.volumeUsd24Hr) : null,
+              }
+            }))
+            for (const r of batchResults) {
+              if (r.status === 'fulfilled' && r.value) coincapResults.push(r.value)
+            }
+          }
+          applyEnrichment(coincapResults)
+          const ccCount = coincapResults.filter(r => r.marketCap !== null).length
+          if (ccCount > 0) log(`CoinCap: ${ccCount} additional projects enriched`)
+        }
+
+        // Mirror all enrichment into newProjects
+        synthResult.newProjects.forEach(np => {
+          const enriched = synthResult.projects.find(p => p.name === np.name)
+          if (enriched) { np.marketCap = enriched.marketCap; np.volume24h = enriched.volume24h }
+        })
+
+        const totalEnriched = synthResult.projects.filter(p => p.marketCap !== null).length
+        log(`Market data total: ${totalEnriched}/${synthResult.projects.length} projects enriched`)
+        await appendLogs(jobId, [`Market data: ${totalEnriched}/${synthResult.projects.length} enriched via CoinGecko + CoinPaprika + CoinCap`])
+      }
+    } catch (enrichErr) {
+      log(`Market data enrichment failed (non-fatal): ${enrichErr instanceof Error ? enrichErr.message : enrichErr}`)
+    }
+
+    // Sort all projects by marketCap descending (nulls last)
+    const sortByMarketCap = (arr: IGlobalDiscoveredProject[]) =>
+      arr.sort((a, b) => {
+        if (a.marketCap === null && b.marketCap === null) return 0
+        if (a.marketCap === null) return 1
+        if (b.marketCap === null) return -1
+        return b.marketCap - a.marketCap
+      })
+    sortByMarketCap(synthResult.projects)
+    sortByMarketCap(synthResult.newProjects)
+    log('Projects sorted by marketCap descending')
+
+    // ── Phase 5: Save report and update job ──
     const generation = previousReport ? (previousReport.generation ?? 0) + 1 : 1
 
     const report = await GlobalDiscoveryReport.create({

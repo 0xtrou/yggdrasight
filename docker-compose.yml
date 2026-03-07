@@ -9,7 +9,7 @@ services:
     container_name: oculus-mongodb
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: oculus
       MONGO_INITDB_ROOT_PASSWORD: oculus_dev_secret
@@ -19,34 +19,53 @@ services:
       - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/init.js:ro
     networks:
       - oculus-network
-
-  mongo-express:
-    image: mongo-express:latest
-    container_name: oculus-mongo-express
-    restart: unless-stopped
-    ports:
-      - "8081:8081"
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: oculus
-      ME_CONFIG_MONGODB_ADMINPASSWORD: oculus_dev_secret
-      ME_CONFIG_MONGODB_URL: mongodb://oculus:oculus_dev_secret@mongodb:27017/
-      ME_CONFIG_BASICAUTH: false
-    depends_on:
-      - mongodb
-    networks:
-      - oculus-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
 
   redis:
     image: redis:7-alpine
     container_name: oculus-redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
-    command: redis-server --save 60 1 --loglevel warning
+      - "127.0.0.1:6379:6379"
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-oculus_redis_secret}
     volumes:
       - redis_data:/data
     networks:
       - oculus-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-oculus_redis_secret}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Mongo Express — DISABLED in production ──────────────────────────────────
+  # Uncomment for local debugging only. Do NOT expose in production.
+  # mongo-express:
+  #   image: mongo-express:latest
+  #   container_name: oculus-mongo-express
+  #   restart: unless-stopped
+  #   ports:
+  #     - "127.0.0.1:8081:8081"
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: oculus
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: oculus_dev_secret
+  #     ME_CONFIG_MONGODB_URL: mongodb://oculus:oculus_dev_secret@mongodb:27017/
+  #     ME_CONFIG_BASICAUTH: "true"
+  #     ME_CONFIG_BASICAUTH_USERNAME: admin
+  #     ME_CONFIG_BASICAUTH_PASSWORD: CHANGE_THIS
+  #   depends_on:
+  #     - mongodb
+  #   networks:
+  #     - oculus-network
 
 volumes:
   mongodb_data:
