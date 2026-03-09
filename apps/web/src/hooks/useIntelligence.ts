@@ -114,71 +114,11 @@ export function useIntelligence(symbol: string, options?: UseIntelligenceOptions
         if (verdicts.length > 0) {
           // Show most recent verdict immediately
           setResult(verdicts[0])
-          // Check staleness: if older than threshold, silently re-analyze in background
+          // Check staleness — flag it but do NOT auto re-analyze
           const age = Date.now() - new Date(verdicts[0].createdAt).getTime()
-          if (age > STALE_THRESHOLD_MS) {
-            setIsStale(true)
-            // Background refresh — don't block the UI or show loading spinner
-            fetch('/api/intelligence/analyze', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ symbol, timeframes: ['1h', '4h', '1d', '1w', '1M'] }),
-            })
-              .then((aRes) => aRes.ok ? aRes.json() : Promise.reject(aRes.status))
-              .then((aData) => {
-                if (!cancelled && mountedRef.current) {
-                  setResult(aData.verdict ?? null)
-                  setIsStale(false)
-                  return fetch(`/api/intelligence/verdicts?symbol=${encodeURIComponent(symbol)}&limit=50`)
-                }
-              })
-              .then((hRes) => hRes && hRes.ok ? hRes.json() : null)
-              .then((hData) => {
-                if (hData && !cancelled && mountedRef.current) {
-                  setHistory(hData.verdicts ?? [])
-                }
-              })
-              .catch((err) => {
-                console.warn('[useIntelligence] Background refresh failed:', err)
-              })
-          } else {
-            setIsStale(false)
-          }
-        } else {
-          // No history — kick off a fresh analysis automatically
-          setLoading(true)
-          setError(null)
-          try {
-            const aRes = await fetch('/api/intelligence/analyze', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ symbol, timeframes: ['1h', '4h', '1d', '1w', '1M'] }),
-            })
-            if (!aRes.ok) throw new Error(`HTTP ${aRes.status}`)
-            const aData = await aRes.json()
-            if (!cancelled && mountedRef.current) {
-              setResult(aData.verdict ?? null)
-              setIsStale(false)
-              const hRes = await fetch(
-                `/api/intelligence/verdicts?symbol=${encodeURIComponent(symbol)}&limit=50`
-              )
-              if (hRes.ok) {
-                const hData = await hRes.json()
-                if (!cancelled && mountedRef.current) {
-                  setHistory(hData.verdicts ?? [])
-                }
-              }
-            }
-          } catch (aErr) {
-            if (!cancelled && mountedRef.current) {
-              setError(aErr instanceof Error ? aErr.message : 'Auto-analysis failed')
-            }
-          } finally {
-            if (!cancelled && mountedRef.current) {
-              setLoading(false)
-            }
-          }
+          setIsStale(age > STALE_THRESHOLD_MS)
         }
+        // No history — leave result null, user triggers analysis manually via UI
       } catch (err) {
         if (!cancelled && mountedRef.current) {
           setError(err instanceof Error ? err.message : 'Failed to fetch history')

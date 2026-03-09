@@ -2,19 +2,15 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useIntelligence } from '@/hooks/useIntelligence'
-import type { VerdictRecord, AnalystVerdict } from '@/lib/intelligence/types'
+import type { AnalystVerdict } from '@/lib/intelligence/types'
 
 interface SignalPanelProps {
   symbol: string
 }
 
-const TIMEFRAMES = [
-  { label: '1H', key: 'h1' },
-  { label: '4H', key: 'h4' },
-  { label: '1D', key: 'd1' },
-  { label: '1W', key: 'w1' },
-  { label: '1M', key: 'mn' },
-] as const
+/* ═══════════════════════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 function directionColor(dir: string): string {
   if (dir === 'long' || dir === 'bullish') return 'var(--color-terminal-up)'
@@ -37,12 +33,118 @@ function formatDate(date: string | Date): string {
   return `${mo}/${day} ${hh}:${mm}`
 }
 
-function extractMtfAnalyst(record: VerdictRecord | null): AnalystVerdict | undefined {
-  if (!record) return undefined
-  return record.analysts.find((a) => a.meta.id === 'mtf-alignment')
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION HEADER — reusable terminal-style section divider
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function SectionLabel({ label }: { label: string }) {
+  return (
+    <div
+      style={{
+        padding: '4px 8px 2px',
+        marginTop: '4px',
+        fontSize: '11px',
+        fontFamily: 'var(--font-mono)',
+        color: 'var(--color-terminal-dim)',
+        letterSpacing: '0.5px',
+        borderBottom: '1px solid var(--color-terminal-border)',
+      }}
+    >
+      {label}
+    </div>
+  )
 }
 
-// ─── Main component ───
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANALYST ROW — compact one-line summary per analyst
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function AnalystRow({ analyst }: { analyst: AnalystVerdict }) {
+  const { text, arrow } = directionLabel(analyst.direction)
+  const color = directionColor(analyst.direction)
+  const confPct = Math.round(analyst.confidence * 100)
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '4px 8px',
+        borderBottom: '1px solid var(--color-terminal-border)',
+      }}
+    >
+      {/* Analyst name */}
+      <span
+        style={{
+          flex: 1,
+          fontSize: '11px',
+          fontFamily: 'var(--font-mono)',
+          color: 'var(--color-terminal-muted)',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {analyst.meta.name}
+      </span>
+
+      {/* Confidence mini-bar */}
+      <div
+        style={{
+          width: '40px',
+          height: '2px',
+          background: 'var(--color-terminal-border)',
+          borderRadius: '1px',
+          overflow: 'hidden',
+          flexShrink: 0,
+        }}
+      >
+        <div
+          style={{
+            width: `${confPct}%`,
+            height: '100%',
+            background: color,
+            borderRadius: '1px',
+          }}
+        />
+      </div>
+
+      {/* Confidence % */}
+      <span
+        style={{
+          fontSize: '10px',
+          fontFamily: 'var(--font-mono)',
+          color: 'var(--color-terminal-dim)',
+          minWidth: '28px',
+          textAlign: 'right',
+          flexShrink: 0,
+        }}
+      >
+        {confPct}%
+      </span>
+
+      {/* Direction chip */}
+      <span
+        style={{
+          fontSize: '10px',
+          fontFamily: 'var(--font-mono)',
+          fontWeight: 600,
+          color,
+          minWidth: '56px',
+          textAlign: 'right',
+          flexShrink: 0,
+        }}
+      >
+        {text} {arrow}
+      </span>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIGNAL PANEL — summarized technical analysis results
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 export function SignalPanel({ symbol }: SignalPanelProps) {
   const { result, loading, error, history, isStale } = useIntelligence(symbol)
@@ -61,10 +163,23 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [isFullscreen])
 
-  const mtf = extractMtfAnalyst(result)
-  const indicators = mtf?.indicators as Record<string, string> | undefined
-
+  const analysts = result?.analysts ?? []
   const hasData = result !== null
+
+  // Extract MTF alignment analyst for timeframe breakdown
+  const mtfAnalyst = analysts.find(a => a.meta.id === 'mtf-alignment')
+  const mtfIndicators = mtfAnalyst?.indicators as Record<string, string> | undefined
+
+  // All analysts except mtf-alignment (shown separately as timeframes)
+  const coreAnalysts = analysts.filter(a => a.meta.id !== 'mtf-alignment')
+
+  const TIMEFRAMES = [
+    { label: '1H', key: 'h1' },
+    { label: '4H', key: 'h4' },
+    { label: '1D', key: 'd1' },
+    { label: '1W', key: 'w1' },
+    { label: '1M', key: 'mn' },
+  ] as const
 
   return (
     <div
@@ -157,6 +272,7 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
           overflowX: 'hidden',
         }}
       >
+        {/* Empty state */}
         {!hasData && !loading && (
           <div
             style={{
@@ -172,6 +288,23 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
           </div>
         )}
 
+        {/* Loading state */}
+        {loading && (
+          <div
+            style={{
+              padding: '24px 8px',
+              textAlign: 'center',
+              fontSize: '11px',
+              fontFamily: 'var(--font-mono)',
+              color: 'var(--color-terminal-dim)',
+              letterSpacing: '0.5px',
+            }}
+          >
+            ANALYZING...
+          </div>
+        )}
+
+        {/* Error state */}
         {error && (
           <div
             style={{
@@ -187,27 +320,15 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
 
         {hasData && (
           <>
-            {/* VERDICT */}
-            <div
-              style={{
-                padding: '4px 8px 2px',
-                marginTop: '4px',
-                fontSize: '11px',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--color-terminal-dim)',
-                letterSpacing: '0.5px',
-                borderBottom: '1px solid var(--color-terminal-border)',
-              }}
-            >
-              VERDICT
-            </div>
+            {/* ══════ VERDICT — overall direction + confidence ══════ */}
+            <SectionLabel label="VERDICT" />
             <div
               style={{
                 padding: '6px 8px',
                 borderBottom: '1px solid var(--color-terminal-border)',
               }}
             >
-              {/* Direction + Score row */}
+              {/* Direction + Score */}
               <div
                 style={{
                   display: 'flex',
@@ -234,7 +355,7 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
                     color: 'var(--color-terminal-text)',
                   }}
                 >
-                  {result.score.toFixed(1)}
+                  {result.score >= 0 ? '+' : ''}{result.score.toFixed(1)}
                 </span>
               </div>
 
@@ -314,79 +435,70 @@ export function SignalPanel({ symbol }: SignalPanelProps) {
                     color: 'var(--color-terminal-muted)',
                   }}
                 >
-                  {result.confluence}
+                  {Math.round(result.confluence * 100)}%
                 </span>
               </div>
             </div>
 
-            {/* TIMEFRAME */}
-            <div
-              style={{
-                padding: '4px 8px 2px',
-                fontSize: '11px',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--color-terminal-dim)',
-                letterSpacing: '0.5px',
-                borderBottom: '1px solid var(--color-terminal-border)',
-              }}
-            >
-              TIMEFRAME
-            </div>
-            {TIMEFRAMES.map((tf) => {
-              const value = indicators?.[tf.key] ?? 'n/a'
-              const color = directionColor(value)
-              const { text, arrow } = directionLabel(value)
+            {/* ══════ ANALYSTS — per-analyst verdict rows ══════ */}
+            {coreAnalysts.length > 0 && (
+              <>
+                <SectionLabel label={`ANALYSTS (${coreAnalysts.length})`} />
+                {coreAnalysts.map((analyst) => (
+                  <AnalystRow key={analyst.meta.id} analyst={analyst} />
+                ))}
+              </>
+            )}
 
-              return (
-                <div
-                  key={tf.key}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '4px 8px',
-                    borderBottom: '1px solid var(--color-terminal-border)',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '12px',
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--color-terminal-muted)',
-                    }}
-                  >
-                    {tf.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '12px',
-                      fontFamily: 'var(--font-mono)',
-                      color,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {text} {arrow}
-                  </span>
-                </div>
-              )
-            })}
+            {/* ══════ TIMEFRAME — MTF alignment breakdown ══════ */}
+            {mtfIndicators && (
+              <>
+                <SectionLabel label="TIMEFRAME" />
+                {TIMEFRAMES.map((tf) => {
+                  const value = mtfIndicators[tf.key] ?? 'n/a'
+                  const color = directionColor(value)
+                  const { text, arrow } = directionLabel(value)
 
-            {/* HISTORY */}
+                  return (
+                    <div
+                      key={tf.key}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '4px 8px',
+                        borderBottom: '1px solid var(--color-terminal-border)',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          fontFamily: 'var(--font-mono)',
+                          color: 'var(--color-terminal-muted)',
+                        }}
+                      >
+                        {tf.label}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          fontFamily: 'var(--font-mono)',
+                          color,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {text} {arrow}
+                      </span>
+                    </div>
+                  )
+                })}
+              </>
+            )}
+
+            {/* ══════ HISTORY — last 5 verdicts ══════ */}
             {history.length > 0 && (
               <>
-                <div
-                  style={{
-                    padding: '4px 8px 2px',
-                    marginTop: '4px',
-                    fontSize: '11px',
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--color-terminal-dim)',
-                    letterSpacing: '0.5px',
-                    borderBottom: '1px solid var(--color-terminal-border)',
-                  }}
-                >
-                  HISTORY
-                </div>
+                <SectionLabel label="HISTORY" />
                 {history.slice(0, 5).map((entry) => {
                   const { text, arrow } = directionLabel(entry.direction)
                   const color = directionColor(entry.direction)

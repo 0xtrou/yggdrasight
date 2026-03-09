@@ -356,6 +356,16 @@
       "name": "gemini-3-pro-preview"
     },
     {
+      "id": "google/gemini-3.1-flash-image-preview",
+      "provider": "google",
+      "name": "gemini-3.1-flash-image-preview"
+    },
+    {
+      "id": "google/gemini-3.1-flash-lite-preview",
+      "provider": "google",
+      "name": "gemini-3.1-flash-lite-preview"
+    },
+    {
       "id": "google/gemini-3.1-pro-preview",
       "provider": "google",
       "name": "gemini-3.1-pro-preview"
@@ -674,6 +684,21 @@
       "id": "openrouter/google/gemma-3n-e4b-it:free",
       "provider": "openrouter",
       "name": "google/gemma-3n-e4b-it:free"
+    },
+    {
+      "id": "openrouter/inception/mercury",
+      "provider": "openrouter",
+      "name": "inception/mercury"
+    },
+    {
+      "id": "openrouter/inception/mercury-2",
+      "provider": "openrouter",
+      "name": "inception/mercury-2"
+    },
+    {
+      "id": "openrouter/inception/mercury-coder",
+      "provider": "openrouter",
+      "name": "inception/mercury-coder"
     },
     {
       "id": "openrouter/kwaipilot/kat-coder-pro:free",
@@ -1036,6 +1061,11 @@
       "name": "openrouter/aurora-alpha"
     },
     {
+      "id": "openrouter/openrouter/free",
+      "provider": "openrouter",
+      "name": "openrouter/free"
+    },
+    {
       "id": "openrouter/openrouter/sherlock-dash-alpha",
       "provider": "openrouter",
       "name": "openrouter/sherlock-dash-alpha"
@@ -1376,5 +1406,5 @@
       "name": "glm-5"
     }
   ],
-  "timestamp": 1772874702999
+  "timestamp": 1773043177379
 }
