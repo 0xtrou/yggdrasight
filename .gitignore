@@ -29,3 +29,6 @@ Thumbs.db
 *.swo
 
 data/volumes/
+data/chat-workspace/
+data/opencode-data/
+tmp/
