@@ -34,11 +34,13 @@ interface AttachmentInput {
 }
 
 interface ChatRequestBody {
-  symbol: string
+  symbol?: string
   message: string
   modelId?: string
   sessionId?: string
   attachments?: AttachmentInput[]
+  /** When true, this is a silent session initialization — suppress AI response from SSE */
+  init?: boolean
 }
 
 // POST /api/chat
@@ -46,8 +48,9 @@ interface ChatRequestBody {
 export async function POST(request: Request) {
   return withAuth(async (ctx) => {
     const body = (await request.json()) as ChatRequestBody
-    const symbol = (body.symbol ?? 'BTC').toUpperCase()
+    const symbol = (body.symbol ?? 'GENERAL').toUpperCase()
     const userMessage = body.message
+    const isInit = !!body.init
 
     // Resolve model
     const agentModelMap = await getAgentModelMapFromConnection(ctx.connection)
@@ -108,7 +111,7 @@ export async function POST(request: Request) {
         modelId,
         messages: [
           {
-            role: 'user',
+            role: isInit ? 'system' : 'user',
             content: userMessage,
             timestamp: new Date(),
             attachments: userMsgAttachments,
@@ -178,8 +181,12 @@ export async function POST(request: Request) {
           for (const line of lines) {
             try {
               const event = JSON.parse(line) as Record<string, unknown>
-              // Forward relevant event types (including opencode_session for session ID capture)
-              if (
+              // In init mode, suppress agent output — only forward session/done/error
+              if (isInit) {
+                if (event.type === 'opencode_session' || event.type === 'error') {
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`))
+                }
+              } else if (
                 event.type === 'text' ||
                 event.type === 'tool_use' ||
                 event.type === 'error' ||

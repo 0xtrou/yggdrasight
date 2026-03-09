@@ -51,6 +51,10 @@ export interface UseChatReturn {
   cancelResponse: () => Promise<void>
   loadSession: (sessionId: string) => Promise<void>
   newSession: () => void
+  /** Create a new session with silent initialization (agent reads context, response hidden) */
+  initSession: () => Promise<void>
+  /** Whether the session is being initialized (agent warmup in progress) */
+  isInitializing: boolean
   deleteSession: (sessionId: string) => Promise<void>
   refreshSessions: () => Promise<void>
   /** Agent thinking/reasoning state */
@@ -94,7 +98,7 @@ function formatToolActivity(tool: string, input?: Record<string, unknown>): stri
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
-export function useChat(symbol?: string): UseChatReturn {
+export function useChat(): UseChatReturn {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [sessions, setSessions] = useState<ChatSession[]>([])
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
@@ -102,6 +106,7 @@ export function useChat(symbol?: string): UseChatReturn {
   const [streamingText, setStreamingText] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [thinking, setThinking] = useState<ThinkingState>({ isThinking: false, activity: null, steps: [] })
+  const [isInitializing, setIsInitializing] = useState(false)
   const abortControllerRef = useRef<AbortController | null>(null)
   const [modelId, setModelIdState] = useState<string>('')
   const validModelIdsRef = useRef<Set<string>>(new Set())
@@ -151,12 +156,82 @@ export function useChat(symbol?: string): UseChatReturn {
     setThinking({ isThinking: false, activity: null, steps: [] })
   }, [])
 
+  // Silent session initialization — agent reads context files, response is hidden.
+  // After init completes, the session has an opencode session ID and user can chat normally.
+  const initSession = useCallback(async () => {
+    if (isStreaming || isInitializing) return
+    setIsInitializing(true)
+    setMessages([])
+    setActiveSessionId(null)
+    setStreamingText('')
+    setError(null)
+    setThinking({ isThinking: false, activity: null, steps: [] })
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Initialize session',
+          modelId,
+          init: true,
+        }),
+      })
+
+      if (!res.ok || !res.body) {
+        setError('Failed to initialize session')
+        setIsInitializing(false)
+        return
+      }
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const chunks = buffer.split('\n\n')
+        buffer = chunks.pop() ?? ''
+        for (const chunk of chunks) {
+          if (!chunk.trim()) continue
+          const lines = chunk.split('\n')
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue
+            const raw = line.slice(6).trim()
+            if (!raw || raw === '[DONE]') continue
+            try {
+              const event = JSON.parse(raw) as { type: string; sessionId?: string }
+              if (event.type === 'session' && event.sessionId) {
+                setActiveSessionId(event.sessionId)
+              }
+            } catch { /* skip */ }
+          }
+        }
+      }
+      await refreshSessions()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Init failed')
+    } finally {
+      setIsInitializing(false)
+    }
+  }, [isStreaming, isInitializing, modelId, refreshSessions])
+
   const loadSession = useCallback(async (sessionId: string) => {
     try {
       const res = await fetch(`/api/chat/${sessionId}`)
       if (!res.ok) return
       const data = await res.json() as { messages: ChatMessage[]; modelId?: string }
-      setMessages(data.messages ?? [])
+      // Filter out system messages (init warmup) and the assistant response that follows them
+      const allMsgs = data.messages ?? []
+      const visibleMsgs = allMsgs.filter((msg, i) => {
+        if (msg.role === 'system') return false
+        // Hide assistant response that immediately follows a system (init) message
+        if (msg.role === 'assistant' && i > 0 && allMsgs[i - 1]?.role === 'system') return false
+        return true
+      })
+      setMessages(visibleMsgs)
       setActiveSessionId(sessionId)
       setStreamingText('')
       setError(null)
@@ -222,7 +297,6 @@ export function useChat(symbol?: string): UseChatReturn {
         headers: { 'Content-Type': 'application/json' },
         signal: abortController.signal,
         body: JSON.stringify({
-          symbol: symbol || 'GENERAL',
           message: content,
           modelId,
           sessionId: activeSessionId,
@@ -366,7 +440,7 @@ export function useChat(symbol?: string): UseChatReturn {
       setThinking({ isThinking: false, activity: null, steps: [] })
       abortControllerRef.current = null
     }
-  }, [isStreaming, symbol, modelId, activeSessionId, refreshSessions])
+  }, [isStreaming, modelId, activeSessionId, refreshSessions])
 
   const cancelResponse = useCallback(async () => {
     // 1. Abort the SSE fetch stream
@@ -411,10 +485,8 @@ export function useChat(symbol?: string): UseChatReturn {
     refreshSessions()
   }, [refreshSessions])
 
-  // On symbol change: start fresh
-  useEffect(() => {
-    if (symbol) newSession()
-  }, [newSession]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Load sessions on mount
+  // (no symbol-change effect needed — chat is global)
 
   return {
     messages,
@@ -429,6 +501,8 @@ export function useChat(symbol?: string): UseChatReturn {
     cancelResponse,
     loadSession,
     newSession,
+    initSession,
+    isInitializing,
     deleteSession,
     refreshSessions,
     thinking,

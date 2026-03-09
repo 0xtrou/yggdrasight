@@ -11,6 +11,11 @@
       "name": "gpt-5-nano"
     },
     {
+      "id": "opencode/mimo-v2-flash-free",
+      "provider": "opencode",
+      "name": "mimo-v2-flash-free"
+    },
+    {
       "id": "opencode/minimax-m2.5-free",
       "provider": "opencode",
       "name": "minimax-m2.5-free"
@@ -1406,5 +1411,5 @@
       "name": "glm-5"
     }
   ],
-  "timestamp": 1773057382118
+  "timestamp": 1773066480398
 }

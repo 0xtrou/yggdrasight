@@ -12,14 +12,11 @@ import type { ChatMessage } from '@/hooks/useChat'
 const MONO_FONT = "'SF Mono', 'JetBrains Mono', 'Fira Code', monospace"
 
 interface ChatDrawerProps {
-  symbol?: string
   open: boolean
   onClose: () => void
 }
 
-export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
-  // Resolve symbol: explicit prop > localStorage (synced by AssetTerminal)
-  const effectiveSymbol = symbol || (typeof window !== 'undefined' ? localStorage.getItem('oculus:activeSymbol') ?? undefined : undefined)
+export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
 
   const {
     messages,
@@ -34,9 +31,11 @@ export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
     cancelResponse,
     loadSession,
     newSession,
+    initSession,
+    isInitializing,
     deleteSession,
     thinking,
-  } = useChat(effectiveSymbol)
+  } = useChat()
 
   const [sessionsExpanded, setSessionsExpanded] = useState(false)
   const [inputText, setInputText] = useState('')
@@ -166,7 +165,7 @@ export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
               fontSize: '11px',
             }}
           >
-            CHAT{effectiveSymbol ? ` ▸ ${effectiveSymbol.toUpperCase()}` : ''}
+            CHAT
           </span>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
@@ -258,7 +257,7 @@ export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
             <button
               onClick={(e) => {
                 e.stopPropagation()
-                newSession()
+                initSession()
               }}
               onMouseEnter={() => setNewSessionHovered(true)}
               onMouseLeave={() => setNewSessionHovered(false)}
@@ -386,7 +385,7 @@ export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
             gap: '12px',
           }}
         >
-          {messages.length === 0 && !isStreaming && (
+          {messages.length === 0 && !isStreaming && !isInitializing && (
             <div
               style={{
                 color: 'var(--color-terminal-dim)',
@@ -397,7 +396,25 @@ export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
                 marginTop: '24px',
               }}
             >
-              ASK ANYTHING{effectiveSymbol ? ` ABOUT ${effectiveSymbol.toUpperCase()}` : ''}
+              ASK ANYTHING ABOUT YOUR PORTFOLIO
+            </div>
+          )}
+
+          {isInitializing && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                color: 'var(--color-terminal-amber)',
+                fontSize: '10px',
+                letterSpacing: '0.06em',
+                marginTop: '24px',
+              }}
+            >
+              <span style={{ animation: 'blink 1s step-end infinite' }}>\u25CF</span>
+              INITIALIZING SESSION\u2026
             </div>
           )}
 
@@ -523,18 +540,18 @@ export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
               onClick={() => fileInputRef.current?.click()}
               onMouseEnter={() => setAttachHovered(true)}
               onMouseLeave={() => setAttachHovered(false)}
-              disabled={isStreaming}
+              disabled={isStreaming || isInitializing}
               title="Attach image"
               style={{
                 background: 'none',
                 border: 'none',
-                cursor: isStreaming ? 'not-allowed' : 'pointer',
-                color: attachHovered && !isStreaming ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
+                cursor: isStreaming || isInitializing ? 'not-allowed' : 'pointer',
+                color: attachHovered && !isStreaming && !isInitializing ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)',
                 fontFamily: MONO_FONT,
                 fontSize: '14px',
                 padding: '4px 2px',
                 flexShrink: 0,
-                opacity: isStreaming ? 0.4 : 1,
+                opacity: isStreaming || isInitializing ? 0.4 : 1,
                 transition: 'color 0.1s ease',
                 lineHeight: 1,
               }}
@@ -554,7 +571,7 @@ export function ChatDrawer({ symbol, open, onClose }: ChatDrawerProps) {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              disabled={isStreaming}
+              disabled={isStreaming || isInitializing}
               placeholder="ASK ABOUT MARKET CONDITIONS..."
               rows={2}
               style={{
