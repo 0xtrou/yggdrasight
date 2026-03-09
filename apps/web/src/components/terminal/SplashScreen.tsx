@@ -14,7 +14,12 @@ const BOOT_LINES = [
   { text: 'SYSTEM READY.', color: '#00ff88' },
 ]
 
-type Phase = 'blank' | 'scanline' | 'logo' | 'boot' | 'progress' | 'fadeout'
+type Phase = 'blank' | 'scanline' | 'logo' | 'boot' | 'init' | 'progress' | 'fadeout'
+
+interface StatusLine {
+  text: string
+  color: string
+}
 
 export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [phase, setPhase] = useState<Phase>('blank')
@@ -22,8 +27,10 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [showCursor, setShowCursor] = useState(false)
   const [progressWidth, setProgressWidth] = useState(0)
   const [opacity, setOpacity] = useState(1)
+  const [initLines, setInitLines] = useState<StatusLine[]>([])
   const completedRef = useRef(false)
 
+  // Phase 1-4: blank → scanline → logo → boot → init
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
 
@@ -39,32 +46,93 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           setVisibleLines(i + 1)
           if (i === BOOT_LINES.length - 1) {
             setShowCursor(true)
+            // After last boot line, transition to init phase
+            timers.push(setTimeout(() => {
+              setShowCursor(false)
+              setPhase('init')
+            }, 400))
           }
         }, i * 200))
       })
     }, 1600))
-    // Phase 4 → progress bar
-    timers.push(setTimeout(() => {
-      setPhase('progress')
-      setShowCursor(false)
-      // Small delay so React can render 0 width, then animate to 100
-      timers.push(setTimeout(() => setProgressWidth(100), 50))
-    }, 2600))
-    // Phase 5 → fadeout
+
+    return () => timers.forEach(clearTimeout)
+  }, [])
+
+  // Init phase: call /api/system/init and show real container status
+  useEffect(() => {
+    if (phase !== 'init') return
+
+    setInitLines([{ text: 'DOCKER AGENT ▸ INITIALIZING...', color: '#444444' }])
+
+    const controller = new AbortController()
+    let transitionTimerId: ReturnType<typeof setTimeout> | null = null
+
+    const fetchTimeoutId = setTimeout(() => controller.abort(), 30000)
+
+    const goToProgress = (delay: number) => {
+      transitionTimerId = setTimeout(() => setPhase('progress'), delay)
+    }
+
+    fetch('/api/system/init', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+      signal: controller.signal,
+    })
+      .then((res) => res.json())
+      .then((data: { steps: Array<{ name: string; status: string; message: string }>; ready: boolean }) => {
+        clearTimeout(fetchTimeoutId)
+        const lines: StatusLine[] = data.steps.length > 0
+          ? data.steps.map((step) => {
+              if (step.status === 'created' || step.status === 'already_running') {
+                return { text: 'DOCKER AGENT ▸ READY', color: '#00ff88' }
+              }
+              return {
+                text: `DOCKER AGENT ▸ ERROR: ${step.message ?? 'unknown'}`,
+                color: '#ffaa00',
+              }
+            })
+          : [{ text: 'DOCKER AGENT ▸ READY', color: '#00ff88' }]
+        setInitLines(lines)
+        goToProgress(400)
+      })
+      .catch(() => {
+        clearTimeout(fetchTimeoutId)
+        setInitLines([{ text: 'DOCKER AGENT ▸ ERROR: TIMEOUT', color: '#ffaa00' }])
+        // Graceful degradation — proceed after 3s even on failure
+        goToProgress(3000)
+      })
+
+    return () => {
+      clearTimeout(fetchTimeoutId)
+      if (transitionTimerId !== null) clearTimeout(transitionTimerId)
+      controller.abort()
+    }
+  }, [phase])
+
+  // Progress → fadeout → done
+  useEffect(() => {
+    if (phase !== 'progress') return
+
+    const timers: ReturnType<typeof setTimeout>[] = []
+
+    // Small delay so React renders 0 width, then animate to 100
+    timers.push(setTimeout(() => setProgressWidth(100), 50))
     timers.push(setTimeout(() => {
       setPhase('fadeout')
       setOpacity(0)
-    }, 3200))
-    // Done
+    }, 600))
     timers.push(setTimeout(() => {
       if (!completedRef.current) {
         completedRef.current = true
         onComplete()
       }
-    }, 3500))
+    }, 900))
 
     return () => timers.forEach(clearTimeout)
-  }, [onComplete])
+  }, [phase, onComplete])
 
   return (
     <div
@@ -132,7 +200,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         }}
       >
         {/* Logo */}
-        {(phase === 'logo' || phase === 'boot' || phase === 'progress' || phase === 'fadeout') && (
+        {(phase === 'logo' || phase === 'boot' || phase === 'init' || phase === 'progress' || phase === 'fadeout') && (
           <div
             style={{
               display: 'flex',
@@ -163,8 +231,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           </div>
         )}
 
-        {/* Boot text */}
-        {(phase === 'boot' || phase === 'progress' || phase === 'fadeout') && (
+        {/* Boot text + init status lines */}
+        {(phase === 'boot' || phase === 'init' || phase === 'progress' || phase === 'fadeout') && (
           <div
             style={{
               width: '100%',
@@ -202,6 +270,23 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
                 ▌
               </span>
             )}
+            {/* Init status lines — shown during init, progress, and fadeout phases */}
+            {(phase === 'init' || phase === 'progress' || phase === 'fadeout') &&
+              initLines.map((line, i) => (
+                <div
+                  key={`init-${i}`}
+                  style={{
+                    fontSize: '11px',
+                    color: line.color,
+                    letterSpacing: '0.04em',
+                    fontWeight: 400,
+                    opacity: 0,
+                    animation: 'lineIn 0.15s ease-out forwards',
+                  }}
+                >
+                  {line.text}
+                </div>
+              ))}
           </div>
         )}
 
@@ -234,7 +319,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       </div>
 
       {/* Bottom status line */}
-      {(phase === 'boot' || phase === 'progress' || phase === 'fadeout') && (
+      {(phase === 'boot' || phase === 'init' || phase === 'progress' || phase === 'fadeout') && (
         <div
           style={{
             position: 'absolute',
