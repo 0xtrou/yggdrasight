@@ -490,7 +490,7 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
                 marginTop: '24px',
               }}
             >
-              AGENT READY \u2014 ASK A QUESTION
+              AGENT READY — ASK A QUESTION
             </div>
           )}
 
@@ -728,23 +728,34 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
 
 function MessageBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === 'user'
-  const prefix = isUser ? 'USER ▸' : 'AI ▸'
   const prefixColor = isUser ? 'var(--color-terminal-green, #4ade80)' : 'var(--color-terminal-amber)'
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-      <span style={{ fontSize: '9px', color: prefixColor, letterSpacing: '0.1em', fontWeight: 700 }}>
-        {prefix}
-      </span>
       {isUser ? (
-        <div style={{ color: 'var(--color-terminal-text)', fontSize: '11px', lineHeight: '1.6', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-          {message.content}
-        </div>
+        <span style={{ fontSize: '9px', color: prefixColor, letterSpacing: '0.1em', fontWeight: 700 }}>
+          USER ▸
+        </span>
       ) : (
-        <div className="chat-markdown" style={{ color: 'var(--color-terminal-text)', fontSize: '11px', lineHeight: '1.6', wordBreak: 'break-word' }}>
-          <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-            {message.content}
-          </ReactMarkdown>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{
+            fontSize: '9px',
+            color: 'var(--color-terminal-amber)',
+            letterSpacing: '0.1em',
+            fontWeight: 700,
+          }}>
+            AI ▸
+          </span>
+          {message.modelId && (
+            <span style={{
+              fontSize: '8px',
+              color: 'var(--color-terminal-dim)',
+              letterSpacing: '0.03em',
+              opacity: 0.6,
+            }}>
+              {message.modelId.split('/').pop()}
+            </span>
+          )}
         </div>
       )}
       {/* Collapsible thinking/reasoning section for assistant messages */}
@@ -771,6 +782,17 @@ function MessageBubble({ message }: { message: ChatMessage }) {
             ))}
           </div>
         </details>
+      )}
+      {isUser ? (
+        <div style={{ color: 'var(--color-terminal-text)', fontSize: '11px', lineHeight: '1.6', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+          {message.content}
+        </div>
+      ) : (
+        <div className="chat-markdown" style={{ color: 'var(--color-terminal-text)', fontSize: '11px', lineHeight: '1.6', wordBreak: 'break-word' }}>
+          <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+            {message.content}
+          </ReactMarkdown>
+        </div>
       )}
       {message.attachments && message.attachments.length > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '2px' }}>

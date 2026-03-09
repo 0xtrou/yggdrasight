@@ -10,6 +10,7 @@ export interface ChatMessage {
   timestamp: string
   attachments?: Array<{ type: string; name: string }>
   thinkingSteps?: Array<{ type: string; label: string }>
+  modelId?: string
 }
 
 export interface ChatSession {
@@ -108,6 +109,7 @@ export function useChat(): UseChatReturn {
   const [thinking, setThinking] = useState<ThinkingState>({ isThinking: false, activity: null, steps: [] })
   const [isInitializing, setIsInitializing] = useState(false)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const thinkingStepsRef = useRef<Array<{ type: string; label: string; timestamp: string }>>([])
   const [modelId, setModelIdState] = useState<string>('')
   const validModelIdsRef = useRef<Set<string>>(new Set())
 
@@ -285,11 +287,14 @@ export function useChat(): UseChatReturn {
     setIsStreaming(true)
     setStreamingText('')
     setThinking({ isThinking: true, activity: 'Connecting...', steps: [] })
+    thinkingStepsRef.current = []
 
     let accumulated = ''
     let newSessionId: string | null = null
     const abortController = new AbortController()
     abortControllerRef.current = abortController
+
+    let inactivityTimer: ReturnType<typeof setInterval> | undefined
 
     try {
       const res = await fetch('/api/chat', {
@@ -314,6 +319,12 @@ export function useChat(): UseChatReturn {
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ''
+      let lastEventTime = Date.now()
+      inactivityTimer = setInterval(() => {
+        if (Date.now() - lastEventTime > 90000) {
+          setThinking(prev => ({ ...prev, activity: 'Still waiting for AI response...' }))
+        }
+      }, 10000)
 
       while (true) {
         const { done, value } = await reader.read()
@@ -333,6 +344,7 @@ export function useChat(): UseChatReturn {
             try {
               const event = JSON.parse(raw) as {
                 type: string
+                phase?: string
                 sessionId?: string
                 part?: { text?: string; tool?: string; state?: { status?: string; input?: Record<string, unknown> } }
                 code?: string
@@ -340,23 +352,29 @@ export function useChat(): UseChatReturn {
               }
 
               if (event.type === 'step_start') {
+                const label = event.phase === 'db' ? 'Loading data...' : 'Processing...'
+                lastEventTime = Date.now()
                 setThinking(prev => ({
                   ...prev,
                   isThinking: true,
-                  activity: 'Thinking...',
-                  steps: [...prev.steps, { type: 'step_start', label: 'Processing', timestamp: new Date().toISOString() }],
+                  activity: label,
+                  steps: [...prev.steps, { type: 'step_start', label, timestamp: new Date().toISOString() }],
                 }))
+                thinkingStepsRef.current = [...thinkingStepsRef.current, { type: 'step_start', label, timestamp: new Date().toISOString() }]
               } else if (event.type === 'tool_use' && event.part) {
                 const toolName = event.part.tool ?? 'tool'
                 const status = event.part.state?.status ?? 'running'
                 const label = formatToolActivity(toolName, event.part.state?.input)
                 if (status === 'running' || status === 'pending') {
+                  lastEventTime = Date.now()
                   setThinking(prev => ({ ...prev, activity: label }))
                 } else {
+                  lastEventTime = Date.now()
                   setThinking(prev => ({
                     ...prev,
                     steps: [...prev.steps, { type: 'tool', label, timestamp: new Date().toISOString() }],
                   }))
+                  thinkingStepsRef.current = [...thinkingStepsRef.current, { type: 'tool', label, timestamp: new Date().toISOString() }]
                 }
               } else if (event.type === 'session' && event.sessionId) {
                 newSessionId = event.sessionId
@@ -365,23 +383,22 @@ export function useChat(): UseChatReturn {
                 // OpenCode internal session ID captured — no UI action needed,
                 // the backend stores it in MongoDB for future resume
               } else if (event.type === 'text' && event.part?.text) {
+                lastEventTime = Date.now()
                 setThinking(prev => ({ ...prev, isThinking: false, activity: null }))
                 accumulated += event.part.text
                 setStreamingText(accumulated)
               } else if (event.type === 'done') {
-                // Capture thinking steps before clearing them
-                let capturedSteps: Array<{ type: string; label: string }> | undefined
-                setThinking(prev => {
-                  capturedSteps = prev.steps.length > 0
-                    ? prev.steps.map(s => ({ type: s.type, label: s.label }))
-                    : undefined
-                  return { isThinking: false, activity: null, steps: [] }
-                })
+                const capturedSteps = thinkingStepsRef.current.length > 0
+                  ? thinkingStepsRef.current.map(s => ({ type: s.type, label: s.label }))
+                  : undefined
+                setThinking({ isThinking: false, activity: null, steps: [] })
+                thinkingStepsRef.current = []
                 const assistantMessage: ChatMessage = {
                   role: 'assistant',
                   content: accumulated,
                   timestamp: new Date().toISOString(),
                   thinkingSteps: capturedSteps,
+                  modelId,
                 }
                 setMessages(prev => [...prev, assistantMessage])
                 setStreamingText('')
@@ -411,18 +428,17 @@ export function useChat(): UseChatReturn {
 
       // Handle case where stream ended without 'done' event
       if (accumulated) {
-        let capturedStepsFallback: Array<{ type: string; label: string }> | undefined
-        setThinking(prev => {
-          capturedStepsFallback = prev.steps.length > 0
-            ? prev.steps.map(s => ({ type: s.type, label: s.label }))
-            : undefined
-          return { isThinking: false, activity: null, steps: [] }
-        })
+        const capturedStepsFallback = thinkingStepsRef.current.length > 0
+          ? thinkingStepsRef.current.map(s => ({ type: s.type, label: s.label }))
+          : undefined
+        setThinking({ isThinking: false, activity: null, steps: [] })
+        thinkingStepsRef.current = []
         const assistantMessage: ChatMessage = {
           role: 'assistant',
           content: accumulated,
           timestamp: new Date().toISOString(),
           thinkingSteps: capturedStepsFallback,
+          modelId,
         }
         setMessages(prev => [...prev, assistantMessage])
         setStreamingText('')
@@ -436,6 +452,7 @@ export function useChat(): UseChatReturn {
         setError(err instanceof Error ? err.message : 'Failed to send message')
       }
     } finally {
+      clearInterval(inactivityTimer)
       setIsStreaming(false)
       setThinking({ isThinking: false, activity: null, steps: [] })
       abortControllerRef.current = null

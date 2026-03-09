@@ -12,6 +12,8 @@ export interface IChatMessage {
   content: string
   timestamp: Date
   attachments?: IMessageAttachment[]
+  modelId?: string
+  thinkingSteps?: Array<{ type: string; label: string }>
 }
 
 export interface IChatSession extends mongoose.Document {
@@ -48,6 +50,8 @@ const MessageSchema = new mongoose.Schema<IChatMessage>(
     content: { type: String, required: true },
     timestamp: { type: Date, required: true, default: Date.now },
     attachments: { type: [MessageAttachmentSchema], default: undefined },
+    modelId: { type: String, default: undefined },
+    thinkingSteps: { type: [{ type: { type: String }, label: { type: String } }], default: undefined },
   },
   { _id: false }
 )

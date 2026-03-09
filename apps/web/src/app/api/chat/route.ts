@@ -105,6 +105,12 @@ export async function POST(request: Request) {
       await existing.save()
       sessionDoc = existing
       sessionId = String(existing._id)
+      // Kill any previous worker still running for this session
+      if (existing.workerPid) {
+        try {
+          process.kill(existing.workerPid, 'SIGTERM')
+        } catch { /* already dead */ }
+      }
     } else {
       const created = await ctx.intelligenceModels.ChatSession.create({
         symbol,
@@ -169,12 +175,22 @@ export async function POST(request: Request) {
     }
 
     const encoder = new TextEncoder()
+    let heartbeat: ReturnType<typeof setInterval> | undefined
     const stream = new ReadableStream({
       start(controller) {
         // Send session ID immediately so client can track the session
         controller.enqueue(
           encoder.encode(`data: ${JSON.stringify({ type: 'session', sessionId })}\n\n`),
         )
+
+        // SSE heartbeat every 15s to keep connection alive
+        heartbeat = setInterval(() => {
+          try {
+            controller.enqueue(encoder.encode(': heartbeat\n\n'))
+          } catch {
+            clearInterval(heartbeat)
+          }
+        }, 15000)
 
         child.stdout!.on('data', (chunk: Buffer) => {
           const lines = chunk.toString().split('\n').filter(Boolean)
@@ -206,6 +222,7 @@ export async function POST(request: Request) {
         })
 
         child.on('close', (code) => {
+          clearInterval(heartbeat)
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify({ type: 'done', code })}\n\n`),
           )
@@ -213,6 +230,7 @@ export async function POST(request: Request) {
         })
 
         child.on('error', (err) => {
+          clearInterval(heartbeat)
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify({ type: 'error', error: err.message })}\n\n`),
           )
@@ -220,6 +238,7 @@ export async function POST(request: Request) {
         })
       },
       cancel() {
+        clearInterval(heartbeat)
         child.kill('SIGTERM')
       },
     })

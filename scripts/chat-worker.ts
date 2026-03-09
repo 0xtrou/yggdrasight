@@ -54,6 +54,8 @@ const MessageSchema = new mongoose.Schema(
     content: { type: String },
     timestamp: { type: Date, default: Date.now },
     attachments: { type: [MessageAttachmentSchema], default: undefined },
+    modelId: { type: String, default: undefined },
+    thinkingSteps: { type: [{ type: { type: String }, label: { type: String } }], default: undefined },
   },
   { _id: false }
 )
@@ -599,6 +601,12 @@ async function runChatAgent(
 
   log(`Running OpenCode via exec: ${model} (resume=${isResume}, container=${persistentContainer})`)
   await appendLogs(sessionId, [`Starting ${model}${isResume ? ' (resuming session)' : ''}...`])
+  // Kill any existing opencode processes in the container to prevent zombie accumulation
+  try {
+    spawnSync(DOCKER_BIN, ['exec', persistentContainer, 'pkill', '-f', 'opencode run'], { timeout: 5000, stdio: 'ignore' })
+  } catch { /* ignore — no processes to kill is fine */ }
+  process.stdout.write(JSON.stringify({ type: 'tool_use', part: { tool: 'Starting AI agent', state: { status: 'running' } } }) + '\n')
+  collectedThinkingSteps.push({ type: 'tool', label: 'Processing...' })
 
   return new Promise((resolve) => {
     const child = spawn(DOCKER_BIN, execArgs, {
@@ -657,6 +665,12 @@ async function runChatAgent(
               const tool = event.part.tool || 'unknown'
               const status = event.part.state?.status || ''
               if (status === 'completed') {
+                const inputDetail = event.part.state?.input || {}
+                let toolDetail = ''
+                if (tool === 'read' && inputDetail.filePath) toolDetail = ` ${(inputDetail.filePath as string).split('/').slice(-2).join('/')}`
+                else if (tool === 'webfetch' && inputDetail.url) toolDetail = ` ${(inputDetail.url as string).substring(0, 80)}`
+                else if (tool === 'websearch_web_search_exa' && inputDetail.query) toolDetail = ` "${(inputDetail.query as string)}"`
+                collectedThinkingSteps.push({ type: 'tool', label: `Using ${tool}${toolDetail}...` })
                 const input = event.part.state?.input || {}
                 let detail = ''
                 if (tool === 'read' && input.filePath) detail = ` ${input.filePath.split('/').slice(-2).join('/')}`
@@ -782,6 +796,9 @@ async function appendLogs(sessionId: string, lines: string[]): Promise<void> {
   }
 }
 
+// Module-level collection — reset per-run in main()
+let collectedThinkingSteps: Array<{ type: string; label: string }> = []
+
 // ── Utility ───────────────────────────────────────────────────────────────────
 
 function log(msg: string) {
@@ -798,6 +815,7 @@ function generateTitle(firstUserContent: string): string {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
+  collectedThinkingSteps = [] // reset for this worker run
   const sessionId = process.argv[2]
   if (!sessionId) {
     console.error('Usage: bun scripts/chat-worker.ts <sessionId>')
@@ -810,6 +828,8 @@ async function main() {
   try {
     await mongoose.connect(MONGODB_URI, { bufferCommands: false })
     log('Connected to MongoDB')
+    process.stdout.write(JSON.stringify({ type: 'step_start', phase: 'db' }) + '\n')
+    collectedThinkingSteps.push({ type: 'step_start', label: 'Loading data...' })
   } catch (err) {
     console.error('Failed to connect to MongoDB:', err)
     process.exit(1)
@@ -880,6 +900,7 @@ async function main() {
 
   const symbol = session.symbol as string
   const model = session.modelId as string
+  // (collectedThinkingSteps already reset at start of main)
   const messages = (session.messages ?? []) as Array<{
     role: string
     content: string
@@ -944,6 +965,8 @@ async function main() {
   ])
 
   log(`Context: verdicts=${latestVerdicts.length}, classifications=${latestClassifications.length}, discoveries=${latestDiscoveries.length}, signals=${signals.length}, assets=${trackedAssets.length}, projects=${projects.length}, signalCrawl=${!!signalCrawl}, globalDiscovery=${!!globalDiscovery}`)
+  process.stdout.write(JSON.stringify({ type: 'tool_use', part: { tool: 'Preparing workspace data', state: { status: 'completed' } } }) + '\n')
+  collectedThinkingSteps.push({ type: 'tool', label: 'Using Preparing workspace data...' })
 
   // Prepare conversation history (exclude the latest user message — it goes in prompt.txt)
   const conversationHistory = messages.slice(0, -1).map(m => ({
@@ -988,6 +1011,7 @@ async function main() {
               role: 'assistant',
               content: `I encountered an error while processing your request: ${result.error}`,
               timestamp: new Date(),
+              modelId: model,
             },
           },
           $set: {
@@ -1008,6 +1032,8 @@ async function main() {
       role: 'assistant',
       content: result.text,
       timestamp: new Date(),
+      modelId: model,
+      thinkingSteps: collectedThinkingSteps.length > 0 ? collectedThinkingSteps : undefined,
     }
 
     const updateOps: Record<string, unknown> = {
@@ -1046,6 +1072,7 @@ async function main() {
             role: 'assistant',
             content: `I encountered an unexpected error: ${errorMsg}`,
             timestamp: new Date(),
+            modelId: model,
           },
         },
         $set: { status: 'active', containerId: null, workerPid: null },
