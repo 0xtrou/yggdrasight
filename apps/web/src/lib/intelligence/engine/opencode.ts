@@ -1,4 +1,4 @@
-import { execFile, spawn } from 'child_process'
+import { execFile, spawn, spawnSync } from 'child_process'
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import path from 'path'
 
@@ -140,6 +140,52 @@ function fetchModelsFromCLI(): Promise<AvailableModel[] | null> {
 }
 
 /**
+ * Fetch models from inside a user's persistent Docker container.
+ * This returns the ACTUAL models available with that user's auth credentials.
+ */
+function fetchModelsFromContainer(containerName: string): Promise<AvailableModel[] | null> {
+  return new Promise((resolve) => {
+    const child = spawn(DOCKER_BIN, ['exec', containerName, 'opencode', 'models'], {
+      env: { ...process.env },
+      stdio: ['pipe', 'pipe', 'pipe'],
+    })
+
+    let stdout = ''
+    let resolved = false
+    const timeout = setTimeout(() => {
+      if (!resolved) {
+        resolved = true
+        child.kill('SIGTERM')
+        const partial = parseModelsOutput(stdout)
+        resolve(partial.length > 0 ? partial : null)
+      }
+    }, 10_000)
+
+    child.stdout.on('data', (chunk: Buffer) => { stdout += chunk.toString() })
+    child.stderr.on('data', () => { /* ignore */ })
+
+    child.on('close', () => {
+      clearTimeout(timeout)
+      if (!resolved) {
+        resolved = true
+        const models = parseModelsOutput(stdout)
+        resolve(models.length > 0 ? models : null)
+      }
+    })
+
+    child.on('error', () => {
+      clearTimeout(timeout)
+      if (!resolved) {
+        resolved = true
+        resolve(null)
+      }
+    })
+
+    child.stdin?.end()
+  })
+}
+
+/**
  * Parse the raw stdout from `opencode models` into AvailableModel[].
  */
 function parseModelsOutput(stdout: string): AvailableModel[] {
@@ -196,7 +242,31 @@ function refreshModelsInBackground(): void {
  * The CLI `opencode models` command is known to hang indefinitely,
  * so we NEVER block on it. Background refresh with 20s timeout only.
  */
-export async function listModels(forceRefresh = false): Promise<AvailableModel[]> {
+export async function listModels(forceRefresh = false, authSessionId?: string): Promise<AvailableModel[]> {
+  // If a user's persistent container exists, fetch models from it directly.
+  // This returns the ACTUAL models available with that user's credentials.
+  if (authSessionId) {
+    const containerName = `oculus-agent-${authSessionId}`
+    console.log(`[opencode] listModels: checking persistent container ${containerName}`)
+    try {
+      const inspect = spawnSync(DOCKER_BIN, ['inspect', '--format', '{{.State.Running}}', containerName], {
+        timeout: 3000, stdio: ['ignore', 'pipe', 'pipe'],
+      })
+      const isRunning = inspect.status === 0 && inspect.stdout.toString().trim() === 'true'
+      console.log(`[opencode] listModels: container running=${isRunning}`)
+      if (isRunning) {
+        const containerModels = await fetchModelsFromContainer(containerName)
+        console.log(`[opencode] listModels: container returned ${containerModels?.length ?? 0} models`)
+        if (containerModels && containerModels.length > 0) {
+          return containerModels
+        }
+      }
+    } catch (err) {
+      console.warn('[opencode] listModels: container check failed:', err)
+      /* fall through to cache-based approach */
+    }
+  }
+
   const now = Date.now()
 
   // 1. Fresh in-memory cache → return immediately

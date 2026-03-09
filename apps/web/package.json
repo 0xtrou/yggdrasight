@@ -12,16 +12,18 @@
   "dependencies": {
     "@oculus/core": "workspace:*",
     "@oculus/db": "workspace:*",
-    "mongoose": "^9.2.4",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^3.0.4",
     "klinecharts": "9.8.12",
     "lightweight-charts": "^5.1.0",
+    "mongoose": "^9.2.4",
     "next": "^16.1.6",
     "postprocessing": "^6.38.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2",
     "three": "^0.183.2"
   },
   "devDependencies": {

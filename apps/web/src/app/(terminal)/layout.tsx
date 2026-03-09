@@ -5,6 +5,7 @@ import { NavDrawer } from '@/components/terminal/NavDrawer'
 import { StatusBar } from '@/components/terminal/StatusBar'
 import { SplashScreen } from '@/components/terminal/SplashScreen'
 import { AuthScreen } from '@/components/terminal/AuthScreen'
+import { ChatDrawer } from '@/components/terminal/ChatDrawer'
 
 interface SessionResponse {
   authenticated: boolean
@@ -14,6 +15,7 @@ interface SessionResponse {
 export default function TerminalLayout({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [showSplash, setShowSplash] = useState(true)
+  const [chatOpen, setChatOpen] = useState(false)
 
   // Check authentication on mount
   useEffect(() => {
@@ -95,6 +97,29 @@ export default function TerminalLayout({ children }: { children: React.ReactNode
         </div>
         <StatusBar />
       </div>
+      {/* Ask AI floating button — hidden when drawer is open (drawer has its own close) */}
+      {!chatOpen && (
+        <button
+          onClick={() => setChatOpen(true)}
+          style={{
+            position: 'fixed',
+            bottom: '16px',
+            right: '16px',
+            zIndex: 1000,
+            background: 'var(--color-terminal-border)',
+            color: 'var(--color-terminal-text)',
+            border: '1px solid var(--color-terminal-border)',
+            padding: '8px 16px',
+            fontFamily: "'SF Mono', 'JetBrains Mono', monospace",
+            fontSize: '11px',
+            cursor: 'pointer',
+            letterSpacing: '0.05em',
+          }}
+        >
+          ◈ ASK AI
+        </button>
+      )}
+      <ChatDrawer open={chatOpen} onClose={() => setChatOpen(false)} />
     </>
   )
 }

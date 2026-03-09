@@ -383,10 +383,10 @@ function AssetTableView({
     try {
       let model: string | undefined
       try {
-        const raw = localStorage.getItem('oculus:agentModelMap')
-        if (raw) {
-          const parsed = JSON.parse(raw)
-          if (parsed?.discovery) model = parsed.discovery
+        const res = await fetch('/api/intelligence/models')
+        if (res.ok) {
+          const data = await res.json()
+          if (data.modelMap?.discovery) model = data.modelMap.discovery
         }
       } catch { /* ignore */ }
 
@@ -729,14 +729,14 @@ function AssetDetailView({ symbol, onBack }: { symbol: string; onBack: () => voi
   const hasData = !!unified?.hasAiData
   const showPageEmptyState = !unified?.hasApiData && !unified?.hasAiData && !latestEntry
 
-  // Read model from AI config localStorage
-  const discoverWithStoredModel = useCallback(() => {
+  // Read model from AI config API
+  const discoverWithStoredModel = useCallback(async () => {
     try {
-      const raw = localStorage.getItem('oculus:agentModelMap')
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        if (parsed?.discovery) {
-          discover(parsed.discovery)
+      const res = await fetch('/api/intelligence/models')
+      if (res.ok) {
+        const data = await res.json()
+        if (data.modelMap?.discovery) {
+          discover(data.modelMap.discovery)
           return
         }
       }

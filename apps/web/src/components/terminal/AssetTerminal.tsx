@@ -5,6 +5,8 @@ import { SignalPanel } from './panels/SignalPanel'
 import { ChartPanel } from './panels/ChartPanel'
 import { AnalysisStrip } from './AnalysisStrip'
 import { useIntelligence } from '@/hooks/useIntelligence'
+import { useAgentModelMap } from '@/hooks/useAgentModelMap'
+
 
 interface AssetTerminalProps {
   symbol: string // base symbol e.g. 'BTC', 'TAO'
@@ -75,24 +77,16 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
   const [analysisVersion, setAnalysisVersion] = useState(0)
   const { result } = useIntelligence(pair, { refreshKey: analysisVersion })
 
-  // Per-agent model selection — shared with AI Config page via localStorage
+  // Sync active symbol to localStorage for ChatDrawer (in layout)
+  useEffect(() => {
+    try { localStorage.setItem('oculus:activeSymbol', pair) } catch { /* ignore */ }
+  }, [pair])
+
+
+  // Per-agent model selection — shared with AI Config page via DB-backed API
   // Keys: agent IDs ('wyckoff', 'elliott-wave', ...) + 'discovery'
   // Values: model IDs ('opencode/big-pickle', 'github-copilot/claude-sonnet-4', ...)
-  const [agentModelMap, setAgentModelMapState] = useState<Record<string, string>>(() => {
-    if (typeof window === 'undefined') return {}
-    try {
-      const raw = localStorage.getItem('oculus:agentModelMap')
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        if (parsed && typeof parsed === 'object') return parsed as Record<string, string>
-      }
-    } catch { /* ignore */ }
-    return {}
-  })
-  const setAgentModelMap = useCallback((next: Record<string, string>) => {
-    setAgentModelMapState(next)
-    try { localStorage.setItem('oculus:agentModelMap', JSON.stringify(next)) } catch { /* ignore */ }
-  }, [])
+  const { modelMap: agentModelMap, setFullMap: setAgentModelMap } = useAgentModelMap()
   const handleAnalysisComplete = useCallback(() => {
     setAnalysisVersion((v) => v + 1)
   }, [])
@@ -221,6 +215,8 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
           </div>
         </div>
       </div>
+
+
     </div>
   )
 }

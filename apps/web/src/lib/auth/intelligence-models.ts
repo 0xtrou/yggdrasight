@@ -47,6 +47,10 @@ export function getIntelligenceModelsForConnection(connection: mongoose.Connecti
   } = require('../intelligence/models/agent-model-config.model')
   const AgentModelConfigSchema = _AgentModelConfigModel.schema
 
+  const {
+    ChatSessionSchema,
+  } = require('../intelligence/models/chat-session.model')
+
   return {
     ClassificationJob:
       connection.models.ClassificationJob ||
@@ -79,6 +83,10 @@ export function getIntelligenceModelsForConnection(connection: mongoose.Connecti
     AgentModelConfig:
       connection.models.AgentModelConfig ||
       connection.model('AgentModelConfig', AgentModelConfigSchema),
+
+    ChatSession:
+      connection.models.ChatSession ||
+      connection.model('ChatSession', ChatSessionSchema),
   }
 }
 

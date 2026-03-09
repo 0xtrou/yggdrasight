@@ -1305,13 +1305,14 @@ function AssetDetailView({ symbol, onBack }: { symbol: string; onBack: () => voi
     rawOutput, dialogOpen, setDialogOpen, cancelClassification,
   } = hook
 
-  // Read per-agent models from AI config localStorage
-  const classifyWithStoredModel = useCallback(() => {
+  // Read per-agent models from AI config API
+  const classifyWithStoredModel = useCallback(async () => {
     const AGENT_KEYS = ['crack_mapping', 'visibility', 'narrative_separator', 'power_vector', 'problem_recognition', 'identity_polarity', 'synthesizer']
     try {
-      const raw = localStorage.getItem('oculus:agentModelMap')
-      if (raw) {
-        const parsed = JSON.parse(raw)
+      const res = await fetch('/api/intelligence/models')
+      if (res.ok) {
+        const data = await res.json()
+        const parsed = data.modelMap
         if (parsed && typeof parsed === 'object') {
           const defaultModel: string | undefined = parsed.intelligence || undefined
           const agentModels: Record<string, string> = {}
@@ -1577,13 +1578,13 @@ function AssetTableView({
     setClassifyingSymbols(prev => new Set(prev).add(base))
 
     try {
-      // Read model config from localStorage
+      // Read model config from API
       let model: string | undefined
       try {
-        const raw = localStorage.getItem('oculus:agentModelMap')
-        if (raw) {
-          const parsed = JSON.parse(raw)
-          if (parsed?.intelligence) model = parsed.intelligence
+        const res = await fetch('/api/intelligence/models')
+        if (res.ok) {
+          const data = await res.json()
+          if (data.modelMap?.intelligence) model = data.modelMap.intelligence
         }
       } catch { /* ignore */ }
 

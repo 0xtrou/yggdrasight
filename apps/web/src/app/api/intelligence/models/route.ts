@@ -10,7 +10,7 @@ export async function GET() {
   return withAuth(async (ctx) => {
     try {
       const [models, modelMap] = await Promise.all([
-        listModels(),
+        listModels(false, ctx.sessionId),
         getAgentModelMapFromConnection(ctx.connection),
       ])
       const agents = LLM_ANALYST_DEFINITIONS.map((d) => ({
@@ -52,6 +52,26 @@ export async function PUT(request: Request) {
         { error: 'Failed to save model config' },
         { status: 500 }
       )
+    }
+  })
+}
+
+export async function PATCH(request: Request) {
+  return withAuth(async (ctx) => {
+    try {
+      const body = await request.json() as { key: string; value: string }
+      if (!body.key || typeof body.key !== 'string') {
+        return NextResponse.json({ error: 'Missing key' }, { status: 400 })
+      }
+      await ctx.intelligenceModels.AgentModelConfig.findByIdAndUpdate(
+        'default',
+        { $set: { [`modelMap.${body.key}`]: body.value, updatedAt: new Date() } },
+        { upsert: true }
+      )
+      return NextResponse.json({ ok: true })
+    } catch (err) {
+      console.error('[PATCH /api/intelligence/models]', err)
+      return NextResponse.json({ error: 'Failed to update model config' }, { status: 500 })
     }
   })
 }
