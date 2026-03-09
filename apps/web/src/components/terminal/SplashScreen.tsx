@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 
 interface SplashScreenProps {
   onComplete: () => void
@@ -29,7 +29,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [opacity, setOpacity] = useState(1)
   const [initLines, setInitLines] = useState<StatusLine[]>([])
   const completedRef = useRef(false)
-
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
   // Phase 1-4: blank → scanline → logo → boot → init
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
@@ -113,26 +114,29 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   }, [phase])
 
   // Progress → fadeout → done
+  // IMPORTANT: We must NOT change `phase` inside this chain, because `phase` is in the
+  // dependency array. Changing it would trigger cleanup and cancel the onComplete timer.
+  // Instead we set opacity directly and keep phase as 'progress'.
   useEffect(() => {
     if (phase !== 'progress') return
 
-    const timers: ReturnType<typeof setTimeout>[] = []
-
     // Small delay so React renders 0 width, then animate to 100
-    timers.push(setTimeout(() => setProgressWidth(100), 50))
-    timers.push(setTimeout(() => {
-      setPhase('fadeout')
-      setOpacity(0)
-    }, 600))
-    timers.push(setTimeout(() => {
+    const t1 = setTimeout(() => setProgressWidth(100), 50)
+    const t2 = setTimeout(() => setOpacity(0), 600)
+    const t3 = setTimeout(() => {
       if (!completedRef.current) {
         completedRef.current = true
-        onComplete()
+        onCompleteRef.current()
       }
-    }, 900))
+    }, 900)
 
-    return () => timers.forEach(clearTimeout)
-  }, [phase, onComplete])
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      clearTimeout(t3)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase])
 
   return (
     <div
@@ -146,7 +150,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         justifyContent: 'center',
         fontFamily: "ui-monospace, 'SF Mono', 'JetBrains Mono', monospace",
         opacity,
-        transition: phase === 'fadeout' ? 'opacity 0.3s ease-out' : undefined,
+        transition: opacity < 1 ? 'opacity 0.3s ease-out' : undefined,
         overflow: 'hidden',
       }}
     >

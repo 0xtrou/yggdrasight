@@ -103,6 +103,7 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
     <>
       <style>{`
         @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes chatDrawerIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         .chat-markdown p { margin: 0 0 8px 0; }
         .chat-markdown p:last-child { margin-bottom: 0; }
@@ -385,7 +386,100 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
             gap: '12px',
           }}
         >
-          {messages.length === 0 && !isStreaming && !isInitializing && (
+          {/* No active session — prompt user to start */}
+          {!activeSessionId && !isInitializing && messages.length === 0 && !isStreaming && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '16px',
+                flex: 1,
+                minHeight: '120px',
+              }}
+            >
+              <div
+                style={{
+                  color: 'var(--color-terminal-dim)',
+                  fontSize: '10px',
+                  letterSpacing: '0.06em',
+                  opacity: 0.5,
+                  textAlign: 'center',
+                }}
+              >
+                ASK ANYTHING ABOUT YOUR PORTFOLIO
+              </div>
+              <button
+                onClick={() => initSession()}
+                style={{
+                  background: 'rgba(0, 255, 136, 0.06)',
+                  border: '1px solid rgba(0, 255, 136, 0.25)',
+                  color: '#00ff88',
+                  fontFamily: MONO_FONT,
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  padding: '10px 24px',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(0, 255, 136, 0.12)'
+                  e.currentTarget.style.borderColor = 'rgba(0, 255, 136, 0.5)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(0, 255, 136, 0.06)'
+                  e.currentTarget.style.borderColor = 'rgba(0, 255, 136, 0.25)'
+                }}
+              >
+                ▸ START NEW CHAT
+              </button>
+            </div>
+          )}
+
+          {/* Initializing spinner — agent is booting up */}
+          {isInitializing && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                flex: 1,
+                minHeight: '120px',
+              }}
+            >
+              <div style={{
+                width: '24px',
+                height: '24px',
+                border: '2px solid rgba(0, 255, 136, 0.15)',
+                borderTop: '2px solid #00ff88',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite',
+              }} />
+              <div style={{
+                color: 'var(--color-terminal-amber)',
+                fontSize: '10px',
+                letterSpacing: '0.08em',
+                fontWeight: 700,
+              }}>
+                BOOTING AGENT\u2026
+              </div>
+              <div style={{
+                color: 'var(--color-terminal-dim)',
+                fontSize: '9px',
+                letterSpacing: '0.04em',
+                opacity: 0.5,
+              }}>
+                READING WORKSPACE DATA
+              </div>
+            </div>
+          )}
+
+          {/* Active session with no messages yet */}
+          {activeSessionId && messages.length === 0 && !isStreaming && !isInitializing && (
             <div
               style={{
                 color: 'var(--color-terminal-dim)',
@@ -396,25 +490,7 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
                 marginTop: '24px',
               }}
             >
-              ASK ANYTHING ABOUT YOUR PORTFOLIO
-            </div>
-          )}
-
-          {isInitializing && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                color: 'var(--color-terminal-amber)',
-                fontSize: '10px',
-                letterSpacing: '0.06em',
-                marginTop: '24px',
-              }}
-            >
-              <span style={{ animation: 'blink 1s step-end infinite' }}>\u25CF</span>
-              INITIALIZING SESSION\u2026
+              AGENT READY \u2014 ASK A QUESTION
             </div>
           )}
 
@@ -484,7 +560,8 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
           </div>
         )}
 
-        {/* ── Input area ── */}
+        {/* ── Input area (only when session active or streaming) ── */}
+        {(activeSessionId || isStreaming) && (
         <div
           style={{
             flexShrink: 0,
@@ -641,6 +718,7 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
             )}
           </div>
         </div>
+        )}
       </div>
     </>
   )
