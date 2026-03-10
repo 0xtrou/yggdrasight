@@ -465,7 +465,7 @@ export function ChatDrawer({ open, onClose }: ChatDrawerProps) {
                 letterSpacing: '0.08em',
                 fontWeight: 700,
               }}>
-                BOOTING AGENT\u2026
+                BOOTING AGENT…
               </div>
               <div style={{
                 color: 'var(--color-terminal-dim)',

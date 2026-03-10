@@ -147,14 +147,26 @@ export async function POST(request: Request) {
     const workerScript = path.join(projectRoot, 'scripts', 'chat-worker.ts')
     const userMongoUri = getUserMongoUri(ctx.sessionId)
 
+    // Write password hash to a temp secret file so it's not leaked via env
+    const secretsDir = path.join(projectRoot, 'tmp', 'secrets')
+    fs.mkdirSync(secretsDir, { recursive: true })
+    const secretFilePath = path.join(secretsDir, `${sessionId}.key`)
+    fs.writeFileSync(secretFilePath, ctx.passwordHash ?? '', { mode: 0o600 })
+
     const child = spawn(BUN_BIN, [workerScript, sessionId], {
       detached: true,
       stdio: ['ignore', 'pipe', 'pipe'], // stdout MUST be 'pipe' for SSE streaming
       cwd: projectRoot,
       env: {
-        ...process.env,
+        NODE_ENV: process.env.NODE_ENV,
+        PATH: process.env.PATH,
+        HOME: process.env.HOME,
+        DOCKER_HOST: process.env.DOCKER_HOST,
+        DOCKER_BIN: process.env.DOCKER_BIN,
+        BUN_BIN: process.env.BUN_BIN,
+        OPENCODE_IMAGE: process.env.OPENCODE_IMAGE,
         ...(userMongoUri ? { OCULUS_MONGODB_URI: userMongoUri } : {}),
-        OCULUS_PASSWORD_HASH: ctx.passwordHash,
+        OCULUS_SECRET_FILE: secretFilePath,
         OPENCODE_DATA_DIR: opencodeDataDir,
         CONTAINER_NAME: containerName,
         AUTH_SESSION_ID: ctx.sessionId,
@@ -165,6 +177,9 @@ export async function POST(request: Request) {
         ].join(path.delimiter),
       },
     })
+
+    // Clean up secret file after worker exits
+    child.on('close', () => { try { fs.unlinkSync(secretFilePath) } catch { /* already gone */ } })
 
     // Store worker PID for cancel targeting
     if (child.pid) {

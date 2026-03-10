@@ -76,7 +76,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
             color: 'var(--color-terminal-muted)',
           }}>
             {discoveryLogs.map((line, i) => (
-              <div key={i} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: line.includes('\u2713') ? 'var(--color-terminal-up)' : line.includes('ERROR') || line.includes('[stderr]') ? 'var(--color-terminal-down)' : line.includes('\u25b6') ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)' }}>
+              <div key={i} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: line.includes('✓') ? 'var(--color-terminal-up)' : line.includes('ERROR') || line.includes('[stderr]') ? 'var(--color-terminal-down)' : line.includes('▶') ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)' }}>
                 {line}
               </div>
             ))}
@@ -145,7 +145,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
   const sparkline = (data: number[]): string => {
     if (!data || data.length === 0) return ''
     const max = Math.max(...data, 1)
-    const blocks = ['\u2581', '\u2582', '\u2583', '\u2584', '\u2585', '\u2586', '\u2587', '\u2588']
+    const blocks = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█']
     return data.map(v => blocks[Math.min(Math.floor((v / max) * 7), 7)]).join('')
   }
 
@@ -159,7 +159,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
         </div>
         {field.value.map((item, i) => (
           <div key={i} style={{ color: itemColor ?? 'var(--color-terminal-text)', fontSize: '12px', fontFamily: 'var(--font-mono)', padding: '1px 0', opacity: 0.9, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {String.fromCharCode(0x25AA)} {item}
+            ▪ {item}
           </div>
         ))}
       </div>
@@ -249,7 +249,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
             color: 'var(--color-terminal-muted)',
           }}>
             {discoveryLogs.map((line, i) => (
-              <div key={i} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: line.includes('\u2713') ? 'var(--color-terminal-up)' : line.includes('ERROR') || line.includes('[stderr]') ? 'var(--color-terminal-down)' : line.includes('\u25b6') ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)' }}>
+              <div key={i} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: line.includes('✓') ? 'var(--color-terminal-up)' : line.includes('ERROR') || line.includes('[stderr]') ? 'var(--color-terminal-down)' : line.includes('▶') ? 'var(--color-terminal-amber)' : 'var(--color-terminal-dim)' }}>
                 {line}
               </div>
             ))}
@@ -258,8 +258,8 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       </div>
 
       {/* ── ASSET IDENTITY ── */}
-      <div style={sectionHeader(`${base} \u2014 PROJECT OVERVIEW`, 'var(--color-terminal-amber)')}>
-        {base} {String.fromCharCode(0x2014)} PROJECT OVERVIEW
+      <div style={sectionHeader(`${base} — PROJECT OVERVIEW`, 'var(--color-terminal-amber)')}>        {base} — PROJECT OVERVIEW
+        {base} — PROJECT OVERVIEW
       </div>
       {u.description.value && (
         <div style={{ padding: '4px 10px', color: 'var(--color-terminal-text)', fontSize: '13px', lineHeight: '1.5', opacity: 0.85 }}>
@@ -283,8 +283,8 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {uRow('Genesis', u.genesisDate)}
 
       {/* ══════ PILLAR 1: TEAM SURVIVAL FITNESS ══════ */}
-      <div style={sectionHeader('1 \u25B8 TEAM SURVIVAL FITNESS', '#5b9bd5')}>
-        1 {String.fromCharCode(0x25B8)} TEAM SURVIVAL FITNESS
+      <div style={sectionHeader('1 ▸ TEAM SURVIVAL FITNESS', '#5b9bd5')}>
+        1 ▸ TEAM SURVIVAL FITNESS
       </div>
       {listField('Founders', u.founders)}
       {uRow('Team Size', u.teamSize)}
@@ -294,7 +294,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {listField('Investors', u.investors)}
       {uRow('Treasury', u.treasury)}
       {uRow('Team Activity', u.teamActivity)}
-      {uRow('Commits (4w)', u.commitCount4Weeks, (v) => v !== null ? fmtNum(v) : '\u2014', u.commitCount4Weeks.value !== null ? (u.commitCount4Weeks.value > 20 ? 'var(--color-terminal-up)' : u.commitCount4Weeks.value > 5 ? 'var(--color-terminal-amber)' : 'var(--color-terminal-down)') : undefined)}
+      {uRow('Commits (4w)', u.commitCount4Weeks, (v) => v !== null ? fmtNum(v) : '—', u.commitCount4Weeks.value !== null ? (u.commitCount4Weeks.value > 20 ? 'var(--color-terminal-up)' : u.commitCount4Weeks.value > 5 ? 'var(--color-terminal-amber)' : 'var(--color-terminal-down)') : undefined)}
       {u.commitActivitySeries.value.length > 0 && (
         <div style={{ padding: '2px 10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span style={{ color: 'var(--color-terminal-muted)', fontSize: '12px' }}>28d Activity</span>
@@ -302,21 +302,21 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
           <span style={{ color: 'var(--color-terminal-blue)', fontSize: '13px', letterSpacing: '1px', fontFamily: 'var(--font-mono)' }}>{sparkline(u.commitActivitySeries.value)}</span>
         </div>
       )}
-      {uRow('PRs Merged', u.pullRequestsMerged, (v) => v !== null ? fmtNum(v) : '\u2014')}
-      {uRow('PR Contributors', u.pullRequestContributors, (v) => v !== null ? fmtNum(v) : '\u2014')}
+      {uRow('PRs Merged', u.pullRequestsMerged, (v) => v !== null ? fmtNum(v) : '—')}
+      {uRow('PR Contributors', u.pullRequestContributors, (v) => v !== null ? fmtNum(v) : '—')}
       {u.codeAdditions4Weeks.value !== null && u.codeDeletions4Weeks.value !== null && (
         uRow('Code +/-', u.codeAdditions4Weeks, () => `+${(u.codeAdditions4Weeks.value ?? 0).toLocaleString()} / -${(u.codeDeletions4Weeks.value ?? 0).toLocaleString()}`)
       )}
       {u.issuesClosed.value !== null && u.issuesTotal.value !== null && (
         uRow('Issues Closed/Total', u.issuesClosed, () => `${(u.issuesClosed.value ?? 0).toLocaleString()} / ${(u.issuesTotal.value ?? 0).toLocaleString()}`)
       )}
-      {uRow('GitHub Stars', u.githubStars, (v) => v !== null ? fmtNum(v) : '\u2014')}
-      {uRow('GitHub Forks', u.githubForks, (v) => v !== null ? fmtNum(v) : '\u2014')}
+      {uRow('GitHub Stars', u.githubStars, (v) => v !== null ? fmtNum(v) : '—')}
+      {uRow('GitHub Forks', u.githubForks, (v) => v !== null ? fmtNum(v) : '—')}
       {pillarScore(u.pillar1Score)}
 
       {/* ══════ PILLAR 2: NARRATIVE ALIGNMENT ══════ */}
-      <div style={sectionHeader('2 \u25B8 NARRATIVE ALIGNMENT', '#6aa84f')}>
-        2 {String.fromCharCode(0x25B8)} NARRATIVE ALIGNMENT
+      <div style={sectionHeader('2 ▸ NARRATIVE ALIGNMENT', '#6aa84f')}>
+        2 ▸ NARRATIVE ALIGNMENT
       </div>
       {u.categories.value.length > 0 && (
         <div style={{ padding: '4px 10px' }}>
@@ -339,16 +339,16 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {listField('Competitors', u.competitors)}
       {listField('Partnerships', u.partnerships)}
       {uRow('Adoption Signals', u.adoptionSignals)}
-      {uRow('Sentiment Up', u.sentimentUp, (v) => v !== null ? `${v.toFixed(0)}%` : '\u2014', u.sentimentUp.value !== null ? (u.sentimentUp.value > 60 ? 'var(--color-terminal-up)' : u.sentimentUp.value < 40 ? 'var(--color-terminal-down)' : 'var(--color-terminal-amber)') : undefined)}
-      {uRow('Sentiment Down', u.sentimentDown, (v) => v !== null ? `${v.toFixed(0)}%` : '\u2014', u.sentimentDown.value !== null && u.sentimentDown.value > 40 ? 'var(--color-terminal-down)' : 'var(--color-terminal-muted)')}
-      {uRow('Twitter Followers', u.twitterFollowers, (v) => v !== null ? fmtNum(v) : '\u2014')}
-      {uRow('Reddit Subscribers', u.redditSubscribers, (v) => v !== null ? fmtNum(v) : '\u2014')}
-      {uRow('Telegram Users', u.telegramUsers, (v) => v !== null ? fmtNum(v) : '\u2014')}
+      {uRow('Sentiment Up', u.sentimentUp, (v) => v !== null ? `${v.toFixed(0)}%` : '—', u.sentimentUp.value !== null ? (u.sentimentUp.value > 60 ? 'var(--color-terminal-up)' : u.sentimentUp.value < 40 ? 'var(--color-terminal-down)' : 'var(--color-terminal-amber)') : undefined)}
+      {uRow('Sentiment Down', u.sentimentDown, (v) => v !== null ? `${v.toFixed(0)}%` : '—', u.sentimentDown.value !== null && u.sentimentDown.value > 40 ? 'var(--color-terminal-down)' : 'var(--color-terminal-muted)')}
+      {uRow('Twitter Followers', u.twitterFollowers, (v) => v !== null ? fmtNum(v) : '—')}
+      {uRow('Reddit Subscribers', u.redditSubscribers, (v) => v !== null ? fmtNum(v) : '—')}
+      {uRow('Telegram Users', u.telegramUsers, (v) => v !== null ? fmtNum(v) : '—')}
       {pillarScore(u.pillar2Score)}
 
       {/* ══════ PILLAR 3: ECONOMIC MOAT ══════ */}
-      <div style={sectionHeader('3 \u25B8 ECONOMIC MOAT', '#e69138')}>
-        3 {String.fromCharCode(0x25B8)} ECONOMIC MOAT
+      <div style={sectionHeader('3 ▸ ECONOMIC MOAT', '#e69138')}>
+        3 ▸ ECONOMIC MOAT
       </div>
       {uRow('Token Type', u.tokenType)}
       {uRow('Total Supply', u.totalSupply)}
@@ -359,11 +359,11 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {uRow('Protocol', u.protocolName)}
       {uRow('Category', u.protocolCategory)}
       {uRow('TVL', u.tvl)}
-      {uRow('TVL 24h', u.tvlChange24h, (v) => v !== null ? fmtPct(v) : '\u2014', u.tvlChange24h.value !== null ? changeColor(u.tvlChange24h.value) : undefined)}
-      {uRow('TVL 7d', u.tvlChange7d, (v) => v !== null ? fmtPct(v) : '\u2014', u.tvlChange7d.value !== null ? changeColor(u.tvlChange7d.value) : undefined)}
-      {uRow('MCap/TVL', u.mcapToTvl, (v) => v !== null ? v.toFixed(2) + 'x' : '\u2014')}
+      {uRow('TVL 24h', u.tvlChange24h, (v) => v !== null ? fmtPct(v) : '—', u.tvlChange24h.value !== null ? changeColor(u.tvlChange24h.value) : undefined)}
+      {uRow('TVL 7d', u.tvlChange7d, (v) => v !== null ? fmtPct(v) : '—', u.tvlChange7d.value !== null ? changeColor(u.tvlChange7d.value) : undefined)}
+      {uRow('MCap/TVL', u.mcapToTvl, (v) => v !== null ? v.toFixed(2) + 'x' : '—')}
       {u.chains.value.length > 0 && uRow('Chains', u.chains, (v) => v.join(', '))}
-      {uRow('Chain TVL', u.chainTvl, (v) => v !== null ? fmtUsd(v) : '\u2014')}
+      {uRow('Chain TVL', u.chainTvl, (v) => v !== null ? fmtUsd(v) : '—')}
       {uRow('Revenue Model', u.revenueModel)}
       {textBlock(u.moatDescription)}
       {uRow('Mainnet', u.mainnetLaunched)}
@@ -372,15 +372,15 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
       {pillarScore(u.pillar3Score)}
 
       {/* ══════ PILLAR 4: VALUATION & ACCUMULATION ══════ */}
-      <div style={sectionHeader('4 \u25B8 VALUATION & ACCUMULATION', '#8e7cc3')}>
-        4 {String.fromCharCode(0x25B8)} VALUATION & ACCUMULATION
+      <div style={sectionHeader('4 ▸ VALUATION & ACCUMULATION', '#8e7cc3')}>
+        4 ▸ VALUATION & ACCUMULATION
       </div>
-      {uRow('Fees 24h', u.fees24h, (v) => v !== null ? fmtUsd(v) : '\u2014')}
-      {uRow('Fees 7d', u.fees7d, (v) => v !== null ? fmtUsd(v) : '\u2014')}
-      {uRow('Fees 30d', u.fees30d, (v) => v !== null ? fmtUsd(v) : '\u2014')}
-      {uRow('Revenue 24h', u.revenue24h, (v) => v !== null ? fmtUsd(v) : '\u2014')}
-      {uRow('Revenue 7d', u.revenue7d, (v) => v !== null ? fmtUsd(v) : '\u2014')}
-      {uRow('Revenue 30d', u.revenue30d, (v) => v !== null ? fmtUsd(v) : '\u2014')}
+      {uRow('Fees 24h', u.fees24h, (v) => v !== null ? fmtUsd(v) : '—')}
+      {uRow('Fees 7d', u.fees7d, (v) => v !== null ? fmtUsd(v) : '—')}
+      {uRow('Fees 30d', u.fees30d, (v) => v !== null ? fmtUsd(v) : '—')}
+      {uRow('Revenue 24h', u.revenue24h, (v) => v !== null ? fmtUsd(v) : '—')}
+      {uRow('Revenue 7d', u.revenue7d, (v) => v !== null ? fmtUsd(v) : '—')}
+      {uRow('Revenue 30d', u.revenue30d, (v) => v !== null ? fmtUsd(v) : '—')}
       {uRow('Current Price', u.currentPrice)}
       {uRow('All-Time High', u.allTimeHigh)}
       {uRow('All-Time Low', u.allTimeLow)}
@@ -420,7 +420,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
               </div>
               {u.risks.value.map((r, i) => (
                 <div key={i} style={{ color: 'var(--color-terminal-text)', fontSize: '12px', fontFamily: 'var(--font-mono)', padding: '1px 0', lineHeight: '1.4', opacity: 0.9 }}>
-                  {String.fromCharCode(0x25AA)} {r}
+                  ▪ {r}
                 </div>
               ))}
             </div>
@@ -432,7 +432,7 @@ export function ProjectInfoContent({ symbol, projectInfo, agentModelMap }: Proje
               </div>
               {u.recentNews.value.map((n, i) => (
                 <div key={i} style={{ color: 'var(--color-terminal-text)', fontSize: '12px', fontFamily: 'var(--font-mono)', padding: '1px 0', lineHeight: '1.4', opacity: 0.9 }}>
-                  {String.fromCharCode(0x25AA)} {n}
+                  ▪ {n}
                 </div>
               ))}
             </div>

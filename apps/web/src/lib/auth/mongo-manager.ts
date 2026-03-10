@@ -20,10 +20,11 @@ const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const MONGO_IMAGE = 'mongo:7'
 const CONTAINER_PREFIX = 'oculus-mongo-'
 const BASE_PORT = 27100 // User containers start scanning from this port
-const MONGO_ADMIN_USER = 'oculus'
-const MONGO_ADMIN_PASS = 'oculus_user_secret' // Internal auth for user containers
+// Legacy fallback — containers created before per-user credentials
+const FALLBACK_USER = 'oculus'
+const FALLBACK_PASS = 'oculus_user_secret'
 
-// ── Types ────────────────────────────────────────────────────────────────────
+// ── Types ────────────────────────────────────────────────────────────────
 
 export interface UserMongoContainer {
   /** Docker container name */
@@ -36,6 +37,10 @@ export interface UserMongoContainer {
   volumePath: string
   /** Whether the container is currently running */
   running: boolean
+  /** MongoDB admin username for this container */
+  mongoUser: string
+  /** MongoDB admin password for this container */
+  mongoPass: string
 }
 
 // ── In-memory registry ───────────────────────────────────────────────────────
@@ -45,6 +50,18 @@ const containerRegistry = new Map<string, UserMongoContainer>()
 
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Generate unique credentials for a new user MongoDB container.
+ */
+function generateContainerCredentials(): { user: string; pass: string } {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { randomBytes } = require('crypto') as typeof import('crypto')
+  return {
+    user: `u_${randomBytes(8).toString('hex')}`,
+    pass: randomBytes(24).toString('base64url'),
+  }
+}
 
 function findMonorepoRoot(): string {
   let dir = process.cwd()
@@ -128,14 +145,14 @@ async function getContainerPort(containerName: string): Promise<number | null> {
 /**
  * Wait for MongoDB to be ready inside the container.
  */
-async function waitForMongo(containerName: string, timeoutMs = 30_000): Promise<void> {
+async function waitForMongo(containerName: string, user: string, pass: string, timeoutMs = 30_000): Promise<void> {
   const start = Date.now()
   while (Date.now() - start < timeoutMs) {
     try {
       const { stdout } = await exec(DOCKER_BIN, [
         'exec', containerName,
         'mongosh', '--quiet', '--eval', 'db.runCommand({ ping: 1 }).ok',
-        '-u', MONGO_ADMIN_USER, '-p', MONGO_ADMIN_PASS, '--authenticationDatabase', 'admin',
+        '-u', user, '-p', pass, '--authenticationDatabase', 'admin',
       ])
       if (stdout.trim() === '1') return
     } catch {
@@ -157,7 +174,7 @@ async function waitForMongo(containerName: string, timeoutMs = 30_000): Promise<
  * @param sessionId - The first 12 chars of the user's password hash (session identifier)
  * @returns UserMongoContainer with connection details
  */
-export async function ensureUserMongo(sessionId: string): Promise<UserMongoContainer> {
+export async function ensureUserMongo(sessionId: string, creds?: { user: string; pass: string }): Promise<UserMongoContainer> {
   const cached = containerRegistry.get(sessionId)
   if (cached) {
     const running = await isContainerRunning(cached.containerName)
@@ -168,7 +185,7 @@ export async function ensureUserMongo(sessionId: string): Promise<UserMongoConta
     const exists = await containerExists(cached.containerName)
     if (exists) {
       await exec(DOCKER_BIN, ['start', cached.containerName])
-      await waitForMongo(cached.containerName)
+      await waitForMongo(cached.containerName, cached.mongoUser, cached.mongoPass)
       const updated = { ...cached, running: true }
       containerRegistry.set(sessionId, updated)
       return updated
@@ -188,7 +205,9 @@ export async function ensureUserMongo(sessionId: string): Promise<UserMongoConta
     if (!running) {
       await exec(DOCKER_BIN, ['start', containerName])
     }
-    await waitForMongo(containerName)
+    // Use provided creds or legacy fallback for containers created before per-user credentials
+    const effectiveCreds = creds ?? { user: FALLBACK_USER, pass: FALLBACK_PASS }
+    await waitForMongo(containerName, effectiveCreds.user, effectiveCreds.pass)
 
     const port = await getContainerPort(containerName)
     if (!port) throw new Error(`Cannot determine port for container ${containerName}`)
@@ -196,9 +215,11 @@ export async function ensureUserMongo(sessionId: string): Promise<UserMongoConta
     const info: UserMongoContainer = {
       containerName,
       port,
-      uri: `mongodb://${MONGO_ADMIN_USER}:${MONGO_ADMIN_PASS}@localhost:${port}/oculus?authSource=admin`,
+      uri: `mongodb://${effectiveCreds.user}:${effectiveCreds.pass}@localhost:${port}/oculus?authSource=admin`,
       volumePath,
       running: true,
+      mongoUser: effectiveCreds.user,
+      mongoPass: effectiveCreds.pass,
     }
     containerRegistry.set(sessionId, info)
     return info
@@ -207,6 +228,7 @@ export async function ensureUserMongo(sessionId: string): Promise<UserMongoConta
   // Create new container — find an available port dynamically
   mkdirSync(volumePath, { recursive: true })
   const port = await findAvailablePort()
+  const newCreds = creds ?? generateContainerCredentials()
 
   const dockerArgs = [
     'run', '-d',
@@ -214,21 +236,23 @@ export async function ensureUserMongo(sessionId: string): Promise<UserMongoConta
     '--restart', 'unless-stopped',
     '-p', `${port}:27017`,
     '-v', `${volumePath}:/data/db`,
-    '-e', `MONGO_INITDB_ROOT_USERNAME=${MONGO_ADMIN_USER}`,
-    '-e', `MONGO_INITDB_ROOT_PASSWORD=${MONGO_ADMIN_PASS}`,
+    '-e', `MONGO_INITDB_ROOT_USERNAME=${newCreds.user}`,
+    '-e', `MONGO_INITDB_ROOT_PASSWORD=${newCreds.pass}`,
     '-e', 'MONGO_INITDB_DATABASE=oculus',
     MONGO_IMAGE,
   ]
 
   await exec(DOCKER_BIN, dockerArgs)
-  await waitForMongo(containerName)
+  await waitForMongo(containerName, newCreds.user, newCreds.pass)
 
   const info: UserMongoContainer = {
     containerName,
     port,
-    uri: `mongodb://${MONGO_ADMIN_USER}:${MONGO_ADMIN_PASS}@localhost:${port}/oculus?authSource=admin`,
+    uri: `mongodb://${newCreds.user}:${newCreds.pass}@localhost:${port}/oculus?authSource=admin`,
     volumePath,
     running: true,
+    mongoUser: newCreds.user,
+    mongoPass: newCreds.pass,
   }
 
   containerRegistry.set(sessionId, info)
@@ -301,9 +325,11 @@ export async function listUserMongoContainers(): Promise<UserMongoContainer[]> {
       containers.push({
         containerName: name,
         port,
-        uri: `mongodb://${MONGO_ADMIN_USER}:${MONGO_ADMIN_PASS}@localhost:${port}/oculus?authSource=admin`,
+        uri: `mongodb://${FALLBACK_USER}:${FALLBACK_PASS}@localhost:${port}/oculus?authSource=admin`,
         volumePath: path.join(findMonorepoRoot(), 'data', 'volumes', sessionId, 'mongo'),
         running: true,
+        mongoUser: FALLBACK_USER,
+        mongoPass: FALLBACK_PASS,
       })
     }
 

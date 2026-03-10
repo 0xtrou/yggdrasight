@@ -64,7 +64,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   useEffect(() => {
     if (phase !== 'init') return
 
-    setInitLines([{ text: 'DOCKER AGENT ▸ INITIALIZING...', color: '#444444' }])
+    setInitLines([{ text: 'CHAT AGENT RUNTIME ▸ INITIALIZING...', color: '#444444' }])
 
     const controller = new AbortController()
     let transitionTimerId: ReturnType<typeof setTimeout> | null = null
@@ -85,23 +85,19 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       .then((res) => res.json())
       .then((data: { steps: Array<{ name: string; status: string; message: string }>; ready: boolean }) => {
         clearTimeout(fetchTimeoutId)
-        const lines: StatusLine[] = data.steps.length > 0
-          ? data.steps.map((step) => {
-              if (step.status === 'created' || step.status === 'already_running') {
-                return { text: 'DOCKER AGENT ▸ READY', color: '#00ff88' }
-              }
-              return {
-                text: `DOCKER AGENT ▸ ERROR: ${step.message ?? 'unknown'}`,
-                color: '#ffaa00',
-              }
-            })
-          : [{ text: 'DOCKER AGENT ▸ READY', color: '#00ff88' }]
+        // Collapse all steps into a single "CHAT AGENT RUNTIME" line
+        const hasError = data.steps.some((s) => s.status === 'error')
+        const errorStep = data.steps.find((s) => s.status === 'error')
+        const lines: StatusLine[] = hasError
+          ? [{ text: `CHAT AGENT RUNTIME ▸ ERROR: ${errorStep?.message ?? 'unknown'}`, color: '#ffaa00' }]
+          : [{ text: 'CHAT AGENT RUNTIME ▸ READY', color: '#00ff88' }]
         setInitLines(lines)
         goToProgress(400)
       })
+
       .catch(() => {
         clearTimeout(fetchTimeoutId)
-        setInitLines([{ text: 'DOCKER AGENT ▸ ERROR: TIMEOUT', color: '#ffaa00' }])
+        setInitLines([{ text: 'CHAT AGENT RUNTIME ▸ ERROR: TIMEOUT', color: '#ffaa00' }])
         // Graceful degradation — proceed after 3s even on failure
         goToProgress(3000)
       })

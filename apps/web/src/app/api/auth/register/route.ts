@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { registerUser, setSessionCookies } from '@/lib/auth/session'
+import { logAuthEvent, extractClientIp } from '@/lib/auth/audit-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -72,6 +73,13 @@ export async function POST(req: NextRequest) {
 
     // Set session cookies
     await setSessionCookies(result.sessionId, result.passwordHash)
+
+    // Audit log — fire and forget
+    void logAuthEvent('register', {
+      sessionId: result.sessionId,
+      ip: extractClientIp(req.headers),
+      userAgent: req.headers.get('user-agent') ?? undefined,
+    })
 
     return NextResponse.json({
       success: true,

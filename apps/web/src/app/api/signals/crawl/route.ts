@@ -60,16 +60,31 @@ export async function POST(req: NextRequest) {
     const workerScript = path.join(projectRoot, 'scripts', 'signal-crawl-worker.ts')
     const userMongoUri = getUserMongoUri(ctx.sessionId)
 
+    // Write password hash to a temp secret file so it's not leaked via env
+    const secretsDir = path.join(projectRoot, 'tmp', 'secrets')
+    fs.mkdirSync(secretsDir, { recursive: true })
+    const secretFilePath = path.join(secretsDir, `${jobId}.key`)
+    fs.writeFileSync(secretFilePath, ctx.passwordHash ?? '', { mode: 0o600 })
+
     const child = spawn(BUN_BIN, [workerScript, jobId], {
       detached: true,
       stdio: ['ignore', 'ignore', 'pipe'],
       cwd: projectRoot,
       env: {
-        ...process.env,
+        NODE_ENV: process.env.NODE_ENV,
+        PATH: process.env.PATH,
+        HOME: process.env.HOME,
+        DOCKER_HOST: process.env.DOCKER_HOST,
+        DOCKER_BIN: process.env.DOCKER_BIN,
+        BUN_BIN: process.env.BUN_BIN,
+        OPENCODE_IMAGE: process.env.OPENCODE_IMAGE,
         ...(userMongoUri ? { OCULUS_MONGODB_URI: userMongoUri } : {}),
-        OCULUS_PASSWORD_HASH: ctx.passwordHash,
+        OCULUS_SECRET_FILE: secretFilePath,
       },
     })
+
+    // Clean up secret file after worker exits
+    child.on('close', () => { try { fs.unlinkSync(secretFilePath) } catch { /* already gone */ } })
 
     child.stderr?.on('data', (data: Buffer) => {
       console.error(`[signal-crawl-worker stderr] ${data.toString().trim()}`)

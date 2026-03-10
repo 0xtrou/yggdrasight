@@ -4,6 +4,9 @@ import { withDecryptedConfig } from '@/lib/auth/session'
 import { execSync } from 'child_process'
 import path from 'path'
 import fs from 'fs'
+import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'
+import { getUserMongoUri } from '@/lib/auth/mongo-manager'
+import { toContainerUri } from '@/lib/auth/container-utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,7 +31,7 @@ function findMonorepoRoot(): string {
 
 interface InitStep {
   name: string
-  status: 'created' | 'already_running' | 'error'
+  status: 'created' | 'already_running' | 'error' | 'skipped'
   message: string
 }
 
@@ -99,7 +102,8 @@ export async function POST(_request: Request) {
             `"${DOCKER_BIN}"`,
             'run', '-d',
             '--name', `"${containerName}"`,
-            '--network', 'host',
+            '--network', 'bridge',
+            '--add-host', 'host.docker.internal:host-gateway',
             '-v', `"${opencodeDataDir}:/root/.local/share/opencode"`,
             '-v', `"${configDir}:/root/.config/opencode:ro"`,
             '-v', `"${workspaceDir}:/workspace:rw"`,
@@ -121,6 +125,85 @@ export async function POST(_request: Request) {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       steps.push({ name: 'docker', status: 'error', message })
+    }
+
+    // ── Start container-internal data refresh loop ──
+    // Writes boot script + data-refresh.js to workspace (bind-mounted as /workspace),
+    // then executes the boot script inside the container. The boot script installs
+    // Node.js + mongodb driver and starts the refresh loop — no exposed HTTP endpoints.
+    const dockerStep = steps.find((s) => s.name === 'docker')
+    if (dockerStep && dockerStep.status !== 'error') {
+      try {
+        const agentModelMap = await getAgentModelMapFromConnection(ctx.connection)
+        const refreshInterval = parseInt(agentModelMap.chatDataRefreshInterval || '10', 10)
+
+        if (refreshInterval > 0) {
+          // Resolve user's MongoDB URI
+          const mongoUri = getUserMongoUri(ctx.sessionId)
+
+          if (!mongoUri) {
+            steps.push({ name: 'data-refresh', status: 'error', message: 'User MongoDB not available' })
+          } else {
+            // Copy data-refresh.js to workspace (bind-mounted into container)
+            const dataRefreshSrc = path.join(projectRoot, 'scripts', 'data-refresh.js')
+            const dataRefreshDst = path.join(workspaceDir, '.data-refresh.js')
+            if (fs.existsSync(dataRefreshSrc)) {
+              fs.copyFileSync(dataRefreshSrc, dataRefreshDst)
+            }
+
+            // Write boot script to workspace
+            const bootScript = [
+              '#!/bin/sh',
+              '# Container boot — installs deps + starts data refresh',
+              'set -e',
+              'if ! command -v node > /dev/null 2>&1; then',
+              '  apk add --no-cache nodejs 2>/dev/null',
+              'fi',
+              'DEPS_DIR="/workspace/.deps"',
+              'if [ ! -d "$DEPS_DIR/node_modules/mongodb" ]; then',
+              '  if ! command -v npm > /dev/null 2>&1; then',
+              '    apk add --no-cache npm 2>/dev/null',
+              '  fi',
+              '  mkdir -p "$DEPS_DIR"',
+              '  cd "$DEPS_DIR"',
+              '  npm init -y --silent 2>/dev/null || true',
+              '  npm install --no-save mongodb 2>/dev/null',
+              'fi',
+              'pkill -f "data-refresh.js" 2>/dev/null || true',
+              '# Symlink node_modules so require() resolves from script dir',
+              'ln -sf /workspace/.deps/node_modules /workspace/node_modules 2>/dev/null || true',
+              'exec node /workspace/.data-refresh.js',
+              '',
+            ].join('\n')
+            fs.writeFileSync(path.join(workspaceDir, '.boot.sh'), bootScript, { mode: 0o755 })
+
+            // Kill any existing refresh process, then exec boot script detached
+            try {
+              execSync(
+                `"${DOCKER_BIN}" exec "${containerName}" pkill -f "data-refresh.js"`,
+                { timeout: 5000, stdio: 'ignore' },
+              )
+            } catch { /* no existing process */ }
+
+            // Run boot script with MONGODB_URI and REFRESH_INTERVAL injected as env vars
+            execSync(
+              `"${DOCKER_BIN}" exec -d -e MONGODB_URI="${toContainerUri(mongoUri)}" -e REFRESH_INTERVAL="${refreshInterval}" "${containerName}" sh /workspace/.boot.sh`,
+              { timeout: 10000, stdio: 'ignore' },
+            )
+
+            steps.push({
+              name: 'data-refresh',
+              status: 'created',
+              message: `Data refresh loop started internally (every ${refreshInterval}s)`,
+            })
+          }
+        } else {
+          steps.push({ name: 'data-refresh', status: 'skipped', message: 'Data refresh disabled (interval=0)' })
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err)
+        steps.push({ name: 'data-refresh', status: 'error', message })
+      }
     }
 
     const ready = steps.every((s) => s.status !== 'error')

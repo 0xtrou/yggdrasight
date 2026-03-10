@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { loginUser, setSessionCookies } from '@/lib/auth/session'
+import { logAuthEvent, extractClientIp } from '@/lib/auth/audit-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,6 +39,13 @@ export async function POST(req: NextRequest) {
     // Set session cookies
     await setSessionCookies(session.sessionId, session.passwordHash)
 
+    // Audit log — fire and forget
+    void logAuthEvent('login', {
+      sessionId: session.sessionId,
+      ip: extractClientIp(req.headers),
+      userAgent: req.headers.get('user-agent') ?? undefined,
+    })
+
     return NextResponse.json({
       success: true,
       sessionId: session.sessionId,
@@ -48,6 +56,14 @@ export async function POST(req: NextRequest) {
 
     const message = err instanceof Error ? err.message : 'Login failed'
     const status = message.includes('Invalid password') ? 401 : 500
+
+    // Audit log failed login — derive a safe sessionId placeholder if possible
+    void logAuthEvent('login_failed', {
+      sessionId: 'unknown',
+      ip: extractClientIp(req.headers),
+      userAgent: req.headers.get('user-agent') ?? undefined,
+      metadata: { reason: message },
+    })
 
     return NextResponse.json({ error: message }, { status })
   }

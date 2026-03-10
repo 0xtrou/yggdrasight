@@ -17,6 +17,7 @@ import { connectSystemDB, connectUserDB } from './db-manager'
 import { ensureUserMongo } from './mongo-manager'
 import { processAndStoreUpload, hasStoredConfig, decryptConfigForMount, cleanupDecryptedConfig } from './vault'
 import { generatePasswordHash } from './crypto'
+import { revokeSession, isSessionRevoked } from './session-blacklist'
 
 import type { DecryptedConfigPaths } from './vault'
 
@@ -70,8 +71,10 @@ function getUserRegistryModel(connection: mongoose.Connection) {
     containerPort: { type: Number, required: true },
     /** Hash of the password hash for verification (not the actual key!) */
     verificationHash: { type: String, required: true },
+    /** Per-user MongoDB credentials (unique per container) */
+    mongoUser: { type: String, required: false },
+    mongoPass: { type: String, required: false },
   })
-
   return connection.models.UserRegistry || connection.model('UserRegistry', schema)
 }
 
@@ -103,8 +106,10 @@ export async function registerUser(
   const passwordHash = generatePasswordHash()
   const sessionId = extractSessionId(passwordHash)
 
-  // Create user's MongoDB container
+  // Create user's MongoDB container with unique per-user credentials
   const container = await ensureUserMongo(sessionId)
+  const mongoUser = container.mongoUser
+  const mongoPass = container.mongoPass
 
   // Connect to user's MongoDB
   const userConn = await connectUserDB(sessionId)
@@ -123,6 +128,8 @@ export async function registerUser(
       sessionId,
       containerPort: container.port,
       verificationHash,
+      mongoUser,
+      mongoPass,
       lastLoginAt: new Date(),
     },
     { upsert: true, new: true },
@@ -156,14 +163,19 @@ export async function loginUser(passwordHash: string): Promise<AuthSession> {
 
   // Verify hash
   const verificationHash = await createVerificationHash(passwordHash)
-  const record = userRecord as { verificationHash: string }
+  const record = userRecord as { verificationHash: string; mongoUser?: string; mongoPass?: string }
   if (record.verificationHash !== verificationHash) {
     throw new Error('Invalid password hash — verification failed')
   }
 
-  // Ensure container is running and connect
-  await ensureUserMongo(sessionId)
-  const connection = await connectUserDB(sessionId)
+  // Look up per-user credentials for correct URI construction
+  const creds = record.mongoUser
+    ? { user: record.mongoUser, pass: record.mongoPass! }
+    : undefined
+
+  // Ensure container is running with correct per-user credentials
+  await ensureUserMongo(sessionId, creds)
+  const connection = await connectUserDB(sessionId, creds)
 
   // Verify config exists in user's MongoDB
   const hasConfig = await hasStoredConfig(connection)
@@ -195,8 +207,19 @@ export async function getCurrentSession(): Promise<AuthSession | null> {
     // Verify session ID matches hash
     if (extractSessionId(passwordHash) !== sessionId) return null
 
-    // Connect to user's MongoDB
-    const connection = await connectUserDB(sessionId)
+    // Check if this session has been explicitly revoked (e.g. remote logout)
+    if (await isSessionRevoked(sessionId)) return null
+
+    // Look up per-user credentials to rebuild URI correctly after server restart
+    const systemConn = await connectSystemDB()
+    const UserRegistry = getUserRegistryModel(systemConn)
+    const rec = await UserRegistry.findOne({ sessionId }, { mongoUser: 1, mongoPass: 1 }).lean() as { mongoUser?: string; mongoPass?: string } | null
+    const creds = rec?.mongoUser
+      ? { user: rec.mongoUser, pass: rec.mongoPass! }
+      : undefined
+
+    // Connect to user's MongoDB (uses per-user creds if available)
+    const connection = await connectUserDB(sessionId, creds)
 
     return { sessionId, passwordHash, connection }
   } catch {
@@ -215,7 +238,7 @@ export async function setSessionCookies(sessionId: string, passwordHash: string)
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 7 * 24 * 60 * 60, // 7 days — shortened for security (was 30 days)
   })
 
   cookieStore.set(HASH_COOKIE, passwordHash, {
@@ -223,18 +246,23 @@ export async function setSessionCookies(sessionId: string, passwordHash: string)
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 7 * 24 * 60 * 60, // 7 days — shortened for security (was 30 days)
   })
 }
 
 /**
  * Clear session cookies (logout).
  */
-export async function clearSessionCookies(): Promise<void> {
+export async function clearSessionCookies(sessionId?: string): Promise<void> {
+  // Revoke in Redis blacklist so existing tokens cannot be replayed
+  if (sessionId) {
+    await revokeSession(sessionId)
+  }
   const cookieStore = await cookies()
   cookieStore.delete(SESSION_COOKIE)
   cookieStore.delete(HASH_COOKIE)
 }
+
 
 /**
  * Decrypt configs for Docker mount, execute a callback, then cleanup.

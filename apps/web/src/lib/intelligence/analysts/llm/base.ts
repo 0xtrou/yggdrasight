@@ -154,7 +154,7 @@ function serializeDeveloper(data: DeveloperData): string {
     const maxCommits = Math.max(...data.commitActivitySeries, 1)
     const sparkline = data.commitActivitySeries.map(c => {
       const level = Math.round((c / maxCommits) * 4)
-      return ['_', '\u2581', '\u2583', '\u2585', '\u2588'][level] ?? '\u2588'
+      return ['_', '▁', '▃', '▅', '█'][level] ?? '█'
     }).join('')
     lines.push(`Commit Activity (28d): ${sparkline}`)
     const totalCommits = data.commitActivitySeries.reduce((s, v) => s + v, 0)

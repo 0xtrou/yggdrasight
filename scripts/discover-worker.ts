@@ -16,7 +16,7 @@
  */
 import mongoose from 'mongoose'
 import { spawn } from 'child_process'
-import { mkdirSync, writeFileSync, rmSync } from 'fs'
+import { mkdirSync, writeFileSync, rmSync, readFileSync } from 'fs'
 import { tmpdir } from 'os'
 import path from 'path'
 
@@ -374,7 +374,8 @@ async function runOpenCode(
   writeFileSync(path.join(tmpDir, 'prompt.txt'), prompt, 'utf-8')
   const args = [
     'run', '--rm',
-    '--network', 'host',
+    '--network', 'bridge',
+    '--add-host', 'host.docker.internal:host-gateway',
     '-v', `${configPaths?.authJsonPath ?? `${HOME_DIR}/.local/share/opencode/auth.json`}:/root/.local/share/opencode/auth.json:ro`,
     '-v', `${HOME_DIR}/.config/opencode:/root/.config/opencode:ro`,
     '-v', `${tmpDir}:/workspace:rw`,
@@ -388,7 +389,7 @@ async function runOpenCode(
 
   return new Promise((resolve) => {
     const child = spawn(DOCKER_BIN, args, {
-      env: { ...process.env },
+      env: { PATH: process.env.PATH, HOME: process.env.HOME, DOCKER_HOST: process.env.DOCKER_HOST },
       stdio: ['pipe', 'pipe', 'pipe'],
     })
 
@@ -585,7 +586,9 @@ async function main() {
 
   // Decrypt per-user config if password hash is provided
   let configPaths: DecryptedConfigPaths | null = null
-  const passwordHash = process.env.OCULUS_PASSWORD_HASH
+  const passwordHash = process.env.OCULUS_SECRET_FILE
+    ? readFileSync(process.env.OCULUS_SECRET_FILE, 'utf-8').trim()
+    : process.env.OCULUS_PASSWORD_HASH // fallback for backward compat
   if (passwordHash) {
     try {
       configPaths = await decryptConfigForMount(mongoose.connection, passwordHash)

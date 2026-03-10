@@ -50,15 +50,15 @@ export async function connectSystemDB(): Promise<mongoose.Connection> {
  *
  * @param sessionId - The first 12 chars of the user's password hash
  */
-export async function connectUserDB(sessionId: string): Promise<mongoose.Connection> {
+export async function connectUserDB(sessionId: string, creds?: { user: string; pass: string }): Promise<mongoose.Connection> {
   // Check existing connection
   const existing = userConnections.get(sessionId)
   if (existing && existing.readyState === 1) {
     return existing
   }
 
-  // Ensure the user's Mongo container is running
-  const container = await ensureUserMongo(sessionId)
+  // Ensure the user's Mongo container is running (pass creds for correct URI)
+  const container = await ensureUserMongo(sessionId, creds)
 
   // Create a new connection
   const conn = mongoose.createConnection(container.uri, {

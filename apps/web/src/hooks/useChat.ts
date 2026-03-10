@@ -111,6 +111,7 @@ export function useChat(): UseChatReturn {
   const abortControllerRef = useRef<AbortController | null>(null)
   const thinkingStepsRef = useRef<Array<{ type: string; label: string; timestamp: string }>>([])
   const [modelId, setModelIdState] = useState<string>('')
+  const [refreshInterval, setRefreshInterval] = useState<number>(10)
   const validModelIdsRef = useRef<Set<string>>(new Set())
 
   const setModelId = useCallback((id: string) => {
@@ -138,7 +139,10 @@ export function useChat(): UseChatReturn {
             setModelIdState(data.models[0].id)
           }
         }
-    }).catch(() => { /* ignore */ })
+        // Parse refresh interval from modelMap
+        const interval = parseInt(data?.modelMap?.chatDataRefreshInterval || '10', 10)
+        setRefreshInterval(interval > 0 ? interval : 0)
+      }).catch(() => { /* ignore */ })
   }, [])
 
   const refreshSessions = useCallback(async () => {
@@ -502,8 +506,20 @@ export function useChat(): UseChatReturn {
     refreshSessions()
   }, [refreshSessions])
 
-  // Load sessions on mount
-  // (no symbol-change effect needed — chat is global)
+  // Periodic workspace data refresh — keeps workspace files current while session is active
+  useEffect(() => {
+    if (refreshInterval <= 0 || !activeSessionId) return
+
+    const timer = setInterval(async () => {
+      try {
+        await fetch('/api/chat/refresh-data', { method: 'POST' })
+      } catch { /* ignore */ }
+    }, refreshInterval * 1000)
+
+    return () => clearInterval(timer)
+  }, [refreshInterval, activeSessionId])
+
+
 
   return {
     messages,

@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentSession, clearSessionCookies } from '@/lib/auth/session'
 import { removeUserMongo } from '@/lib/auth/mongo-manager'
 import { disconnectUserDB } from '@/lib/auth/db-manager'
+import { logAuthEvent, extractClientIp } from '@/lib/auth/audit-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,7 +12,7 @@ export const dynamic = 'force-dynamic'
  * Clear session cookies, disconnect user DB, and remove the MongoDB container.
  * The volume data on disk is preserved so the user can re-login without data loss.
  */
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const session = await getCurrentSession()
 
@@ -27,8 +28,16 @@ export async function POST(req: Request) {
       }
     }
 
-    // Clear cookies
-    await clearSessionCookies()
+    // Clear cookies and revoke session in Redis blacklist
+    await clearSessionCookies(session?.sessionId)
+
+    if (session) {
+      void logAuthEvent('logout', {
+        sessionId: session.sessionId,
+        ip: extractClientIp(req.headers),
+        userAgent: req.headers.get('user-agent') ?? undefined,
+      })
+    }
 
     return NextResponse.json({ success: true, message: 'Logged out' })
   } catch (err) {

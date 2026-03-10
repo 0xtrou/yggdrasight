@@ -24,6 +24,7 @@ const DEFAULT_SIGNALS_MODEL = 'opencode/big-pickle'
 const DEFAULT_MODEL = DEFAULT_ANALYSIS_MODEL
 
 const SECTION_COLORS = {
+  chatAgent: '#00cc88',
   discovery: 'var(--color-terminal-amber)',
   analysis: 'var(--color-terminal-blue)',
   intelligence: '#8e7cc3',
@@ -183,6 +184,13 @@ export default function AIConfigPage() {
   const [saved, setSaved] = useState(false)
   const [setAllOpen, setSetAllOpen] = useState(false)
   const [setAllModel, setSetAllModel] = useState('')
+  const [refreshInterval, setRefreshInterval] = useState<string>('10')
+  const [chatHealth, setChatHealth] = useState<{
+    container: { running: boolean; name: string; uptime?: string; image?: string }
+    refreshLoop: { running: boolean }
+    workspace: { exists: boolean; lastUpdated?: string; assetCount?: number }
+  } | null>(null)
+  const [healthLoading, setHealthLoading] = useState(true)
 
   // Load models + agents + persisted modelMap from API
   useEffect(() => {
@@ -193,6 +201,8 @@ export default function AIConfigPage() {
         setAgents(data.agents ?? [])
         if (data.modelMap && typeof data.modelMap === 'object') {
           setAgentModelMap(data.modelMap)
+          const storedInterval = data.modelMap.chatDataRefreshInterval
+          if (storedInterval !== undefined) setRefreshInterval(String(storedInterval))
         }
         setLoading(false)
       })
@@ -200,6 +210,22 @@ export default function AIConfigPage() {
         console.warn('[AIConfigPage] Failed to fetch models:', err)
         setLoading(false)
       })
+  }, [])
+
+  useEffect(() => {
+    const fetchHealth = () => {
+      fetch('/api/chat/health')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) setChatHealth(data as typeof chatHealth)
+          setHealthLoading(false)
+        })
+        .catch(() => setHealthLoading(false))
+    }
+    fetchHealth()
+    const timer = setInterval(fetchHealth, 15000)
+    return () => clearInterval(timer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleModelChange = useCallback(
@@ -217,6 +243,19 @@ export default function AIConfigPage() {
     []
   )
 
+  const handleIntervalChange = useCallback(
+    (value: string) => {
+      setRefreshInterval(value)
+      handleModelChange('chatDataRefreshInterval', value)
+      fetch('/api/chat/refresh-data/restart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interval: parseInt(value, 10) }),
+      }).catch(() => { /* ignore */ })
+    },
+    [handleModelChange],
+  )
+
   const getAgentModel = useCallback(
     (agentId: string) => agentModelMap[agentId] || '',
     [agentModelMap]
@@ -231,6 +270,7 @@ export default function AIConfigPage() {
       'discovery',
       'master_planner', 'discovery_agent', 'global_synthesizer',
       'signal_crawler',
+      'chat',
     ]
     const next: Record<string, string> = {}
     for (const key of allKeys) {
@@ -453,6 +493,114 @@ export default function AIConfigPage() {
           </div>
         ) : (
           <>
+            {/* ── CHAT AGENT section ── */}
+            <section>
+              <SectionHeader
+                icon="◎"
+                label="Chat Agent"
+                color={SECTION_COLORS.chatAgent}
+                description="Interactive chat assistant. Answers questions about tracked assets, analysis results, and market intelligence."
+              />
+              <AgentRow
+                agent={{
+                  id: 'chat',
+                  name: 'Chat Assistant',
+                  description: 'AI model for the interactive chat agent. Answers questions about tracked assets, analysis results, and market intelligence.',
+                  category: 'chat',
+                }}
+                modelId={getAgentModel('chat')}
+                onModelChange={(m) => handleModelChange('chat', m)}
+                models={models}
+                accentColor={SECTION_COLORS.chatAgent}
+              />
+              {/* Container Health */}
+              <div style={{
+                padding: '8px 10px',
+                background: 'var(--color-terminal-bg)',
+                border: '1px solid var(--color-terminal-border)',
+                borderRadius: '2px',
+                marginBottom: '6px',
+                borderLeft: `2px solid ${SECTION_COLORS.chatAgent}`,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '5px' }}>
+                  <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--color-terminal-text)', letterSpacing: '0.05em', textTransform: 'uppercase' as const }}>
+                    Container Health
+                  </span>
+                  {healthLoading ? (
+                    <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-dim)' }}>checking...</span>
+                  ) : chatHealth?.container.running ? (
+                    <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-up)' }}>● RUNNING</span>
+                  ) : (
+                    <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-down)' }}>● STOPPED</span>
+                  )}
+                </div>
+                {chatHealth && !healthLoading && (
+                  <div style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-muted)', lineHeight: 1.6 }}>
+                    <div>Container: <span style={{ color: 'var(--color-terminal-dim)' }}>{chatHealth.container.name}</span></div>
+                    {chatHealth.container.uptime && (
+                      <div>Started: <span style={{ color: 'var(--color-terminal-dim)' }}>{new Date(chatHealth.container.uptime).toLocaleString()}</span></div>
+                    )}
+                    {chatHealth.container.image && (
+                      <div>Image: <span style={{ color: 'var(--color-terminal-dim)' }}>{chatHealth.container.image}</span></div>
+                    )}
+                    <div>Refresh Loop: <span style={{ color: chatHealth.refreshLoop.running ? 'var(--color-terminal-up)' : 'var(--color-terminal-down)' }}>{chatHealth.refreshLoop.running ? '● Active' : '● Inactive'}</span></div>
+                    <div>Workspace: <span style={{ color: 'var(--color-terminal-dim)' }}>
+                      {chatHealth.workspace.exists ? `${chatHealth.workspace.assetCount || 0} assets` : 'No data'}
+                      {chatHealth.workspace.lastUpdated ? ` · Updated ${new Date(chatHealth.workspace.lastUpdated).toLocaleTimeString()}` : ''}
+                    </span></div>
+                  </div>
+                )}
+              </div>
+              {/* Data Refresh Interval row */}
+              <div style={{
+                padding: '8px 10px',
+                background: 'var(--color-terminal-bg)',
+                border: '1px solid var(--color-terminal-border)',
+                borderRadius: '2px',
+                marginBottom: '6px',
+                borderLeft: `2px solid ${SECTION_COLORS.chatAgent}`,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '5px' }}>
+                  <div>
+                    <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--color-terminal-text)', letterSpacing: '0.05em', textTransform: 'uppercase' as const }}>
+                      Data Refresh Interval
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-dim)' }}>
+                    {refreshInterval === '0' ? 'disabled' : `every ${refreshInterval}s`}
+                  </span>
+                </div>
+                <div style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-muted)', marginBottom: '6px', lineHeight: 1.4 }}>
+                  How often the workspace data is refreshed from the database while a chat session is active.
+                </div>
+                <select
+                  value={refreshInterval}
+                  onChange={(e) => handleIntervalChange(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '6px 8px',
+                    fontSize: '10px',
+                    fontFamily: 'var(--font-mono)',
+                    background: 'var(--color-terminal-surface)',
+                    color: 'var(--color-terminal-text)',
+                    border: '1px solid var(--color-terminal-border)',
+                    borderRadius: '2px',
+                    outline: 'none',
+                    cursor: 'pointer',
+                    appearance: 'none' as const,
+                    WebkitAppearance: 'none' as const,
+                  }}
+                >
+                  <option value="0">Disabled</option>
+                  <option value="5">Every 5 seconds</option>
+                  <option value="10">Every 10 seconds</option>
+                  <option value="30">Every 30 seconds</option>
+                  <option value="60">Every 60 seconds</option>
+                  <option value="120">Every 2 minutes</option>
+                </select>
+              </div>
+            </section>
+
             {/* ── INTELLIGENCE section ── */}
             <section>
               <SectionHeader
