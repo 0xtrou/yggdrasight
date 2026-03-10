@@ -32,3 +32,7 @@ data/volumes/
 data/chat-workspace/
 data/opencode-data/
 tmp/
+
+# Test artifacts
+chat-*.md
+*.snapshot.png
