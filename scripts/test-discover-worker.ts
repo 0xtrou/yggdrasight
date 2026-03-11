@@ -8,7 +8,7 @@
 import mongoose from 'mongoose'
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://yggdrasight:yggdrasight_dev_secret@localhost:27017/yggdrasight?authSource=admin'
-const BUN_BIN = process.env.BUN_BIN ?? '/Users/mrk/.bun/bin/bun'
+const BUN_BIN = process.env.BUN_BIN ?? (process.env.HOME ? `${process.env.HOME}/.bun/bin/bun` : '/usr/local/bin/bun')
 const WORKER_SCRIPT = new URL('./discover-worker.ts', import.meta.url).pathname
 
 const symbol = process.argv[2] || 'BTC'

@@ -8,7 +8,7 @@ import { getUserMongoUri } from '@/lib/auth/mongo-manager'
 
 export const dynamic = 'force-dynamic'
 
-const BUN_BIN = process.env.BUN_BIN ?? '/Users/mrk/.bun/bin/bun'
+const BUN_BIN = process.env.BUN_BIN ?? (process.env.HOME ? `${process.env.HOME}/.bun/bin/bun` : '/usr/local/bin/bun')
 
 /**
  * Find the monorepo root by walking up from cwd until we find pnpm-workspace.yaml.
@@ -73,8 +73,8 @@ export async function POST(request: Request) {
         DOCKER_BIN: process.env.DOCKER_BIN,
         BUN_BIN: process.env.BUN_BIN,
         OPENCODE_IMAGE: process.env.OPENCODE_IMAGE,
-        ...(userMongoUri ? { OCULUS_MONGODB_URI: userMongoUri } : {}),
-        OCULUS_SECRET_FILE: secretFilePath,
+        ...(userMongoUri ? { YGGDRASIGHT_MONGODB_URI: userMongoUri } : {}),
+        YGGDRASIGHT_SECRET_FILE: secretFilePath,
         NODE_PATH: [
           path.join(projectRoot, 'packages/db/node_modules'),
           path.join(projectRoot, 'node_modules'),
