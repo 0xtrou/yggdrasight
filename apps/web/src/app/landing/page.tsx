@@ -1281,132 +1281,7 @@ function ArchSection() {
   )
 }
 
-// ── Screenshots Section ───────────────────────────────────────────────────────
-function ScreenshotsSection() {
-  return (
-    <section
-      style={{
-        background: BG,
-        padding: '110px 32px',
-      }}
-      className="yspad"
-    >
-      <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
-        {/* Header */}
-        <div className="yr" style={{ marginBottom: '48px' }}>
-          <div
-            style={{
-              fontFamily: MONO,
-              fontSize: '12px',
-              color: DIM,
-              letterSpacing: '0.06em',
-              marginBottom: '6px',
-            }}
-          >
-            <span style={{ color: GREEN }}>$</span> cat SCREENSHOTS.md
-          </div>
-          <h2
-            style={{
-              fontFamily: MONO,
-              fontSize: 'clamp(18px, 3.5vw, 28px)',
-              fontWeight: 700,
-              letterSpacing: '0.06em',
-              color: TEXT,
-              margin: '0 0 8px 0',
-            }}
-          >
-            THE EXPERIENCE
-          </h2>
-          <div
-            style={{
-              height: '1px',
-              background: `linear-gradient(to right, ${BORDER}, transparent)`,
-              maxWidth: '320px',
-            }}
-          />
-        </div>
 
-        {/* Screenshots grid */}
-        <div
-          className="yr yfg"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '16px',
-          }}
-        >
-          {[
-            { name: 'Dashboard', desc: 'Asset overview and intelligence controls' },
-            { name: 'Intelligence', desc: 'Multi-agent classification results' },
-            { name: 'Terminal', desc: 'Real-time market data and analysis' },
-            { name: 'AI Config', desc: 'Per-agent model configuration' },
-            { name: 'Signals', desc: 'Trading signals and automation' },
-            { name: 'Feeds', desc: 'Live market intelligence streams' },
-          ].map((screenshot, i) => (
-            <div
-              key={screenshot.name}
-              className={`yr ycard yd${(i % 6) + 1}`}
-              style={{
-                background: PANEL,
-                border: `1px solid ${BORDER}`,
-                padding: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                minHeight: '280px',
-              }}
-            >
-              {/* Placeholder image */}
-              <div
-                style={{
-                  flex: 1,
-                  background: `linear-gradient(135deg, rgba(0,255,136,0.05), rgba(68,136,255,0.05))`,
-                  border: `1px solid ${BORDER}`,
-                  borderRadius: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '11px',
-                  color: DIM,
-                  letterSpacing: '0.06em',
-                  fontFamily: MONO,
-                }}
-              >
-                [SCREENSHOT]
-              </div>
-
-              {/* Title */}
-              <div
-                style={{
-                  fontFamily: MONO,
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  color: TEXT,
-                }}
-              >
-                {screenshot.name}
-              </div>
-
-              {/* Description */}
-              <p
-                style={{
-                  fontFamily: MONO,
-                  fontSize: '11px',
-                  color: MUTED,
-                  lineHeight: 1.6,
-                  margin: 0,
-                }}
-              >
-                {screenshot.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 // ── Footer / CTA Section ──────────────────────────────────────────────────────
 function FooterSection() {
@@ -1717,7 +1592,7 @@ export default function LandingPage() {
         <TerminalSection />
         <FeaturesSection />
         <ArchSection />
-        <ScreenshotsSection />
+
         <FooterSection />
       </div>
     </>
