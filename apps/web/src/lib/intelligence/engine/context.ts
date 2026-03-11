@@ -7,9 +7,10 @@ export interface BuildContextOptions {
   timeframes: Timeframe[]
   model?: string       // OpenCode model ID for LLM analysts
   agentIds?: string[]  // LLM agent IDs to run
+  authJsonPath?: string // Decrypted auth.json path for Docker container mounts
 }
 
-export function buildContext(symbol: string, timeframes: Timeframe[], model?: string): AnalysisContext {
+export function buildContext(symbol: string, timeframes: Timeframe[], model?: string, authJsonPath?: string): AnalysisContext {
   const candleCache = new Map<Timeframe, Promise<Candle[]>>()
   let signalsCache: Promise<SignalDoc[]> | null = null
   let marketGlobalCache: Promise<MarketGlobal> | null = null
@@ -24,6 +25,7 @@ export function buildContext(symbol: string, timeframes: Timeframe[], model?: st
     timeframes,
     primaryTimeframe: timeframes[0] ?? Timeframe.H4,
     model,
+    authJsonPath,
 
     getCandles: (tf: Timeframe): Promise<Candle[]> => {
       if (!candleCache.has(tf)) {

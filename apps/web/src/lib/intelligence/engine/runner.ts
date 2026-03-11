@@ -10,6 +10,7 @@ export interface RunAnalysisOptions {
   agentModelMap?: Record<string, string>
   agentIds?: string[]
   includeDeterministic?: boolean
+  authJsonPath?: string
 }
 
 export async function runAnalysis(
@@ -19,7 +20,7 @@ export async function runAnalysis(
 ): Promise<ConsensusResult> {
   // Build shared context (lazy-cached data providers)
   const defaultModel = options?.agentModelMap ? Object.values(options.agentModelMap)[0] : options?.model
-  const ctx = buildContext(symbol, timeframes, defaultModel)
+  const ctx = buildContext(symbol, timeframes, defaultModel, options?.authJsonPath)
 
 
   const analysts: Analyst[] = []

@@ -117,6 +117,8 @@ export interface AnalysisContext {
   // ── LLM analysis config ──
   model?: string                  // OpenCode model ID (e.g. 'google/gemini-2.5-pro')
   agentIds?: string[]             // Which LLM agents to run (empty = all)
+  /** Decrypted auth.json path for Docker container mounts */
+  authJsonPath?: string
 
   // ── Extended data providers (graceful degradation — may return null) ──
   getOnChainData?: () => Promise<OnChainData | null>

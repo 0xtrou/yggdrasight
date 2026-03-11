@@ -495,6 +495,7 @@ export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
           model,
           prompt: workspace.message,
           workDir: workspace.workDir,
+          authJsonPath: ctx.authJsonPath,
         })
 
         // Validate file reads
@@ -521,6 +522,7 @@ export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
             model,
             prompt: retryPrompt,
             workDir: workspace.workDir,
+            authJsonPath: ctx.authJsonPath,
           })
 
           const retryAudit = validateFilesRead(result.filesRead, definition.meta.requiredData)

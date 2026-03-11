@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Timeframe } from '@yggdrasight/core'
 import { runAnalysis } from '@/lib/intelligence/engine/runner'
 import { withAuth } from '@/lib/auth/middleware'
+import { withDecryptedConfig } from '@/lib/auth/session'
 import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'
 
 export const dynamic = 'force-dynamic'
@@ -34,7 +35,10 @@ export async function POST(req: NextRequest) {
       const model = agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? undefined
 
       // Run analysis
-      const result = await runAnalysis(symbol, timeframes, { model, agentModelMap, agentIds })
+      // Run analysis with decrypted auth for Docker container mounts
+      const result = await withDecryptedConfig(ctx, async (configPaths) => {
+        return runAnalysis(symbol, timeframes, { model, agentModelMap, agentIds, authJsonPath: configPaths.authJsonPath })
+      })
 
       // Persist to MongoDB
       const verdict = await ctx.intelligenceModels.IntelligenceVerdict.create({
