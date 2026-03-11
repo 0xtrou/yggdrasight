@@ -302,7 +302,7 @@ function MenuItem({
 
 export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdict?: { direction: 'long' | 'short' | 'neutral'; confidence: number } | null; symbol?: string } = {}) {
   // ── Persisted chart config (per-asset, saved immediately on every change) ──
-  const storageKey = `oculus-chart-config:${externalSymbol}`
+  const storageKey = `yggdrasight-chart-config:${externalSymbol}`
 
   const readConfig = useCallback(() => {
     try {
@@ -371,7 +371,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
 
   const [alerts, setAlerts] = useState<PriceAlert[]>(() => {
     try {
-      const stored = localStorage.getItem(`oculus-chart-alerts:${externalSymbol}`)
+      const stored = localStorage.getItem(`yggdrasight-chart-alerts:${externalSymbol}`)
       return stored ? JSON.parse(stored) : []
     } catch { return [] }
   })
@@ -380,7 +380,7 @@ export function ChartPanel({ verdict, symbol: externalSymbol = 'BTC' }: { verdic
     setAlerts(prev => {
       const next = typeof updater === 'function' ? updater(prev) : updater
       try {
-        localStorage.setItem(`oculus-chart-alerts:${externalSymbol}`, JSON.stringify(next))
+        localStorage.setItem(`yggdrasight-chart-alerts:${externalSymbol}`, JSON.stringify(next))
       } catch { /* quota */ }
       return next
     })

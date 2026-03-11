@@ -5,7 +5,7 @@
  * Each user gets their own isolated MongoDB instance with a host volume
  * for persistence.
  *
- * Container naming: oculus-mongo-<sessionId>
+ * Container naming: yggdrasight-mongo-<sessionId>
  * Volume path: data/volumes/<sessionId>/mongo
  * Port: dynamically assigned, finds available port starting from 27100
  */
@@ -18,11 +18,11 @@ import net from 'net'
 
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const MONGO_IMAGE = 'mongo:7'
-const CONTAINER_PREFIX = 'oculus-mongo-'
+const CONTAINER_PREFIX = 'yggdrasight-mongo-'
 const BASE_PORT = 27100 // User containers start scanning from this port
 // Legacy fallback — containers created before per-user credentials
-const FALLBACK_USER = 'oculus'
-const FALLBACK_PASS = 'oculus_user_secret'
+const FALLBACK_USER = 'yggdrasight'
+const FALLBACK_PASS = 'yggdrasight_user_secret'
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -215,7 +215,7 @@ export async function ensureUserMongo(sessionId: string, creds?: { user: string;
     const info: UserMongoContainer = {
       containerName,
       port,
-      uri: `mongodb://${effectiveCreds.user}:${effectiveCreds.pass}@localhost:${port}/oculus?authSource=admin`,
+      uri: `mongodb://${effectiveCreds.user}:${effectiveCreds.pass}@localhost:${port}/yggdrasight?authSource=admin`,
       volumePath,
       running: true,
       mongoUser: effectiveCreds.user,
@@ -238,7 +238,7 @@ export async function ensureUserMongo(sessionId: string, creds?: { user: string;
     '-v', `${volumePath}:/data/db`,
     '-e', `MONGO_INITDB_ROOT_USERNAME=${newCreds.user}`,
     '-e', `MONGO_INITDB_ROOT_PASSWORD=${newCreds.pass}`,
-    '-e', 'MONGO_INITDB_DATABASE=oculus',
+    '-e', 'MONGO_INITDB_DATABASE=yggdrasight',
     MONGO_IMAGE,
   ]
 
@@ -248,7 +248,7 @@ export async function ensureUserMongo(sessionId: string, creds?: { user: string;
   const info: UserMongoContainer = {
     containerName,
     port,
-    uri: `mongodb://${newCreds.user}:${newCreds.pass}@localhost:${port}/oculus?authSource=admin`,
+    uri: `mongodb://${newCreds.user}:${newCreds.pass}@localhost:${port}/yggdrasight?authSource=admin`,
     volumePath,
     running: true,
     mongoUser: newCreds.user,
@@ -325,7 +325,7 @@ export async function listUserMongoContainers(): Promise<UserMongoContainer[]> {
       containers.push({
         containerName: name,
         port,
-        uri: `mongodb://${FALLBACK_USER}:${FALLBACK_PASS}@localhost:${port}/oculus?authSource=admin`,
+        uri: `mongodb://${FALLBACK_USER}:${FALLBACK_PASS}@localhost:${port}/yggdrasight?authSource=admin`,
         volumePath: path.join(findMonorepoRoot(), 'data', 'volumes', sessionId, 'mongo'),
         running: true,
         mongoUser: FALLBACK_USER,

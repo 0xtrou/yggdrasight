@@ -11,8 +11,8 @@
     "outDir": "./dist",
     "baseUrl": "..",
     "paths": {
-      "@oculus/db": ["packages/db/src/index.ts"],
-      "@oculus/core": ["packages/core/src/index.ts"]
+      "@yggdrasight/db": ["packages/db/src/index.ts"],
+      "@yggdrasight/core": ["packages/core/src/index.ts"]
     }
   },
   "ts-node": {

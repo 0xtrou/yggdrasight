@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Exchange, SignalDirection, Timeframe, ProviderType, AssetClass } from '@oculus/core'
+import { Exchange, SignalDirection, Timeframe, ProviderType, AssetClass } from '@yggdrasight/core'
 
 interface NewSignalModalProps {
   open: boolean

@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
-import { ProviderType } from '@oculus/core'
+import { ProviderType } from '@yggdrasight/core'
 
 // ── Document interface ─────────────────────────────────────────────────
 export interface ISignalProviderDocument extends Document {

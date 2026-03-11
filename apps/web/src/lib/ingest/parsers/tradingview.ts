@@ -1,5 +1,5 @@
-import { AssetClass, Exchange, ProviderType, SignalDirection, Timeframe } from '@oculus/core'
-import type { CreateSignalInput } from '@oculus/core'
+import { AssetClass, Exchange, ProviderType, SignalDirection, Timeframe } from '@yggdrasight/core'
+import type { CreateSignalInput } from '@yggdrasight/core'
 
 const INTERVAL_MAP: Record<string, Timeframe> = {
   '1': Timeframe.M1, '5': Timeframe.M5, '15': Timeframe.M15, '30': Timeframe.M30,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { UpdateSignalSchema } from '@oculus/core'
+import { UpdateSignalSchema } from '@yggdrasight/core'
 import { withAuth } from '@/lib/auth/middleware'
 
 export const dynamic = 'force-dynamic'

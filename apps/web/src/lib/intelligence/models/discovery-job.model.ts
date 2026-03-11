@@ -1,4 +1,4 @@
-import { mongoose } from '@oculus/db'
+import { mongoose } from '@yggdrasight/db'
 import type { DiscoveredProjectInfo } from '../types'
 
 // ── Discovery job document interface ──────────────────────────────────────────

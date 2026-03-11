@@ -10,14 +10,14 @@
 #   docker compose -f docker/opencode/docker-compose.yml up -d
 #
 # Send work to agent-1:
-#   docker exec oculus-agent-1 opencode run --attach http://localhost:4096 "your task"
+#   docker exec yggdrasight-agent-1 opencode run --attach http://localhost:4096 "your task"
 #
 # From the host:
 #   opencode run --attach http://localhost:4096 "your task"   # agent-1
 #   opencode run --attach http://localhost:4097 "your task"   # agent-2
 # ────────────────────────────────────────────────────────────────
 
-name: oculus-agents
+name: yggdrasight-agents
 
 x-agent-common: &agent-common
   build:
@@ -51,7 +51,7 @@ x-agent-common: &agent-common
 services:
   agent-1:
     <<: *agent-common
-    container_name: oculus-agent-1
+    container_name: yggdrasight-agent-1
     ports:
       - "4096:4096"
     volumes:
@@ -75,7 +75,7 @@ services:
 
   agent-2:
     <<: *agent-common
-    container_name: oculus-agent-2
+    container_name: yggdrasight-agent-2
     ports:
       - "4097:4096"
     volumes:
@@ -98,7 +98,7 @@ services:
 
   agent-3:
     <<: *agent-common
-    container_name: oculus-agent-3
+    container_name: yggdrasight-agent-3
     ports:
       - "4098:4096"
     volumes:
@@ -121,7 +121,7 @@ services:
 
   agent-4:
     <<: *agent-common
-    container_name: oculus-agent-4
+    container_name: yggdrasight-agent-4
     ports:
       - "4099:4096"
     volumes:
@@ -144,7 +144,7 @@ services:
 
   agent-5:
     <<: *agent-common
-    container_name: oculus-agent-5
+    container_name: yggdrasight-agent-5
     ports:
       - "4100:4096"
     volumes:

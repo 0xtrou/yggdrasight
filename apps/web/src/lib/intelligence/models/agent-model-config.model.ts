@@ -1,4 +1,4 @@
-import { mongoose } from '@oculus/db'
+import { mongoose } from '@yggdrasight/db'
 
 // ── AgentModelConfig document interface ──────────────────────────────────────
 export interface IAgentModelConfig {

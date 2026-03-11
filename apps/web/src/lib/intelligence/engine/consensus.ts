@@ -1,4 +1,4 @@
-import { SignalDirection, Timeframe } from '@oculus/core'
+import { SignalDirection, Timeframe } from '@yggdrasight/core'
 import type { AnalystVerdict, ConsensusResult, TimeframeAnalysis } from '../types'
 
 /**

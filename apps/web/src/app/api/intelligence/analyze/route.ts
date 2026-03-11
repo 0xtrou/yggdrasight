@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Timeframe } from '@oculus/core'
+import { Timeframe } from '@yggdrasight/core'
 import { runAnalysis } from '@/lib/intelligence/engine/runner'
 import { withAuth } from '@/lib/auth/middleware'
 import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'

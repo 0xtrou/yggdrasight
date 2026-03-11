@@ -1,5 +1,5 @@
 /**
- * Oculus Trading — Signal Feed Seeder
+ * Yggdrasight — Signal Feed Seeder
  *
  * Seeds realistic trading signals into MongoDB for development/testing.
  *
@@ -18,7 +18,7 @@
  *   --dry-run        Print signals without inserting
  */
 
-import { connectDB, Signal } from '@oculus/db'
+import { connectDB, Signal } from '@yggdrasight/db'
 import {
   SignalDirection,
   SignalStatus,
@@ -26,7 +26,7 @@ import {
   Exchange,
   ProviderType,
   MarketRegime,
-} from '@oculus/core'
+} from '@yggdrasight/core'
 
 // ── Colour helpers (no deps) ──────────────────────────────────────────────────
 const c = {
@@ -342,7 +342,7 @@ async function main() {
   const opts = parseArgs()
 
   console.log()
-  console.log(bold('  ◉ OCULUS TRADING — Signal Feed Seeder'))
+  console.log(bold('  ◉ YGGDRASIGHT — Signal Feed Seeder'))
   console.log(clr('gray', '  ─────────────────────────────────────'))
   console.log()
 

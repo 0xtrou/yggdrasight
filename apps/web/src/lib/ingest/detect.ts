@@ -1,4 +1,4 @@
-import { ProviderType } from '@oculus/core'
+import { ProviderType } from '@yggdrasight/core'
 
 export function detectProvider(body: unknown): ProviderType {
   if (typeof body !== 'object' || body === null) return ProviderType.WEBHOOK

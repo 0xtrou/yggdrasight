@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import type { SignalStatus, SignalDirection, Exchange, Timeframe } from '@oculus/core'
+import type { SignalStatus, SignalDirection, Exchange, Timeframe } from '@yggdrasight/core'
 
 export interface Signal {
   id: string

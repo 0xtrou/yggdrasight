@@ -1,5 +1,5 @@
 // runs as root inside mongo container
-db = db.getSiblingDB('oculus-trading');
+db = db.getSiblingDB('yggdrasight');
 
 db.createCollection('signals');
 db.createCollection('projects');
@@ -29,4 +29,4 @@ db.signals.insertOne({
   updatedAt: new Date(),
 });
 
-print('Oculus Trading DB initialized successfully');
+print('Yggdrasight DB initialized successfully');

@@ -1,4 +1,4 @@
-# Oculus - VPS Deployment Guide
+# Yggdrasight - VPS Deployment Guide
 
 ## Overview
 
@@ -52,13 +52,13 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 sudo timedatectl set-timezone UTC
 
 # Create non-root user
-sudo adduser --disabled-password --gecos "" oculus
-sudo usermod -aG sudo oculus
+sudo adduser --disabled-password --gecos "" yggdrasight
+sudo usermod -aG sudo yggdrasight
 
 # Setup SSH keys for the new user (paste your public key into authorized_keys)
-sudo mkdir -p /home/oculus/.ssh && sudo chmod 700 /home/oculus/.ssh
-sudo touch /home/oculus/.ssh/authorized_keys && sudo chmod 600 /home/oculus/.ssh/authorized_keys
-sudo chown -R oculus:oculus /home/oculus/.ssh
+sudo mkdir -p /home/yggdrasight/.ssh && sudo chmod 700 /home/yggdrasight/.ssh
+sudo touch /home/yggdrasight/.ssh/authorized_keys && sudo chmod 600 /home/yggdrasight/.ssh/authorized_keys
+sudo chown -R yggdrasight:yggdrasight /home/yggdrasight/.ssh
 
 # Harden SSH: disable password auth and root login
 sudo sed -i "s/^#PasswordAuthentication yes/PasswordAuthentication no/" /etc/ssh/sshd_config || true
@@ -80,7 +80,7 @@ sudo systemctl enable --now fail2ban
 ```
 
 Notes
-- Use the non-root user `oculus` for normal work. Keep SSH root login disabled.
+- Use the non-root user `yggdrasight` for normal work. Keep SSH root login disabled.
 - Swap helps with heavy AI tasks. Adjust swap if running many containers.
 
 ## Step 2 - Install Dependencies
@@ -91,44 +91,44 @@ sudo apt update && sudo apt install -y build-essential curl git nginx certbot py
 
 # Install Docker
 curl -fsSL https://get.docker.com | sudo sh
-sudo usermod -aG docker oculus
+sudo usermod -aG docker yggdrasight
 
 # Install Docker Compose plugin
 sudo apt install -y docker-compose-plugin
 
 # Install nvm and Node 24 (as deploy user)
-su - oculus -c "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.6/install.sh | bash"
-export NVM_DIR="/home/oculus/.nvm"
-su - oculus -c ". $NVM_DIR/nvm.sh && nvm install 24 && nvm use 24"
+su - yggdrasight -c "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.6/install.sh | bash"
+export NVM_DIR="/home/yggdrasight/.nvm"
+su - yggdrasight -c ". $NVM_DIR/nvm.sh && nvm install 24 && nvm use 24"
 
 # pnpm 9 (global)
-su - oculus -c "npm install -g pnpm@9"
+su - yggdrasight -c "npm install -g pnpm@9"
 
 # Bun (workers run on Bun)
-su - oculus -c "curl -fsSL https://bun.sh/install | bash"
+su - yggdrasight -c "curl -fsSL https://bun.sh/install | bash"
 
 # PM2 (global)
-su - oculus -c "npm install -g pm2"
+su - yggdrasight -c "npm install -g pm2"
 
 # Certbot available via python3-certbot-nginx
 ```
 
 Notes
-- Ensure Bun is on the PATH for the `oculus` user. Workers require Bun.
+- Ensure Bun is on the PATH for the `yggdrasight` user. Workers require Bun.
 
 ## Step 3 - Clone & Install
 
 ```bash
 # Prepare directory and clone repository
-sudo mkdir -p /srv/oculus-trading && sudo chown oculus:oculus /srv/oculus-trading
-su - oculus -c "git clone <your-repo-url> /srv/oculus-trading"
-cd /srv/oculus-trading
+sudo mkdir -p /srv/yggdrasight && sudo chown yggdrasight:yggdrasight /srv/yggdrasight
+su - yggdrasight -c "git clone <your-repo-url> /srv/yggdrasight"
+cd /srv/yggdrasight
 
 # Install workspace dependencies
-su - oculus -c "cd /srv/oculus-trading && pnpm install --frozen-lockfile"
+su - yggdrasight -c "cd /srv/yggdrasight && pnpm install --frozen-lockfile"
 
 # Ensure ownership
-sudo chown -R oculus:oculus /srv/oculus-trading
+sudo chown -R yggdrasight:yggdrasight /srv/yggdrasight
 ```
 
 ## Step 4 - Configure Environment
@@ -149,10 +149,10 @@ Required edits
 
 ```bash
 # apps/web/.env.local
-MONGODB_URI=mongodb://oculus:YOUR_MONGO_PASSWORD@127.0.0.1:27017/oculus-trading?authSource=admin
+MONGODB_URI=mongodb://yggdrasight:YOUR_MONGO_PASSWORD@127.0.0.1:27017/yggdrasight?authSource=admin
 
 # REDIS (change for production)
-REDIS_URL=redis://:oculus_redis_secret@127.0.0.1:6379
+REDIS_URL=redis://:yggdrasight_redis_secret@127.0.0.1:6379
 ```
 
 Guidance
@@ -163,7 +163,7 @@ OpenCode auth
 - Place OpenCode auth files at ~/.local/share/opencode/auth.json and ~/.config/opencode for AI workers.
 
 Security notes
-- Default Redis password is `oculus_redis_secret`. Change it before production.
+- Default Redis password is `yggdrasight_redis_secret`. Change it before production.
 - Mongo Express is commented out by default. Keep it disabled in production.
 
 ## Step 5 - Start Infrastructure
@@ -185,23 +185,23 @@ Notes
 
 ```bash
 # Build the monorepo (Turborepo builds core -> db -> web)
-su - oculus -c "cd /srv/oculus-trading && pnpm build"
+su - yggdrasight -c "cd /srv/yggdrasight && pnpm build"
 
 # Create logs dir and set ownership
-sudo mkdir -p /srv/oculus-trading/logs && sudo chown oculus:oculus /srv/oculus-trading/logs
+sudo mkdir -p /srv/yggdrasight/logs && sudo chown yggdrasight:yggdrasight /srv/yggdrasight/logs
 
 # Start via PM2 (ecosystem.config.js expected in repo root)
-su - oculus -c "cd /srv/oculus-trading && pm2 start ecosystem.config.js --env production"
-su - oculus -c "pm2 save"
+su - yggdrasight -c "cd /srv/yggdrasight && pm2 start ecosystem.config.js --env production"
+su - yggdrasight -c "pm2 save"
 
 # Setup systemd startup for PM2 and run the printed command as root
-su - oculus -c "pm2 startup systemd -u oculus --hp /home/oculus"
+su - yggdrasight -c "pm2 startup systemd -u yggdrasight --hp /home/yggdrasight"
 
 # Install pm2-logrotate and configure
-su - oculus -c "pm2 install pm2-logrotate && pm2 set pm2-logrotate:max_size 50M && pm2 set pm2-logrotate:retain 10"
+su - yggdrasight -c "pm2 install pm2-logrotate && pm2 set pm2-logrotate:max_size 50M && pm2 set pm2-logrotate:retain 10"
 
 # Verify process and app health
-su - oculus -c "pm2 status"
+su - yggdrasight -c "pm2 status"
 curl -sS http://127.0.0.1:3000/health || curl -I http://127.0.0.1:3000
 ```
 
@@ -213,7 +213,7 @@ PM2 notes
 
 ```bash
 # Write HTTP-only config first (certbot adds SSL automatically)
-sudo tee /etc/nginx/sites-available/oculus > /dev/null <<'NG'
+sudo tee /etc/nginx/sites-available/yggdrasight > /dev/null <<'NG'
 server {
     listen 80;
     server_name your-domain.com;
@@ -236,7 +236,7 @@ server {
 NG
 
 # Enable site, remove default, test, reload
-sudo ln -sf /etc/nginx/sites-available/oculus /etc/nginx/sites-enabled/oculus
+sudo ln -sf /etc/nginx/sites-available/yggdrasight /etc/nginx/sites-enabled/yggdrasight
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t && sudo systemctl reload nginx
 
@@ -259,13 +259,13 @@ Notes:
 
 ```bash
 # Prepare backup folder
-sudo mkdir -p /srv/oculus-backups && sudo chown oculus:oculus /srv/oculus-backups
+sudo mkdir -p /srv/yggdrasight-backups && sudo chown yggdrasight:yggdrasight /srv/yggdrasight-backups
 
 # Install mongodump (mongodb-database-tools)
 sudo apt update && sudo apt install -y mongodb-database-tools
 
 # Add cron job for daily backups at 03:00 and rotate older than 7 days
-(crontab -l 2>/dev/null; echo "0 3 * * * /usr/bin/mongodump --uri=\"mongodb://oculus:YOUR_PASSWORD@localhost:27017/oculus-trading?authSource=admin\" --out=/srv/oculus-backups/\$(date +\%Y\%m\%d) && find /srv/oculus-backups -mtime +7 -delete") | crontab -
+(crontab -l 2>/dev/null; echo "0 3 * * * /usr/bin/mongodump --uri=\"mongodb://yggdrasight:YOUR_PASSWORD@localhost:27017/yggdrasight?authSource=admin\" --out=/srv/yggdrasight-backups/\$(date +\%Y\%m\%d) && find /srv/yggdrasight-backups -mtime +7 -delete") | crontab -
 ```
 
 Notes
@@ -274,11 +274,11 @@ Notes
 ## Deploying Updates
 
 ```bash
-cd /srv/oculus-trading
+cd /srv/yggdrasight
 git pull --ff-only
 pnpm install --frozen-lockfile
 pnpm build
-pm2 reload oculus-web || pm2 restart oculus-web
+pm2 reload yggdrasight-web || pm2 restart yggdrasight-web
 pm2 status
 ```
 
@@ -287,18 +287,18 @@ pm2 status
 ```bash
 # Status and info
 pm2 status
-pm2 show oculus-web
+pm2 show yggdrasight-web
 
 # Logs
-pm2 logs oculus-web --lines 100
+pm2 logs yggdrasight-web --lines 100
 pm2 flush
 
 # Control
 pm2 start ecosystem.config.js
-pm2 stop oculus-web
-pm2 restart oculus-web
-pm2 reload oculus-web
-pm2 delete oculus-web
+pm2 stop yggdrasight-web
+pm2 restart yggdrasight-web
+pm2 reload yggdrasight-web
+pm2 delete yggdrasight-web
 
 # Monitor
 pm2 monit
@@ -371,7 +371,7 @@ free -h
 ps aux --sort=-%mem | head -n 20
 
 # Docker permission denied: add user to docker group and re-login
-sudo usermod -aG docker oculus
+sudo usermod -aG docker yggdrasight
 ```
 
 Common tips

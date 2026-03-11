@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
-const NAV_COLLAPSED_KEY = 'oculus:navCollapsed'
+const NAV_COLLAPSED_KEY = 'yggdrasight:navCollapsed'
 
 interface NavItem {
   id: string
@@ -102,7 +102,7 @@ export function NavDrawer() {
   return (
     <>
       <style>{`
-        @keyframes oculusBorderBlink {
+        @keyframes yggdrasightBorderBlink {
           0%, 100% { border-color: var(--color-terminal-amber); box-shadow: 0 0 6px rgba(255,170,0,0.4); }
           50% { border-color: rgba(255,170,0,0.15); box-shadow: none; }
         }
@@ -151,13 +151,13 @@ export function NavDrawer() {
           alignItems: 'center',
           justifyContent: 'center',
           border: '1px solid var(--color-terminal-amber)',
-          animation: 'oculusBorderBlink 2s ease-in-out infinite',
+          animation: 'yggdrasightBorderBlink 2s ease-in-out infinite',
         }}>
-          <img src="/logo.png" alt="Oculus" style={{ width: '24px', height: '24px' }} />
+          <img src="/logo.png" alt="Yggdrasight" style={{ width: '24px', height: '24px' }} />
         </div>
         {showExpanded && (
           <div style={{ display: 'flex', alignItems: 'baseline', flexShrink: 0 }}>
-            <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 800, fontSize: '16px', letterSpacing: '0.14em', textShadow: '0 0 8px rgba(255,170,0,0.4)' }}>OCULUS</span>
+            <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 800, fontSize: '16px', letterSpacing: '0.14em', textShadow: '0 0 8px rgba(255,170,0,0.4)' }}>YGGDRASIGHT</span>
           </div>
         )}
       </div>

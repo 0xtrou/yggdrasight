@@ -1,4 +1,4 @@
-import { mongoose } from '@oculus/db'
+import { mongoose } from '@yggdrasight/db'
 
 // ── Signal crawl result entry ─────────────────────────────────────────────────
 export interface ICrawledSignal {

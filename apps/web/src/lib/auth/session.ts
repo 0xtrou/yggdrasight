@@ -23,8 +23,8 @@ import type { DecryptedConfigPaths } from './vault'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const SESSION_COOKIE = 'oculus-session'
-const HASH_COOKIE = 'oculus-hash'
+const SESSION_COOKIE = 'yggdrasight-session'
+const HASH_COOKIE = 'yggdrasight-hash'
 const SESSION_ID_LENGTH = 12 // First 12 chars of password hash = session identifier
 
 // ── Types ────────────────────────────────────────────────────────────────────

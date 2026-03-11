@@ -1,10 +1,10 @@
 {
-  "name": "oculus-trading",
+  "name": "yggdrasight",
   "private": true,
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "start": "pnpm --filter @oculus/web start",
+    "start": "pnpm --filter @yggdrasight/web start",
     "up": "docker compose up -d && pnpm build && pnpm start",
     "down": "docker compose down",
     "lint": "turbo run lint",

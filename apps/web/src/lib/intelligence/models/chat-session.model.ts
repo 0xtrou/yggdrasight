@@ -1,4 +1,4 @@
-import { mongoose } from '@oculus/db'
+import { mongoose } from '@yggdrasight/db'
 
 // ── Chat session document interface ───────────────────────────────────────────
 export interface IMessageAttachment {

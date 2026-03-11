@@ -1,7 +1,7 @@
 /**
  * Per-User Intelligence Model Registration
  *
- * Analogous to `getModelsForConnection()` in @oculus/db, but for the
+ * Analogous to `getModelsForConnection()` in @yggdrasight/db, but for the
  * intelligence-layer models that live in the web app.
  *
  * Registers all intelligence schemas on a user's Mongoose connection so

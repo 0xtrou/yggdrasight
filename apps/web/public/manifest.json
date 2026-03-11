@@ -1,6 +1,6 @@
 {
-  "name": "Oculus Trading Terminal",
-  "short_name": "Oculus",
+  "name": "Yggdrasight Terminal",
+  "short_name": "Yggdrasight",
   "description": "AI-Powered Trading Intelligence Terminal with real-time market analysis and automated execution",
   "start_url": "/",
   "display": "standalone",

@@ -1,4 +1,4 @@
-import { mongoose } from '@oculus/db'
+import { mongoose } from '@yggdrasight/db'
 
 // ── Discovered project (found by agents during global scan) ──────────────────
 

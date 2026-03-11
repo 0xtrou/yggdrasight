@@ -36,7 +36,7 @@ interface DiscoveredProjectInfo {
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const MONGODB_URI = process.env.OCULUS_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
+const MONGODB_URI = process.env.YGGDRASIGHT_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://yggdrasight:yggdrasight_dev_secret@localhost:27017/yggdrasight?authSource=admin'
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 // No hard timeout — the agent can take as long as it needs
@@ -369,7 +369,7 @@ async function runOpenCode(
   configPaths?: DecryptedConfigPaths | null,
 ): Promise<{ success: boolean; text: string; error?: string; urlsFetched: string[]; toolCallCount: number }> {
   const HOME_DIR = process.env.HOME ?? '/root'
-  const tmpDir = path.join(tmpdir(), `oculus-job-${jobId}`)
+  const tmpDir = path.join(tmpdir(), `yggdrasight-job-${jobId}`)
   mkdirSync(tmpDir, { recursive: true })
   writeFileSync(path.join(tmpDir, 'prompt.txt'), prompt, 'utf-8')
   const args = [
@@ -586,9 +586,9 @@ async function main() {
 
   // Decrypt per-user config if password hash is provided
   let configPaths: DecryptedConfigPaths | null = null
-  const passwordHash = process.env.OCULUS_SECRET_FILE
-    ? readFileSync(process.env.OCULUS_SECRET_FILE, 'utf-8').trim()
-    : process.env.OCULUS_PASSWORD_HASH // fallback for backward compat
+  const passwordHash = process.env.YGGDRASIGHT_SECRET_FILE
+    ? readFileSync(process.env.YGGDRASIGHT_SECRET_FILE, 'utf-8').trim()
+    : process.env.YGGDRASIGHT_PASSWORD_HASH // fallback for backward compat
   if (passwordHash) {
     try {
       configPaths = await decryptConfigForMount(mongoose.connection, passwordHash)

@@ -1,5 +1,5 @@
-import { ProviderType, CreateSignalSchema } from '@oculus/core'
-import type { CreateSignalInput } from '@oculus/core'
+import { ProviderType, CreateSignalSchema } from '@yggdrasight/core'
+import type { CreateSignalInput } from '@yggdrasight/core'
 import { parseTradingView } from './parsers/tradingview'
 import { parseGeneric } from './parsers/generic'
 

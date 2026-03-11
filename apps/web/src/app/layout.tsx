@@ -15,9 +15,9 @@ const inter = Inter({
   display: 'swap',
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://oculus.trading'
-const SITE_NAME = 'Oculus Trading'
-const SITE_TITLE = 'Oculus Trading Terminal'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yggdrasight.com'
+const SITE_NAME = 'Yggdrasight'
+const SITE_TITLE = 'Yggdrasight Terminal'
 const SITE_DESCRIPTION =
   'AI-powered trading intelligence terminal with real-time market analysis, multi-timeframe signals, and automated execution for crypto and traditional markets.'
 
@@ -108,7 +108,7 @@ export const metadata: Metadata = {
         alt: `${SITE_NAME} - AI-Powered Trading Intelligence`,
       },
     ],
-    creator: '@oculustrading',
+    creator: '@yggdrasight',
   },
 
   // ── Microsoft ────────────────────────────────────────

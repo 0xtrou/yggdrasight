@@ -1,7 +1,7 @@
 /**
  * Session Blacklist via Redis
  *
- * Revoked sessions are stored as individual keys `oculus:revoked-sessions:<id>`.
+ * Revoked sessions are stored as individual keys `yggdrasight:revoked-sessions:<id>`.
  * Each key has a TTL matching the cookie maxAge (7 days).
  * `getCurrentSession()` checks this on every request — O(1) Redis GET.
  *
@@ -16,7 +16,7 @@ import Redis from 'ioredis'
 /** Must match the cookie maxAge in setSessionCookies() */
 const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60 // 7 days
 
-const REDIS_KEY_PREFIX = 'oculus:revoked-sessions'
+const REDIS_KEY_PREFIX = 'yggdrasight:revoked-sessions'
 
 // ── Redis Connection ─────────────────────────────────────────────────────────
 

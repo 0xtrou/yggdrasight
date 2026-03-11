@@ -1,4 +1,4 @@
-import { mongoose } from '@oculus/db'
+import { mongoose } from '@yggdrasight/db'
 import { AnalystVerdict } from '../types'
 
 // ── Intelligence verdict document interface ──────────────────────────────────

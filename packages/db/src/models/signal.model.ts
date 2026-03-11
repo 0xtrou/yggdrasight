@@ -4,7 +4,7 @@ import {
   SignalDirection,
   Timeframe,
   Exchange,
-} from '@oculus/core'
+} from '@yggdrasight/core'
 
 // ── Take-profit subdocument ────────────────────────────────────────────
 const TakeProfitSchema = new Schema(

@@ -213,7 +213,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
-            alt="Oculus"
+            alt="Yggdrasight"
             style={{
               height: '64px',
               width: 'auto',
@@ -654,7 +654,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
           letterSpacing: '0.06em',
         }}
       >
-        <span>OCULUS © 2025</span>
+        <span>YGGDRASIGHT © 2025</span>
         <span style={{ color: '#333333' }}>ENCRYPTED WITH AES-256-GCM</span>
         <span>BUILD 0001</span>
       </div>

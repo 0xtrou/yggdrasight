@@ -1,10 +1,10 @@
-// PM2 Ecosystem Config — Oculus Trading
+// PM2 Ecosystem Config — Yggdrasight
 // Usage: pm2 start ecosystem.config.js
 
 module.exports = {
   apps: [
     {
-      name: 'oculus-web',
+      name: 'yggdrasight-web',
       script: 'node_modules/.bin/next',
       args: 'start',
       cwd: './apps/web',

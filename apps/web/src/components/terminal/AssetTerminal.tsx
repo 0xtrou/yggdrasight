@@ -79,7 +79,7 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
 
   // Sync active symbol to localStorage for ChatDrawer (in layout)
   useEffect(() => {
-    try { localStorage.setItem('oculus:activeSymbol', pair) } catch { /* ignore */ }
+    try { localStorage.setItem('yggdrasight:activeSymbol', pair) } catch { /* ignore */ }
   }, [pair])
 
 
@@ -103,7 +103,7 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
   // Restore panel sizes from localStorage on mount (client-side only)
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('oculus-panel-sizes')
+      const saved = localStorage.getItem('yggdrasight-panel-sizes')
       if (saved) {
         const parsed = JSON.parse(saved)
         if (parsed.rightColumnWidth != null) setRightColumnWidth(parsed.rightColumnWidth)
@@ -137,7 +137,7 @@ export function AssetTerminal({ symbol }: AssetTerminalProps) {
   useEffect(() => {
     if (!hydratedRef.current) return
     localStorage.setItem(
-      'oculus-panel-sizes',
+      'yggdrasight-panel-sizes',
       JSON.stringify({ rightColumnWidth, chartRatio }),
     )
   }, [rightColumnWidth, chartRatio])

@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://oculus.trading/sitemap.xml
+Sitemap: https://yggdrasight.com/sitemap.xml

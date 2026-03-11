@@ -145,7 +145,7 @@ export async function decryptConfigForMount(
   if (!encryptedBlob) return null
 
   // Create a unique temp directory
-  const tempRoot = path.join(tmpdir(), `oculus-config-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`)
+  const tempRoot = path.join(tmpdir(), `yggdrasight-config-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`)
   mkdirSync(tempRoot, { recursive: true })
 
   // Decrypt and restore all files to temp directory

@@ -29,7 +29,7 @@ export async function connectDB(): Promise<typeof mongoose> {
 }
 
 /**
- * Register all @oculus/db schemas on a given Mongoose connection.
+ * Register all @yggdrasight/db schemas on a given Mongoose connection.
  * Returns model constructors bound to that connection.
  *
  * This is used for per-user MongoDB connections — each user gets their own

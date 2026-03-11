@@ -46,7 +46,7 @@ import type { IGlobalDiscoveredProject } from '../apps/web/src/lib/intelligence/
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const MONGODB_URI = process.env.OCULUS_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin'
+const MONGODB_URI = process.env.YGGDRASIGHT_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://yggdrasight:yggdrasight_dev_secret@localhost:27017/yggdrasight?authSource=admin'
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 const AGENT_TIMEOUT_MS = 900_000 // 15 minutes per individual agent (agents may do deep research)
@@ -393,7 +393,7 @@ function buildMasterPlannerWorkspace(
     projects: Array<{ name: string; sector: string | null; primaryCategory: number | null }>
   } | null,
 ): string {
-  const tmpDir = path.join(tmpdir(), `oculus-global-master-${Date.now()}`)
+  const tmpDir = path.join(tmpdir(), `yggdrasight-global-master-${Date.now()}`)
   mkdirSync(tmpDir, { recursive: true })
   mkdirSync(path.join(tmpDir, 'data'), { recursive: true })
 
@@ -422,7 +422,7 @@ function buildDiscoveryAgentWorkspace(
   },
   previousProjects: Array<{ name: string; symbol: string | null }>,
 ): string {
-  const tmpDir = path.join(tmpdir(), `oculus-global-agent-${agentId}-${Date.now()}`)
+  const tmpDir = path.join(tmpdir(), `yggdrasight-global-agent-${agentId}-${Date.now()}`)
   mkdirSync(tmpDir, { recursive: true })
   mkdirSync(path.join(tmpDir, 'data'), { recursive: true })
 
@@ -449,7 +449,7 @@ function buildSynthesizerWorkspace(
   depth: number,
   agentCount: number,
 ): string {
-  const tmpDir = path.join(tmpdir(), `oculus-global-synth-${Date.now()}`)
+  const tmpDir = path.join(tmpdir(), `yggdrasight-global-synth-${Date.now()}`)
   mkdirSync(tmpDir, { recursive: true })
   mkdirSync(path.join(tmpDir, 'data'), { recursive: true })
 
@@ -518,9 +518,9 @@ async function main() {
 
   // Decrypt per-user config if password hash is provided
   let configPaths: DecryptedConfigPaths | null = null
-  const passwordHash = process.env.OCULUS_SECRET_FILE
-    ? readFileSync(process.env.OCULUS_SECRET_FILE, 'utf-8').trim()
-    : process.env.OCULUS_PASSWORD_HASH // fallback for backward compat
+  const passwordHash = process.env.YGGDRASIGHT_SECRET_FILE
+    ? readFileSync(process.env.YGGDRASIGHT_SECRET_FILE, 'utf-8').trim()
+    : process.env.YGGDRASIGHT_PASSWORD_HASH // fallback for backward compat
   if (passwordHash) {
     try {
       configPaths = await decryptConfigForMount(mongoose.connection, passwordHash)

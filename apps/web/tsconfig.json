@@ -5,8 +5,8 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@oculus/core": ["../../packages/core/src/index.ts"],
-      "@oculus/db": ["../../packages/db/src/index.ts"],
+      "@yggdrasight/core": ["../../packages/core/src/index.ts"],
+      "@yggdrasight/db": ["../../packages/db/src/index.ts"],
       "@/*": ["./src/*"]
     }
   },

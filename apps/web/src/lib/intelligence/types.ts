@@ -1,4 +1,4 @@
-import { SignalDirection, Timeframe, MarketRegime } from '@oculus/core'
+import { SignalDirection, Timeframe, MarketRegime } from '@yggdrasight/core'
 export { SignalDirection, Timeframe, MarketRegime }
 
 /**

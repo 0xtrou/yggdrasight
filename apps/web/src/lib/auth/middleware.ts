@@ -18,7 +18,7 @@
  *   }
  */
 import { NextResponse } from 'next/server'
-import { getModelsForConnection } from '@oculus/db'
+import { getModelsForConnection } from '@yggdrasight/db'
 import { getCurrentSession } from './session'
 import { getIntelligenceModelsForConnection } from './intelligence-models'
 
@@ -53,7 +53,7 @@ export async function withAuth(handler: AuthHandler): Promise<NextResponse> {
       )
     }
 
-    // Register @oculus/db models on the user's connection
+    // Register @yggdrasight/db models on the user's connection
     const models = getModelsForConnection(session.connection)
     // Register intelligence models on the user's connection
     const intelligenceModels = getIntelligenceModelsForConnection(session.connection)

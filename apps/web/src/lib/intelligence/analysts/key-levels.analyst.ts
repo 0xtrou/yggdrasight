@@ -1,4 +1,4 @@
-import { SignalDirection } from '@oculus/core'
+import { SignalDirection } from '@yggdrasight/core'
 import { Analyst, AnalystMeta, AnalystVerdict, AnalysisContext, Candle } from '../types'
 
 const meta: AnalystMeta = {

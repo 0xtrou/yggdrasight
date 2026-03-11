@@ -1,5 +1,5 @@
-import { AssetClass, Exchange, ProviderType, SignalDirection, Timeframe } from '@oculus/core'
-import type { CreateSignalInput } from '@oculus/core'
+import { AssetClass, Exchange, ProviderType, SignalDirection, Timeframe } from '@yggdrasight/core'
+import type { CreateSignalInput } from '@yggdrasight/core'
 
 function tryDirection(b: Record<string, unknown>): SignalDirection {
   const raw = (b['direction'] ?? b['action'] ?? b['side'] ?? '') as string

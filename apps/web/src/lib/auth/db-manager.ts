@@ -20,7 +20,7 @@ const userConnections = new Map<string, mongoose.Connection>()
 
 // ── System DB ───────────────────────────────────────────────────────────────
 
-const SYSTEM_MONGODB_URI = process.env.MONGODB_URI || 'mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-system?authSource=admin'
+const SYSTEM_MONGODB_URI = process.env.MONGODB_URI || 'mongodb://yggdrasight:yggdrasight_dev_secret@localhost:27017/yggdrasight-system?authSource=admin'
 
 /**
  * Connect to the system MongoDB (the main shared instance).

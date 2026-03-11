@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "paths": {
-      "@oculus/core": ["../core/src/index.ts"]
+      "@yggdrasight/core": ["../core/src/index.ts"]
     }
   },
   "include": ["src/**/*"]

@@ -7,7 +7,7 @@ interface SplashScreenProps {
 }
 
 const BOOT_LINES = [
-  { text: 'OCULUS TRADING TERMINAL v0.1.0', color: '#e8e8e8' },
+  { text: 'YGGDRASIGHT TRADING TERMINAL v0.1.0', color: '#e8e8e8' },
   { text: 'INITIALIZING INTELLIGENCE ENGINE...', color: '#888888' },
   { text: 'CONNECTING TO MARKET DATA FEEDS...', color: '#888888' },
   { text: 'LOADING ASSET CONFIGURATION...', color: '#888888' },
@@ -213,7 +213,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
-              alt="Oculus"
+              alt="Yggdrasight"
               style={{
                 height: '80px',
                 width: 'auto',
@@ -335,7 +335,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             letterSpacing: '0.06em',
           }}
         >
-          <span>OCULUS © 2025</span>
+          <span>YGGDRASIGHT © 2025</span>
           <span style={{ color: '#333333' }}>NOT FINANCIAL ADVICE</span>
           <span>BUILD 0001</span>
         </div>

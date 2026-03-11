@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="./apps/web/public/icon-512x512.png" alt="Oculus" width="100" />
-  <h1>OCULUS</h1>
+  <img src="./apps/web/public/icon-512x512.png" alt="Yggdrasight" width="100" />
+  <h1>YGGDRASIGHT</h1>
   <p><strong>AI-native trading intelligence terminal.</strong><br/>Real-time market data. Multi-agent philosophical analysis. Bloomberg vibes.</p>
   <p>
     <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" />
@@ -20,7 +20,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  OCULUS  │  BTC  ETH  SOL  TAO  PENDLE           ◉ LIVE │
+│  YGGDRASIGHT  │  BTC  ETH  SOL  TAO  PENDLE           ◉ LIVE │
 ├─────────────────────────────────────────────────────────┤
 │  CHART ▸ 4H         │  INTELLIGENCE                     │
 │                     │  ├─ Crack Mapping       COMPLETE  │
@@ -38,7 +38,7 @@
 
 ## What is this
 
-Oculus is a research trading terminal that runs a swarm of AI agents against crypto assets to produce philosophical market intelligence — not price predictions, but a structured understanding of *why* a market is moving and *who* is moving it.
+Yggdrasight is a research trading terminal that runs a swarm of AI agents against crypto assets to produce philosophical market intelligence — not price predictions, but a structured understanding of *why* a market is moving and *who* is moving it.
 
 It combines live market data with a multi-layer intelligence engine: a discovery phase that researches the underlying project, a classification phase that runs 6 parallel analytical agents through Docker containers, and a synthesis phase that unifies everything into a structured verdict.
 
@@ -48,7 +48,7 @@ The UI is built to feel like a Bloomberg terminal. Dark. Dense. Fast.
 
 ## Intelligence Engine
 
-The core of Oculus is a 3-layer AI pipeline:
+The core of Yggdrasight is a 3-layer AI pipeline:
 
 ### Layer 1 — Discovery
 The discovery worker runs an [OpenCode](https://opencode.ai) agent in a Docker container with no time limit. It researches the underlying project — whitepapers, GitHub, socials, tokenomics — and returns structured context that feeds everything downstream.
@@ -103,7 +103,7 @@ Runtime         Node 24+ / Bun
 ## Project Structure
 
 ```
-oculus-trading/
+yggdrasight/
 ├── apps/
 │   └── web/                          Next.js application
 │       └── src/
@@ -141,7 +141,7 @@ oculus-trading/
 
 ## Per-Agent Model Configuration
 
-Every agent in the system can run a different model. Configuration lives in `/ai-config` and persists to `localStorage('oculus:agentModelMap')`.
+Every agent in the system can run a different model. Configuration lives in `/ai-config` and persists to `localStorage('yggdrasight:agentModelMap')`.
 
 ```
 Discovery       → one model
@@ -158,8 +158,8 @@ The per-agent map flows all the way through: UI → API → worker → each Dock
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/anomalyco/oculus-trading
-cd oculus-trading
+git clone https://github.com/anomalyco/yggdrasight
+cd yggdrasight
 pnpm install
 ```
 
@@ -190,7 +190,7 @@ pnpm dev
 
 ```bash
 # Required
-MONGODB_URI=mongodb://oculus:oculus_dev_secret@localhost:27017/oculus-trading?authSource=admin
+MONGODB_URI=mongodb://yggdrasight:yggdrasight_dev_secret@localhost:27017/yggdrasight?authSource=admin
 REDIS_URL=redis://localhost:6379
 
 # Optional — market data
@@ -249,7 +249,7 @@ UI polls /api/intelligence/classify/:jobId
 
 ## Signals
 
-Oculus supports manual and automated trading signals. Each signal carries:
+Yggdrasight supports manual and automated trading signals. Each signal carries:
 - Asset, direction (long/short), entry/target/stop
 - Confidence level
 - AI-generated rationale (linked to classification verdict)

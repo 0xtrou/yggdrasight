@@ -1,4 +1,4 @@
-import { Timeframe } from '@oculus/core'
+import { Timeframe } from '@yggdrasight/core'
 import type { Analyst, ConsensusResult, AnalystVerdict } from '../types'
 import { ANALYSTS } from '../analysts'
 import { getLLMAnalysts } from '../analysts/llm'

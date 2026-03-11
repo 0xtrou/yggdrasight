@@ -1,4 +1,4 @@
-import { mongoose } from '@oculus/db'
+import { mongoose } from '@yggdrasight/db'
 import type { ClassificationResult, SubAgentResult } from '../classification/types'
 
 // ── Classification job document interface ──────────────────────────────────

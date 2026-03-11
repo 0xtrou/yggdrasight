@@ -1,4 +1,4 @@
-import { Timeframe } from '@oculus/core'
+import { Timeframe } from '@yggdrasight/core'
 import { cookies } from 'next/headers'
 import type { AnalysisContext, Candle, SignalDoc, MarketGlobal, OnChainData, SentimentData, OrderBookData, NewsData, DeveloperData, DefiProtocolData } from '../types'
 
