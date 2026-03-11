@@ -71,21 +71,41 @@ export function middleware(req: NextRequest): NextResponse {
   // localhost -> pass through (dev mode)
   const isLandingDomain =
     hostname === 'yggdrasight.com' || hostname === 'www.yggdrasight.com'
+  const isLocalhost = hostname.startsWith('localhost') || hostname === '127.0.0.1'
 
-  if (isLandingDomain && pathname === '/') {
-    const url = req.nextUrl.clone()
-    url.pathname = '/landing'
-    const response = NextResponse.rewrite(url)
-    applySecurityHeaders(response)
-    return response
-  }
+  // Route landing domain and localhost to landing page
+  if (isLandingDomain || isLocalhost) {
+    // Root path -> landing page
+    if (pathname === '/') {
+      const url = req.nextUrl.clone()
+      url.pathname = '/landing'
+      const response = NextResponse.rewrite(url)
+      applySecurityHeaders(response)
+      return response
+    }
 
-  if (isLandingDomain && !pathname.startsWith('/landing') && !pathname.startsWith('/api') && !pathname.startsWith('/_next')) {
-    const url = req.nextUrl.clone()
-    url.pathname = '/landing'
-    const response = NextResponse.rewrite(url)
-    applySecurityHeaders(response)
-    return response
+    // /landing -> landing page (keep route accessible)
+    if (pathname === '/landing') {
+      const response = NextResponse.next()
+      applySecurityHeaders(response)
+      return response
+    }
+
+    // /app or /terminal -> actual app
+    if (pathname === '/app' || pathname === '/terminal' || pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.startsWith('/public') || pathname.startsWith('/assets')) {
+      const response = NextResponse.next()
+      applySecurityHeaders(response)
+      return response
+    }
+
+    // Other paths -> landing page (fallback)
+    if (isLocalhost && !pathname.startsWith('/api') && !pathname.startsWith('/_next') && !pathname.startsWith('/public')) {
+      const url = req.nextUrl.clone()
+      url.pathname = '/landing'
+      const response = NextResponse.rewrite(url)
+      applySecurityHeaders(response)
+      return response
+    }
   }
 
   const limitConfig = RATE_LIMITS[pathname]
