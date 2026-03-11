@@ -157,7 +157,7 @@ export function NavDrawer() {
         </div>
         {showExpanded && (
           <div style={{ display: 'flex', alignItems: 'baseline', flexShrink: 0 }}>
-            <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 800, fontSize: '16px', letterSpacing: '0.14em', textShadow: '0 0 8px rgba(255,170,0,0.4)' }}>YGGDRASIGHT</span>
+            <span style={{ color: 'var(--color-terminal-amber)', fontWeight: 800, fontSize: '13px', letterSpacing: '0.10em', textShadow: '0 0 8px rgba(255,170,0,0.4)' }}>YGGDRASIGHT</span>
           </div>
         )}
       </div>
