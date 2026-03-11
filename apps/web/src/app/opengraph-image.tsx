@@ -1,4 +1,6 @@
 import { ImageResponse } from 'next/og'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 
 export const runtime = 'nodejs'
 
@@ -12,9 +14,8 @@ export const contentType = 'image/png'
 export default async function Image() {
   try {
     // Fetch icon from public directory
-    const iconPath = new URL('../../public/icon-512x512.png', import.meta.url)
-    const iconData = await fetch(iconPath).then((res) => res.arrayBuffer())
-    const iconBase64 = Buffer.from(iconData).toString('base64')
+    const iconData = readFileSync(join(process.cwd(), 'public', 'icon-512x512.png'))
+    const iconBase64 = iconData.toString('base64')
 
     return new ImageResponse(
       (
