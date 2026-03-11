@@ -62,6 +62,32 @@ export function middleware(req: NextRequest): NextResponse {
   scheduleCleanup()
 
   const { pathname } = req.nextUrl
+  const host = req.headers.get('host') || ''
+  const hostname = host.split(':')[0]
+
+  // Domain-based routing:
+  // yggdrasight.com / www.yggdrasight.com -> landing page
+  // terminal.yggdrasight.com -> terminal app (pass through)
+  // localhost -> pass through (dev mode)
+  const isLandingDomain =
+    hostname === 'yggdrasight.com' || hostname === 'www.yggdrasight.com'
+
+  if (isLandingDomain && pathname === '/') {
+    const url = req.nextUrl.clone()
+    url.pathname = '/landing'
+    const response = NextResponse.rewrite(url)
+    applySecurityHeaders(response)
+    return response
+  }
+
+  if (isLandingDomain && !pathname.startsWith('/landing') && !pathname.startsWith('/api') && !pathname.startsWith('/_next')) {
+    const url = req.nextUrl.clone()
+    url.pathname = '/landing'
+    const response = NextResponse.rewrite(url)
+    applySecurityHeaders(response)
+    return response
+  }
+
   const limitConfig = RATE_LIMITS[pathname]
 
   // Rate limiting for auth endpoints
@@ -72,10 +98,8 @@ export function middleware(req: NextRequest): NextResponse {
     const entry = rateLimitStore.get(storeKey)
 
     if (!entry || now >= entry.resetTime) {
-      // First request in the window (or window has expired)
       rateLimitStore.set(storeKey, { count: 1, resetTime: now + limitConfig.windowMs })
     } else if (entry.count >= limitConfig.max) {
-      // Limit exceeded — return 429 with security headers attached
       const response = NextResponse.json(
         { error: 'Too many requests. Try again later.' },
         { status: 429 },
@@ -87,7 +111,6 @@ export function middleware(req: NextRequest): NextResponse {
     }
   }
 
-  // Pass request headers upstream — required for response header propagation in Next.js 16
   const requestHeaders = new Headers(req.headers)
   const response = NextResponse.next({ request: { headers: requestHeaders } })
   applySecurityHeaders(response)
