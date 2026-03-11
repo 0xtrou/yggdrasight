@@ -193,13 +193,16 @@ function extractResponse(stdout: string): ExtractedResponse {
     } catch { /* skip invalid JSON */ }
   }
 
+  // Try to find parseable JSON in ALL text first (agent may output JSON in any step),
+  // then fall back to last step text for error reporting.
+  const allText = allTextParts.join('')
   const lastStepText = stepTextParts[stepTextParts.length - 1]!
-  if (lastStepText.length > 0) return { text: lastStepText.join(''), urlsFetched, toolCallCount }
-  if (allTextParts.length > 0) return { text: allTextParts.join(''), urlsFetched, toolCallCount }
+
+  // Prefer allText — gives parseDiscoveredInfo the full conversation to search for JSON
+  if (allText.length > 0) return { text: allText, urlsFetched, toolCallCount }
   if (hasJsonEvents) return { text: '', urlsFetched, toolCallCount }
   return { text: stdout.trim(), urlsFetched: [], toolCallCount }
 }
-
 // ── Discovery prompt builder ──────────────────────────────────────────────────
 
 function buildDiscoveryPrompt(symbol: string): string {
@@ -267,78 +270,53 @@ function buildDiscoveryPrompt(symbol: string): string {
   }, null, 2)
 
   return [
-    `You are a crypto research analyst. Your task is to deeply research the cryptocurrency project "${fullName}" (ticker: ${symbol}).`,
+    `You are a crypto research analyst. Your task is to deeply research the cryptocurrency project "${fullName}" (ticker: ${symbol}) and return a SINGLE JSON object.`,
     '',
-    '## RESEARCH INSTRUCTIONS',
+    '## CRITICAL OUTPUT REQUIREMENT',
     '',
-    'Use your websearch and webfetch tools extensively. Do NOT rely on training data — search the web for CURRENT information.',
+    'Your FINAL message MUST be ONLY a single JSON object matching the schema below.',
+    'Do NOT wrap it in markdown code blocks. Do NOT add any commentary before or after.',
+    'If you cannot find data for a field, set it to null.',
+    '',
+    '## RESEARCH STEPS (do these using tools, then output JSON)',
+    '',
+    'Use your websearch and webfetch tools extensively. Do NOT rely on training data.',
     '',
     '### Step 1: General Project Research',
     `Search for "${fullName} crypto" and "${symbol} cryptocurrency" to find:`,
     '- Official website, social links (Twitter/X, Discord, Telegram, GitHub)',
-    '- Team/founders — who built this? What is their background?',
-    '- Funding rounds, investors, total funding raised, treasury/runway',
-    '- Token type and chain (ERC-20, native L1, SPL, etc.)',
-    '- Tokenomics (total supply, circulating supply, max supply, vesting)',
-    '- Project description, categories, ecosystem',
-    '- Competitors, unique selling points, partnerships',
-    '- Revenue model — how does the protocol earn?',
-    '- Adoption signals — dApp usage, active users, growth',
-    '- Recent news and developments',
-    '- Known risks or controversies',
+    '- Team/founders, background, funding rounds, investors',
+    '- Token type, chain, tokenomics (supply, vesting)',
+    '- Description, categories, ecosystem, competitors, partnerships',
+    '- Revenue model, adoption signals, recent news, risks',
     '',
     '### Step 2: Valuation & Market Data',
-    'Search for current pricing and valuation data:',
-    '- Current price, all-time high, all-time low, % from ATH',
-    '- Staking yield / APR if applicable',
-    '- Token inflation / emission rate',
-    '- Vesting schedule and upcoming unlocks',
+    'Search CoinGecko and CoinMarketCap for:',
+    '- Current price, ATH, ATL, % from ATH, market cap, FDV, TVL',
+    '- Staking yield, inflation rate, vesting schedule',
     '',
-    '### Step 3: On-Chain Activity Research',
-    `Research on-chain activity using blockchain explorers. Search for "${symbol} contract address" or "${fullName} token address" first, then visit the relevant explorer:`,
-    '',
-    '**Explorer URL patterns to try (use webfetch):**',
-    '- Ethereum/ERC-20: https://etherscan.io/token/<contract_address> — check holders, transfers, top holders',
-    '- Solana/SPL: https://solscan.io/token/<token_address> — check holders, activity',
-    '- BSC/BEP-20: https://bscscan.com/token/<contract_address>',
-    '- Arbitrum: https://arbiscan.io/token/<contract_address>',
-    '- Base: https://basescan.org/token/<contract_address>',
-    '- Optimism: https://optimistic.etherscan.io/token/<contract_address>',
-    '- Avalanche: https://snowtrace.io/token/<contract_address>',
-    '- Polygon: https://polygonscan.com/token/<contract_address>',
-    '',
-    'Also try:',
-    `- CoinGecko page: https://www.coingecko.com/en/coins/${slug}`,
-    `- DeFiLlama: https://defillama.com/protocol/${slug}`,
+    '### Step 3: On-Chain Activity',
+    `Search for on-chain data using explorers:`,
+    `- CoinGecko: https://www.coingecko.com/en/coins/${slug}`,
     `- CoinMarketCap: https://coinmarketcap.com/currencies/${slug}/`,
+    `- DeFiLlama: https://defillama.com/protocol/${slug}`,
+    '- Holder count, whale activity, top holders, active addresses',
     '',
-    'Look for:',
-    '- Number of token holders',
-    '- Recent large transactions (whale activity)',
-    '- Top holder distribution (concentration risk)',
-    '- Daily active addresses if available',
-    '- Any notable on-chain patterns',
+    '### Step 4: OUTPUT JSON',
     '',
-    '### Step 4: Compile Results',
+    'Rate each pillar as STRONG, MODERATE, or WEAK:',
+    '1. Team Survival Fitness 2. Narrative Alignment 3. Economic Moat 4. Valuation & Accumulation Zone',
     '',
-    'Rate each of the 4 core investment pillars as STRONG, MODERATE, or WEAK:',
-    '1. **Team Survival Fitness** — Is the team credible, funded, actively building?',
-    '2. **Narrative Alignment** — Does the project fit current macro narratives (AI, DePIN, RWA)?',
-    '3. **Economic Moat** — Does the protocol have defensibility, real TVL, revenue?',
-    '4. **Valuation & Accumulation Zone** — Is the current price attractive vs fundamentals?',
+    'Then output ONLY this JSON (no text before or after):',
     '',
-    'Return your findings as a SINGLE JSON object with this EXACT structure (use null for anything you could not find):',
-    '',
-    '```json',
     jsonSchema,
-    '```',
     '',
-    'IMPORTANT:',
-    '- Return ONLY the JSON object, no other text',
-    '- Use null for any field you could not find reliable data for',
-    '- For on-chain data, note if the data is from a specific date',
-    '- Be factual — cite what you found, do not speculate',
-    '- Rate each pillar honestly based on evidence found',
+    '## RULES',
+    '- Your response MUST be ONLY the JSON object, nothing else',
+    '- Use null for unfound fields',
+    '- Be factual, do not speculate',
+    '- If running low on steps, STOP researching and output the JSON with what you have',
+    '- Do NOT narrate your research process in the final output',
   ].join('\n')
 }
 
@@ -637,10 +615,20 @@ async function main() {
 
     log(`Agent completed — ${result.toolCallCount} tool calls, ${result.urlsFetched.length} URLs`)
 
-    // Parse the response
-    const parsed = parseDiscoveredInfo(result.text)
+    // Parse the response — try multiple strategies to extract JSON
+    let parsed = parseDiscoveredInfo(result.text)
     if (!parsed) {
-      log(`Failed to parse response. Preview: ${result.text.substring(0, 300)}`)
+      // Try extracting from all markdown code blocks in the full text
+      const codeBlocks = result.text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/g)
+      if (codeBlocks) {
+        for (const block of codeBlocks) {
+          const inner = block.replace(/```(?:json)?\s*\n?/, '').replace(/\n?```/, '')
+          try { parsed = JSON.parse(inner); break } catch { /* try next */ }
+        }
+      }
+    }
+    if (!parsed) {
+      log(`Failed to parse response (${result.text.length}B). Preview: ${result.text.substring(0, 500)}`)
       await DiscoveryJob.updateOne(
         { _id: jobId },
         { $set: { status: 'failed', error: 'Failed to parse agent discovery response', rawOutput: result.text, completedAt: new Date() } },
