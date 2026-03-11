@@ -621,22 +621,20 @@ function TerminalSection() {
         </p>
       </div>
 
-      {/* Terminal window */}
+      {/* Terminal screenshot */}
       <div
         className="ytpre yr"
         style={{
           width: '100%',
-          maxWidth: '740px',
-          fontFamily: MONO,
-          fontSize: '12px',
-          background: PANEL,
+          maxWidth: '960px',
+          borderRadius: '8px',
+          overflow: 'hidden',
           border: `1px solid ${BORDER}`,
           boxShadow: `
             0 0 0 1px rgba(0,255,136,0.04),
             0 0 60px rgba(0,0,0,0.9),
             0 0 50px rgba(0,255,136,0.05),
-            0 48px 96px rgba(0,0,0,0.7)
-          `,
+            0 48px 96px rgba(0,0,0,0.7)`,
         }}
       >
         {/* Window chrome */}
@@ -674,9 +672,8 @@ function TerminalSection() {
               fontFamily: MONO,
             }}
           >
-            yggdrasight — intelligence — BTC/USDT
+            yggdrasight — terminal — BTC/USDT
           </span>
-          {/* LIVE pill */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <div
               style={{
@@ -699,112 +696,22 @@ function TerminalSection() {
             </span>
           </div>
         </div>
-
-        {/* ASCII content */}
-        <pre
+        {/* Screenshot */}
+        <img
+          src="/terminal-screenshot.png"
+          alt="Yggdrasight Terminal — BTC Trading Dashboard with real-time analysis"
           style={{
-            padding: '16px 18px',
-            margin: 0,
-            color: MUTED,
-            lineHeight: 1.65,
-            overflowX: 'auto',
-            fontSize: 'inherit',
-            fontFamily: MONO,
+            width: '100%',
+            height: 'auto',
+            display: 'block',
           }}
-        >
-          <TerminalArt />
-        </pre>
+        />
       </div>
     </section>
   )
 }
 
-function TerminalArt() {
-  const gn = GREEN
-  const am = AMBER
-  const bx = '#2e2e2e'
-  const dm = DIM
-  const mu = MUTED
-
-  return (
-    <>
-      <span style={{ color: bx }}>{'┌─────────────────────────────────────────────────────────┐'}</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: gn, fontWeight: 700 }}>{'  YGGDRASIGHT  '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: am }}>{'  BTC  ETH  SOL  TAO  PENDLE'}</span>
-      <span style={{ color: dm }}>{'          '}</span>
-      <span style={{ color: gn, animation: 'yLive 1.5s ease-in-out infinite', display: 'inline-block' }}>◉</span>
-      <span style={{ color: gn }}>{' LIVE '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>{'├─────────────────────────────────────────────────────────┤'}</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: mu }}>{'  CHART ▸ 4H         '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: mu }}>{'  INTELLIGENCE                     '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'                     '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'  ├─ Crack Mapping       '}</span>
-      <span style={{ color: gn, fontWeight: 600 }}>COMPLETE</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: gn }}>{'  ╱╲  ╱╲╱╲          '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'  ├─ Visibility          '}</span>
-      <span style={{ color: gn, fontWeight: 600 }}>COMPLETE</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: gn }}>{' ╱  ╲╱    ╲╱╲       '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'  ├─ Narrative Separator '}</span>
-      <span style={{ color: gn, fontWeight: 600 }}>COMPLETE</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: gn }}>{'              ╲╱     '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'  ├─ Power Vector        '}</span>
-      <span style={{ color: gn, fontWeight: 600 }}>COMPLETE</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'                     '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'  ├─ Problem Recognition '}</span>
-      <span style={{ color: gn, fontWeight: 600 }}>COMPLETE</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: gn }}>{'  $98,420.00  '}</span>
-      <span style={{ color: gn, fontWeight: 700 }}>{'+2.4%'}</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'  └─ Synthesizer     ▸ '}</span>
-      <span style={{ color: am, animation: 'yRun 0.9s step-end infinite', fontWeight: 700 }}>RUNNING</span>
-      <span style={{ color: dm }}>{'    '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>{'├─────────────────────┴──────────────────────────────────┤'}</span>{'\n'}
-      <span style={{ color: bx }}>│</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: mu }}>{'ANALYSIS'}</span>
-      <span style={{ color: bx }}>{'  │  '}</span>
-      <span style={{ color: dm }}>Wyckoff</span>
-      <span style={{ color: bx }}>{'  │  '}</span>
-      <span style={{ color: dm }}>Elliott</span>
-      <span style={{ color: bx }}>{'  │  '}</span>
-      <span style={{ color: dm }}>Soros</span>
-      <span style={{ color: bx }}>{'  │  '}</span>
-      <span style={{ color: dm }}>On-chain</span>
-      <span style={{ color: dm }}>{'  '}</span>
-      <span style={{ color: bx }}>│</span>{'\n'}
-      <span style={{ color: bx }}>{'└─────────────────────────────────────────────────────────┘'}</span>
-    </>
-  )
-}
+// Terminal screenshot replaces ASCII art — no TerminalArt function needed
 
 // ── Features Section ──────────────────────────────────────────────────────────
 const FEATURES = [

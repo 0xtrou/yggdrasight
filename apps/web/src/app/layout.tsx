@@ -17,7 +17,7 @@ const inter = Inter({
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yggdrasight.com'
 const SITE_NAME = 'Yggdrasight'
-const SITE_TITLE = 'Yggdrasight Terminal'
+const SITE_TITLE = 'Yggdrasight | AI-Native Trading Intelligence Terminal'
 const SITE_DESCRIPTION =
   'AI-powered trading intelligence terminal with real-time market analysis, multi-timeframe signals, and automated execution for crypto and traditional markets.'
 

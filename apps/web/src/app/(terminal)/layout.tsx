@@ -16,6 +16,7 @@ export default function TerminalLayout({ children }: { children: React.ReactNode
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [showSplash, setShowSplash] = useState(true)
   const [chatOpen, setChatOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   // Check authentication on mount
   useEffect(() => {
@@ -39,6 +40,14 @@ export default function TerminalLayout({ children }: { children: React.ReactNode
     }
 
     checkAuth()
+  }, [])
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 900)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   const handleSplashComplete = () => {
@@ -72,6 +81,57 @@ export default function TerminalLayout({ children }: { children: React.ReactNode
   // Show auth screen if not authenticated
   if (!isAuthenticated) {
     return <AuthScreen onAuthenticated={handleAuthenticated} />
+  }
+
+  // Block mobile devices
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          height: '100vh',
+          width: '100vw',
+          background: '#0a0a0a',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '32px',
+          fontFamily: "ui-monospace, 'SF Mono', 'JetBrains Mono', monospace",
+          textAlign: 'center',
+          gap: '24px',
+        }}
+      >
+        <img
+          src="/icon-512x512.png"
+          alt="Yggdrasight"
+          style={{ width: 64, height: 64, opacity: 0.8, filter: 'drop-shadow(0 0 12px rgba(0,255,136,0.3))' }}
+        />
+        <div style={{ color: '#e8e8e8', fontSize: '16px', fontWeight: 600, letterSpacing: '0.1em' }}>
+          DESKTOP ONLY
+        </div>
+        <div style={{ color: '#888888', fontSize: '12px', lineHeight: 1.7, maxWidth: '320px', letterSpacing: '0.02em' }}>
+          Yggdrasight Terminal is built for desktop and tablet devices.
+          The information density requires a screen width of at least 900px.
+        </div>
+        <div style={{ color: '#555555', fontSize: '11px', letterSpacing: '0.04em' }}>
+          Please switch to a desktop or tablet to access the terminal.
+        </div>
+        <a
+          href="https://yggdrasight.com"
+          style={{
+            marginTop: '8px',
+            color: '#00ff88',
+            fontSize: '11px',
+            letterSpacing: '0.08em',
+            textDecoration: 'none',
+            border: '1px solid rgba(0,255,136,0.3)',
+            padding: '8px 20px',
+          }}
+        >
+          VISIT LANDING PAGE
+        </a>
+      </div>
+    )
   }
 
   // Show terminal UI if authenticated
