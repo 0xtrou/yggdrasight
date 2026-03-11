@@ -35,4 +35,5 @@ tmp/
 
 # Test artifacts
 chat-*.md
-*.snapshot.png
+*.snapshot.pngopencode.json
+*.code-workspace
