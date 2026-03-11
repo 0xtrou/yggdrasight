@@ -20,7 +20,9 @@ export async function GET() {
         category: d.meta.category,
       }))
 
-      return NextResponse.json({ models, agents, modelMap })
+      const response = NextResponse.json({ models, agents, modelMap })
+      response.headers.set('Cache-Control', 'private, max-age=300, stale-while-revalidate=600')
+      return response
     } catch (err) {
       console.error('[GET /api/intelligence/models]', err)
       return NextResponse.json(

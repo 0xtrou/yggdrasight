@@ -176,7 +176,12 @@ function refreshModelsInBackground(): void {
         writeModelsCacheFile(models)
         console.log(`[opencode] Background refresh: found ${models.length} models`)
       } else {
-        console.log('[opencode] Background refresh: CLI returned no models (timeout or error)')
+        // CLI unavailable — still update cache timestamp so we don't re-trigger for another TTL cycle
+        modelsCacheTime = Date.now()
+        if (modelsCache && modelsCache.length > 0) {
+          writeModelsCacheFile(modelsCache)
+        }
+        console.log('[opencode] Background refresh: CLI returned no models (timeout or error), cache timestamp bumped')
       }
     })
     .catch((err) => {
@@ -212,7 +217,7 @@ export async function listModels(forceRefresh = false, _authSessionId?: string):
   const fileCached = readModelsCacheFile()
   if (fileCached) {
     modelsCache = fileCached.models
-    modelsCacheTime = fileCached.timestamp
+    modelsCacheTime = now  // Use current time, not file timestamp, to avoid immediate staleness
 
     // If file cache is stale, kick background refresh
     if (forceRefresh || now - fileCached.timestamp > MODELS_CACHE_TTL_MS) {
