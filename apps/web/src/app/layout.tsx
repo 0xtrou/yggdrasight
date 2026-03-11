@@ -84,15 +84,6 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     locale: 'en_US',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: `${SITE_NAME} - AI-Powered Trading Intelligence`,
-        type: 'image/png',
-      },
-    ],
   },
 
   // ── Twitter / X ──────────────────────────────────────
@@ -100,14 +91,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: [
-      {
-        url: '/twitter-image.png',
-        width: 1200,
-        height: 600,
-        alt: `${SITE_NAME} - AI-Powered Trading Intelligence`,
-      },
-    ],
     creator: '@yggdrasight',
   },
 
