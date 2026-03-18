@@ -11,6 +11,7 @@ export interface RunAnalysisOptions {
   agentIds?: string[]
   includeDeterministic?: boolean
   authJsonPath?: string
+  forceFresh?: boolean
 }
 
 export async function runAnalysis(
@@ -20,7 +21,7 @@ export async function runAnalysis(
 ): Promise<ConsensusResult> {
   // Build shared context (lazy-cached data providers)
   const defaultModel = options?.agentModelMap ? Object.values(options.agentModelMap)[0] : options?.model
-  const ctx = buildContext(symbol, timeframes, defaultModel, options?.authJsonPath)
+  const ctx = { ...buildContext(symbol, timeframes, defaultModel, options?.authJsonPath), forceFresh: options?.forceFresh ?? false }
 
 
   const analysts: Analyst[] = []
@@ -31,7 +32,14 @@ export async function runAnalysis(
   }
 
 
-  if (options?.model || options?.agentModelMap) {
+  // Only add LLM analysts when there is an actual model to use.
+  // An empty agentModelMap ({}) is truthy but provides no model — skip to avoid
+  // every LLM analyst returning "No model specified" without spawning containers.
+  const hasModel = !!(
+    options?.model ||
+    (options?.agentModelMap && Object.keys(options.agentModelMap).length > 0)
+  )
+  if (hasModel) {
     const llmAnalysts = getLLMAnalysts(options.agentIds)
     analysts.push(...llmAnalysts)
   }
