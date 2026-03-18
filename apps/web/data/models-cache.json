@@ -1401,6 +1401,131 @@
       "name": "z-ai/glm-5"
     },
     {
+      "id": "xai/grok-2",
+      "provider": "xai",
+      "name": "grok-2"
+    },
+    {
+      "id": "xai/grok-2-1212",
+      "provider": "xai",
+      "name": "grok-2-1212"
+    },
+    {
+      "id": "xai/grok-2-latest",
+      "provider": "xai",
+      "name": "grok-2-latest"
+    },
+    {
+      "id": "xai/grok-2-vision",
+      "provider": "xai",
+      "name": "grok-2-vision"
+    },
+    {
+      "id": "xai/grok-2-vision-1212",
+      "provider": "xai",
+      "name": "grok-2-vision-1212"
+    },
+    {
+      "id": "xai/grok-2-vision-latest",
+      "provider": "xai",
+      "name": "grok-2-vision-latest"
+    },
+    {
+      "id": "xai/grok-3",
+      "provider": "xai",
+      "name": "grok-3"
+    },
+    {
+      "id": "xai/grok-3-fast",
+      "provider": "xai",
+      "name": "grok-3-fast"
+    },
+    {
+      "id": "xai/grok-3-fast-latest",
+      "provider": "xai",
+      "name": "grok-3-fast-latest"
+    },
+    {
+      "id": "xai/grok-3-latest",
+      "provider": "xai",
+      "name": "grok-3-latest"
+    },
+    {
+      "id": "xai/grok-3-mini",
+      "provider": "xai",
+      "name": "grok-3-mini"
+    },
+    {
+      "id": "xai/grok-3-mini-fast",
+      "provider": "xai",
+      "name": "grok-3-mini-fast"
+    },
+    {
+      "id": "xai/grok-3-mini-fast-latest",
+      "provider": "xai",
+      "name": "grok-3-mini-fast-latest"
+    },
+    {
+      "id": "xai/grok-3-mini-latest",
+      "provider": "xai",
+      "name": "grok-3-mini-latest"
+    },
+    {
+      "id": "xai/grok-4",
+      "provider": "xai",
+      "name": "grok-4"
+    },
+    {
+      "id": "xai/grok-4-1-fast",
+      "provider": "xai",
+      "name": "grok-4-1-fast"
+    },
+    {
+      "id": "xai/grok-4-1-fast-non-reasoning",
+      "provider": "xai",
+      "name": "grok-4-1-fast-non-reasoning"
+    },
+    {
+      "id": "xai/grok-4-fast",
+      "provider": "xai",
+      "name": "grok-4-fast"
+    },
+    {
+      "id": "xai/grok-4-fast-non-reasoning",
+      "provider": "xai",
+      "name": "grok-4-fast-non-reasoning"
+    },
+    {
+      "id": "xai/grok-4.20-beta-latest-non-reasoning",
+      "provider": "xai",
+      "name": "grok-4.20-beta-latest-non-reasoning"
+    },
+    {
+      "id": "xai/grok-4.20-beta-latest-reasoning",
+      "provider": "xai",
+      "name": "grok-4.20-beta-latest-reasoning"
+    },
+    {
+      "id": "xai/grok-4.20-multi-agent-beta-latest",
+      "provider": "xai",
+      "name": "grok-4.20-multi-agent-beta-latest"
+    },
+    {
+      "id": "xai/grok-beta",
+      "provider": "xai",
+      "name": "grok-beta"
+    },
+    {
+      "id": "xai/grok-code-fast-1",
+      "provider": "xai",
+      "name": "grok-code-fast-1"
+    },
+    {
+      "id": "xai/grok-vision-beta",
+      "provider": "xai",
+      "name": "grok-vision-beta"
+    },
+    {
       "id": "zai/glm-4.5",
       "provider": "zai",
       "name": "glm-4.5"
@@ -1451,5 +1576,5 @@
       "name": "glm-5-turbo"
     }
   ],
-  "timestamp": 1773824467841
+  "timestamp": 1773835218669
 }

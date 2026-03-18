@@ -58,25 +58,23 @@ function applySecurityHeaders(response: NextResponse): void {
   }
 }
 
-const MODE = process.env.MODE
-
 export function middleware(req: NextRequest): NextResponse {
   scheduleCleanup()
 
   const { pathname } = req.nextUrl
   const host = req.headers.get('host') || ''
   const hostname = host.split(':')[0]
-  const isLocalhost = hostname.startsWith('localhost') || hostname === '127.0.0.1'
+  const isTerminal = hostname.includes('terminal.');
 
   // ── MODE=terminal: pure terminal deployment, no landing page ────────────────
-  if (MODE === 'terminal') {
+  if (isTerminal) {
     const response = NextResponse.next()
     applySecurityHeaders(response)
     return response
   }
 
   // ── MODE=landing: pure landing deployment, block all terminal routes ────────
-  if (MODE === 'landing') {
+  if (!isTerminal) {
     if (pathname === '/landing' || pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.startsWith('/public')) {
       const response = NextResponse.next()
       applySecurityHeaders(response)
@@ -85,15 +83,6 @@ export function middleware(req: NextRequest): NextResponse {
     const url = req.nextUrl.clone()
     url.pathname = '/landing'
     const response = pathname === '/' ? NextResponse.rewrite(url) : NextResponse.redirect(url)
-    applySecurityHeaders(response)
-    return response
-  }
-
-  // ── No MODE set: pass everything through unchanged ──────────────────────────
-  if (pathname === '/') {
-    const url = req.nextUrl.clone()
-    url.pathname = '/landing'
-    const response = NextResponse.rewrite(url)
     applySecurityHeaders(response)
     return response
   }
