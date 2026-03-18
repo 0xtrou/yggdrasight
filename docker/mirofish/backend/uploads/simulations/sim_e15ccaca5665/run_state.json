@@ -1,0 +1,696 @@
+{
+  "simulation_id": "sim_e15ccaca5665",
+  "runner_status": "completed",
+  "current_round": 20,
+  "total_rounds": 20,
+  "simulated_hours": 0,
+  "total_simulation_hours": 48,
+  "progress_percent": 100.0,
+  "twitter_current_round": 20,
+  "reddit_current_round": 20,
+  "twitter_simulated_hours": 0,
+  "reddit_simulated_hours": 0,
+  "twitter_running": false,
+  "reddit_running": false,
+  "twitter_completed": true,
+  "reddit_completed": true,
+  "twitter_actions_count": 20,
+  "reddit_actions_count": 26,
+  "total_actions_count": 46,
+  "started_at": "2026-03-17T22:40:38.013725",
+  "updated_at": "2026-03-17T22:42:14.269594",
+  "completed_at": "2026-03-17T22:42:14.269973",
+  "error": null,
+  "process_pid": 44141,
+  "recent_actions": [
+    {
+      "round_num": 17,
+      "timestamp": "2026-03-17T22:42:14.191912",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "LIKE_COMMENT",
+      "action_args": {
+        "comment_id": 5,
+        "comment_content": "We are actively tracking the TVL recovery on BNB Chain. A detailed report on Venus Protocol's contribution and its impact on XVS holders will be shared soon. Stay tuned for updates!",
+        "comment_author_name": "Venus Protocol"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 17,
+      "timestamp": "2026-03-17T22:42:14.191577",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "LIKE_COMMENT",
+      "action_args": {
+        "comment_id": 4,
+        "comment_content": "It would be interesting to quantify the contribution of Venus Protocol to the overall BNB Chain DeFi TVL recovery. We'll look into providing some data on this.",
+        "comment_author_name": "CoinGecko"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 16,
+      "timestamp": "2026-03-17T22:42:12.290089",
+      "platform": "reddit",
+      "agent_id": 2,
+      "agent_name": "governance proposals",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Observed recent interesting trends: 1) $XVS showing uptrend and volume spike. 2) BNB Chain DeFi TVL recovery. Let's discuss: What governance proposals can further capitalize on these trends and enhance Venus Protocol's position?",
+        "post_id": 8
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 16,
+      "timestamp": "2026-03-17T22:42:12.290036",
+      "platform": "reddit",
+      "agent_id": 2,
+      "agent_name": "governance proposals",
+      "action_type": "LIKE_COMMENT",
+      "action_args": {
+        "comment_id": 4,
+        "comment_content": "It would be interesting to quantify the contribution of Venus Protocol to the overall BNB Chain DeFi TVL recovery. We'll look into providing some data on this.",
+        "comment_author_name": "CoinGecko"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 16,
+      "timestamp": "2026-03-17T22:42:12.289964",
+      "platform": "reddit",
+      "agent_id": 2,
+      "agent_name": "governance proposals",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "Venus Protocol's strategy focuses on optimizing for the BNB Chain ecosystem. Direct comparison to Compound and Aave on other chains needs to consider factors like gas fees and asset availability. We need to analyze the risk-adjusted yields and user demographics on each platform to have a comprehensive comparison. Data-driven proposals are crucial for adapting and gaining market share. Community feedback on specific areas for improvement is highly encouraged.",
+        "comment_id": 6
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 16,
+      "timestamp": "2026-03-17T22:42:12.289742",
+      "platform": "reddit",
+      "agent_id": 3,
+      "agent_name": "Venus Protocol",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "We are actively tracking the TVL recovery on BNB Chain. A detailed report on Venus Protocol's contribution and its impact on XVS holders will be shared soon. Stay tuned for updates!",
+        "comment_id": 5
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 20,
+      "timestamp": "2026-03-17T22:42:13.450003",
+      "platform": "twitter",
+      "agent_id": 3,
+      "agent_name": "Venus Protocol",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 4,
+        "like_id": 4,
+        "post_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "post_author_name": "BNB Chain"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 17,
+      "timestamp": "2026-03-17T22:42:11.621952",
+      "platform": "twitter",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "QUOTE_POST",
+      "action_args": {
+        "quoted_id": 5,
+        "new_post_id": 11,
+        "original_content": "Recent governance proposals for new collateral types on Venus Protocol could further influence the price of XVS. What are the potential impacts of these proposals on the protocol's overall health and token value?",
+        "original_author_name": "governance proposals",
+        "quote_content": "Governance proposals are crucial for the evolution of Venus Protocol. We encourage community participation in these discussions and are evaluating the potential impacts of new collateral types on XVS and the overall ecosystem."
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 17,
+      "timestamp": "2026-03-17T22:42:11.621611",
+      "platform": "twitter",
+      "agent_id": 3,
+      "agent_name": "Venus Protocol",
+      "action_type": "QUOTE_POST",
+      "action_args": {
+        "quoted_id": 5,
+        "new_post_id": 10,
+        "original_content": "Recent governance proposals for new collateral types on Venus Protocol could further influence the price of XVS. What are the potential impacts of these proposals on the protocol's overall health and token value?",
+        "original_author_name": "governance proposals",
+        "quote_content": "Governance proposals regarding new collateral types are crucial for Venus Protocol's growth and XVS value. Community discussion and participation are highly encouraged!"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 16,
+      "timestamp": "2026-03-17T22:42:09.391103",
+      "platform": "twitter",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 7,
+        "like_id": 3,
+        "post_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "post_author_name": "Aave"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 13,
+      "timestamp": "2026-03-17T22:42:06.713330",
+      "platform": "reddit",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "It would be interesting to quantify the contribution of Venus Protocol to the overall BNB Chain DeFi TVL recovery. We'll look into providing some data on this.",
+        "comment_id": 4
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 13,
+      "timestamp": "2026-03-17T22:42:06.713132",
+      "platform": "reddit",
+      "agent_id": 4,
+      "agent_name": "Aave",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "The addition of new collateral types on Venus could lead to increased borrowing capacity, potentially driving demand for XVS. However, it's crucial to assess the risk profiles of these new assets to ensure the protocol's solvency.",
+        "comment_id": 3
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 12,
+      "timestamp": "2026-03-17T22:42:04.851750",
+      "platform": "reddit",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "LIKE_COMMENT",
+      "action_args": {
+        "comment_id": 2,
+        "comment_content": "Interesting comparison! I'd like to see a breakdown of on-chain governance participation rates between Venus and Aave. Also, how do their liquidation mechanisms differ and how does that impact risk for lenders?",
+        "comment_author_name": "Compound"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 13,
+      "timestamp": "2026-03-17T22:42:05.302254",
+      "platform": "twitter",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "QUOTE_POST",
+      "action_args": {
+        "quoted_id": 4,
+        "new_post_id": 9,
+        "original_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "original_author_name": "BNB Chain",
+        "quote_content": "The recovery of BNB Chain DeFi TVL indeed has implications for Venus Protocol. We are actively monitoring the contributions and impacts on XVS holders. Further analysis will be shared soon."
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 11,
+      "timestamp": "2026-03-17T22:42:03.345066",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "Interesting comparison! I'd like to see a breakdown of on-chain governance participation rates between Venus and Aave. Also, how do their liquidation mechanisms differ and how does that impact risk for lenders?",
+        "comment_id": 2
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 11,
+      "timestamp": "2026-03-17T22:42:03.344909",
+      "platform": "reddit",
+      "agent_id": 4,
+      "agent_name": "Aave",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 7,
+        "like_id": 3,
+        "post_content": "How does Venus Protocol's (XVS) approach to collateral and governance compare to Aave? What are the key differences in risk management and community involvement?",
+        "post_author_name": "Aave"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 12,
+      "timestamp": "2026-03-17T22:42:03.039858",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 7,
+        "like_id": 2,
+        "post_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "post_author_name": "Aave"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-17T22:42:00.454043",
+      "platform": "reddit",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "Venus Protocol's performance on BNB Chain is competitive, with a focus on providing accessible DeFi lending services. While direct comparisons to Compound and Aave are complex due to chain differences, Venus is actively innovating and adapting to the BNB Chain ecosystem. Community input and governance proposals are key to its continued growth and market share gains. We encourage users to participate in the governance process.",
+        "comment_id": 1
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-17T22:42:00.453793",
+      "platform": "reddit",
+      "agent_id": 4,
+      "agent_name": "Aave",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "How does Venus Protocol's (XVS) approach to collateral and governance compare to Aave? What are the key differences in risk management and community involvement?",
+        "post_id": 7
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 11,
+      "timestamp": "2026-03-17T22:42:01.033863",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "REPOST",
+      "action_args": {
+        "new_post_id": 8,
+        "original_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "original_author_name": "BNB Chain"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-17T22:41:59.047205",
+      "platform": "twitter",
+      "agent_id": 4,
+      "agent_name": "Aave",
+      "action_type": "QUOTE_POST",
+      "action_args": {
+        "quoted_id": 4,
+        "new_post_id": 7,
+        "original_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "original_author_name": "BNB Chain",
+        "quote_content": "How does the BNB Chain DeFi TVL recovery and Venus Protocol's growth affect other DeFi protocols and the broader ecosystem?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-17T22:41:59.047036",
+      "platform": "twitter",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 6,
+        "like_id": 1,
+        "post_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "post_author_name": "CoinGecko"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.584960",
+      "platform": "reddit",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "CoinGecko data shows a notable volume spike for XVS on March 14th, indicating potential institutional buying pressure. The recovery of BNB Chain DeFi TVL also bodes well for Venus Protocol. We will continue monitoring these trends.",
+        "post_id": 6
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.584831",
+      "platform": "reddit",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 4,
+        "like_id": 2,
+        "post_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "post_author_name": "BNB Chain"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.584716",
+      "platform": "reddit",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 2,
+        "like_id": 1,
+        "post_content": "CoinGecko data reveals a significant volume spike for XVS on March 14th. This suggests institutional buying pressure. Is this a sign of things to come for Venus Protocol?",
+        "post_author_name": "CoinGecko"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.584631",
+      "platform": "reddit",
+      "agent_id": 2,
+      "agent_name": "governance proposals",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Recent governance proposals for new collateral types on Venus Protocol could further influence the price of XVS. What are the potential impacts of these proposals on the protocol's overall health and token value?",
+        "post_id": 5
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.584540",
+      "platform": "reddit",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "post_id": 4
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.584398",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "How does Venus Protocol's performance on BNB Chain compare to other DeFi lending protocols like Compound and Aave on different chains? Is Venus Protocol gaining market share?",
+        "post_id": 3
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.584052",
+      "platform": "reddit",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "CoinGecko data reveals a significant volume spike for XVS on March 14th. This suggests institutional buying pressure. Is this a sign of things to come for Venus Protocol?",
+        "post_id": 2
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:57.583691",
+      "platform": "reddit",
+      "agent_id": 3,
+      "agent_name": "Venus Protocol",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be broken. What are your thoughts on XVS's short-term prospects?",
+        "post_id": 1
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:56.634929",
+      "platform": "twitter",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "QUOTE_POST",
+      "action_args": {
+        "quoted_id": 4,
+        "new_post_id": 6,
+        "original_content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "original_author_name": "BNB Chain",
+        "quote_content": "CoinGecko is tracking the BNB Chain DeFi TVL recovery closely. We'll provide data updates on Venus Protocol's contribution to this recovery and its impact on XVS."
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:56.634826",
+      "platform": "twitter",
+      "agent_id": 2,
+      "agent_name": "governance proposals",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Recent governance proposals for new collateral types on Venus Protocol could further influence the price of XVS. What are the potential impacts of these proposals on the protocol's overall health and token value?",
+        "post_id": 5
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:56.634729",
+      "platform": "twitter",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "post_id": 4
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:56.634611",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "How does Venus Protocol's performance on BNB Chain compare to other DeFi lending protocols like Compound and Aave on different chains? Is Venus Protocol gaining market share?",
+        "post_id": 3
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:56.634448",
+      "platform": "twitter",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "CoinGecko data reveals a significant volume spike for XVS on March 14th. This suggests institutional buying pressure. Is this a sign of things to come for Venus Protocol?",
+        "post_id": 2
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 9,
+      "timestamp": "2026-03-17T22:41:56.634017",
+      "platform": "twitter",
+      "agent_id": 3,
+      "agent_name": "Venus Protocol",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be broken. What are your thoughts on XVS's short-term prospects?",
+        "post_id": 1
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.979937",
+      "platform": "reddit",
+      "agent_id": 2,
+      "agent_name": "governance proposals",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Recent governance proposals for new collateral types on Venus Protocol could further influence the price of XVS. What are the potential impacts of these proposals on the protocol's overall health and token value?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.979904",
+      "platform": "reddit",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.979869",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "How does Venus Protocol's performance on BNB Chain compare to other DeFi lending protocols like Compound and Aave on different chains? Is Venus Protocol gaining market share?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.979830",
+      "platform": "reddit",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "CoinGecko data reveals a significant volume spike for XVS on March 14th. This suggests institutional buying pressure. Is this a sign of things to come for Venus Protocol?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.979785",
+      "platform": "reddit",
+      "agent_id": 3,
+      "agent_name": "Venus Protocol",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be broken. What are your thoughts on XVS's short-term prospects?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.882505",
+      "platform": "twitter",
+      "agent_id": 2,
+      "agent_name": "governance proposals",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Recent governance proposals for new collateral types on Venus Protocol could further influence the price of XVS. What are the potential impacts of these proposals on the protocol's overall health and token value?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.882470",
+      "platform": "twitter",
+      "agent_id": 1,
+      "agent_name": "BNB Chain",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.882435",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "Compound",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "How does Venus Protocol's performance on BNB Chain compare to other DeFi lending protocols like Compound and Aave on different chains? Is Venus Protocol gaining market share?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.882398",
+      "platform": "twitter",
+      "agent_id": 5,
+      "agent_name": "CoinGecko",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "CoinGecko data reveals a significant volume spike for XVS on March 14th. This suggests institutional buying pressure. Is this a sign of things to come for Venus Protocol?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-17T22:41:29.882356",
+      "platform": "twitter",
+      "agent_id": 3,
+      "agent_name": "Venus Protocol",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be broken. What are your thoughts on XVS's short-term prospects?"
+      },
+      "result": null,
+      "success": true
+    }
+  ],
+  "rounds_count": 0
+}

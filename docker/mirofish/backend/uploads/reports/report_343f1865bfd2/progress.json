@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "progress": 100,
+  "message": "报告生成完成",
+  "current_section": null,
+  "completed_sections": [
+    "市场整体环境：小幅波动",
+    "技术分析信号：趋势不明",
+    "未来趋势展望：谨慎观望"
+  ],
+  "updated_at": "2026-03-18T06:50:20.882546"
+}

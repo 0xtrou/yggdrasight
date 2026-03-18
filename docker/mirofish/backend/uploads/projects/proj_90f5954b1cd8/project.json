@@ -1,0 +1,260 @@
+{
+  "project_id": "proj_90f5954b1cd8",
+  "name": "XVS End-of-March Prediction",
+  "status": "graph_completed",
+  "created_at": "2026-03-17T22:48:46.070532",
+  "updated_at": "2026-03-17T22:51:36.241812",
+  "files": [
+    {
+      "filename": "xvs_eom_seed.md",
+      "size": 5917
+    }
+  ],
+  "total_text_length": 5904,
+  "ontology": {
+    "entity_types": [
+      {
+        "name": "CryptoTrader",
+        "description": "Individuals trading XVS and other cryptocurrencies.",
+        "attributes": [
+          {
+            "name": "trading_strategy",
+            "type": "text",
+            "description": "The trader's typical investment strategy."
+          }
+        ],
+        "examples": [
+          "@CryptoWhale",
+          "@AltcoinHunter"
+        ]
+      },
+      {
+        "name": "DeFiAnalyst",
+        "description": "Analysts specializing in decentralized finance protocols like Venus.",
+        "attributes": [
+          {
+            "name": "expertise_area",
+            "type": "text",
+            "description": "Specific area of DeFi expertise (e.g., lending, borrowing)."
+          }
+        ],
+        "examples": [
+          "@DeFiReport",
+          "@VenusInsights"
+        ]
+      },
+      {
+        "name": "NewsOutlet",
+        "description": "News organizations reporting on cryptocurrency and DeFi markets.",
+        "attributes": [
+          {
+            "name": "reporting_focus",
+            "type": "text",
+            "description": "The outlet's primary focus (e.g., breaking news, analysis)."
+          }
+        ],
+        "examples": [
+          "CoinDesk",
+          "Bloomberg Crypto"
+        ]
+      },
+      {
+        "name": "MarketParticipant",
+        "description": "General participants in the cryptocurrency market.",
+        "attributes": [
+          {
+            "name": "investment_size",
+            "type": "text",
+            "description": "Approximate size of their crypto portfolio."
+          }
+        ],
+        "examples": [
+          "@CryptoNewbie",
+          "@HodlForLife"
+        ]
+      },
+      {
+        "name": "VenusProtocol",
+        "description": "The Venus Protocol itself, a DeFi lending/borrowing platform.",
+        "attributes": [
+          {
+            "name": "tvl",
+            "type": "text",
+            "description": "Total Value Locked in the Venus Protocol."
+          }
+        ],
+        "examples": [
+          "VenusProtocol"
+        ]
+      },
+      {
+        "name": "BNBChain",
+        "description": "The BNB Chain, the blockchain on which Venus Protocol operates.",
+        "attributes": [
+          {
+            "name": "tvl",
+            "type": "text",
+            "description": "Total Value Locked on the BNB Chain."
+          }
+        ],
+        "examples": [
+          "BNBChain"
+        ]
+      },
+      {
+        "name": "Aave",
+        "description": "Aave, a competitor DeFi lending protocol.",
+        "attributes": [
+          {
+            "name": "tvl",
+            "type": "text",
+            "description": "Total Value Locked in the Aave protocol."
+          }
+        ],
+        "examples": [
+          "Aave"
+        ]
+      },
+      {
+        "name": "Whale",
+        "description": "Large cryptocurrency holders who can significantly influence the market.",
+        "attributes": [
+          {
+            "name": "wallet_address",
+            "type": "text",
+            "description": "Public address of the whale's crypto wallet."
+          }
+        ],
+        "examples": [
+          "@BigCryptoWhale",
+          "0xAbCdEf123456"
+        ]
+      },
+      {
+        "name": "Person",
+        "description": "Any individual, used when a more specific type is not applicable.",
+        "attributes": [],
+        "examples": [
+          "John Doe",
+          "Jane Smith"
+        ]
+      },
+      {
+        "name": "Organization",
+        "description": "Any organization, used when a more specific type is not applicable.",
+        "attributes": [
+          {
+            "name": "org_name",
+            "type": "text",
+            "description": "The organization's name."
+          }
+        ],
+        "examples": [
+          "Acme Corp",
+          "Beta Foundation"
+        ]
+      }
+    ],
+    "edge_types": [
+      {
+        "name": "TRADES",
+        "description": "A trader trades a cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "CryptoTrader",
+            "target": "VenusProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "ANALYZES",
+        "description": "An analyst analyzes a DeFi protocol.",
+        "source_targets": [
+          {
+            "source": "DeFiAnalyst",
+            "target": "VenusProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "REPORTS_ON",
+        "description": "A news outlet reports on a cryptocurrency or protocol.",
+        "source_targets": [
+          {
+            "source": "NewsOutlet",
+            "target": "VenusProtocol"
+          },
+          {
+            "source": "NewsOutlet",
+            "target": "BNBChain"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "PARTICIPATES_IN",
+        "description": "A market participant participates in a DeFi protocol.",
+        "source_targets": [
+          {
+            "source": "MarketParticipant",
+            "target": "VenusProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "OPERATES_ON",
+        "description": "A DeFi protocol operates on a blockchain.",
+        "source_targets": [
+          {
+            "source": "VenusProtocol",
+            "target": "BNBChain"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "COMPETES_WITH",
+        "description": "One DeFi protocol competes with another.",
+        "source_targets": [
+          {
+            "source": "VenusProtocol",
+            "target": "Aave"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "HOLDS",
+        "description": "A whale holds a cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "Whale",
+            "target": "VenusProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "INFLUENCES",
+        "description": "A whale influences a market participant.",
+        "source_targets": [
+          {
+            "source": "Whale",
+            "target": "MarketParticipant"
+          }
+        ],
+        "attributes": []
+      }
+    ]
+  },
+  "analysis_summary": "根据提供的XVS价格预测文档，设计了包括加密货币交易者、DeFi分析师、新闻媒体、市场参与者、Venus协议、BNB链、Aave和巨鲸等实体类型。关系类型反映了他们之间的交易、分析、报道、参与、竞争和影响等互动关系，用于模拟社交媒体舆论。",
+  "graph_id": "mirofish_6a3439e1be294c51",
+  "graph_build_task_id": "11d97ba9-ef04-43f8-b926-49c11ec966da",
+  "simulation_requirement": "Predict the price of XVS (Venus Protocol) on March 31, 2026. The token has rallied +17.5% from $2.842 to $3.34 over 9 days (March 9-17). Simulate how crypto traders, DeFi analysts, news outlets, and market participants would react over the next 14 days. Consider bullish continuation, consolidation, or mean-reversion scenarios. Provide a specific price prediction with confidence range.",
+  "chunk_size": 500,
+  "chunk_overlap": 50,
+  "error": null
+}

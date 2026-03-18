@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "progress": 100,
+  "message": "报告生成完成",
+  "current_section": null,
+  "completed_sections": [
+    "SENTUSDT短期价格走势预测：下行风险",
+    "交易量骤降：市场兴趣减退",
+    "潜在风险：长期持有者的压力"
+  ],
+  "updated_at": "2026-03-18T08:00:43.867957"
+}

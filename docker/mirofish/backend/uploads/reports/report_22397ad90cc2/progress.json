@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "progress": 100,
+  "message": "报告生成完成",
+  "current_section": null,
+  "completed_sections": [
+    "市场情绪与比特币主导地位对SENTUSDT价格的影响",
+    "SENTUSDT价格历史表现与未来趋势预判"
+  ],
+  "updated_at": "2026-03-18T06:13:06.744818"
+}

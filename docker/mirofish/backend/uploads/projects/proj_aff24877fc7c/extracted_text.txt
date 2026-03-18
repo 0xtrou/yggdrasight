@@ -1,0 +1,29 @@
+
+
+=== SENTUSDT-seed.md ===
+# SENTUSDT — 30-Day Price Analysis & Prediction
+
+## Price Data (from exchange candles)
+Current Price: 0.02129
+Period Change: -9.25% (500 candles)
+Range: 0.02058 - 0.0285
+
+## Market Context
+Fear & Greed Index: 26 (Fear)
+BTC Dominance: 56.7%
+Total Crypto Market Cap 24h Change: 0.18%
+
+## Bull Case
+- Analyze the 7d/14d/30d price changes above and identify bullish patterns
+- Consider if price is near 30d low (potential reversal) or above moving averages
+- Note if volume is increasing (confirms momentum)
+
+## Bear Case
+- Analyze if the trend is clearly downward (price < SMA7 < SMA14)
+- Consider if price is near 30d high (potential exhaustion)
+- Note if volume is declining (weakening conviction)
+
+## Prediction Question
+Based on the 30-day price action, trend indicators, volume, and macro context above:
+Will SENTUSDT price be BULLISH or BEARISH over the next 24-72 hours?
+You MUST pick a side. Neutral is only acceptable if the data genuinely shows zero directional bias.

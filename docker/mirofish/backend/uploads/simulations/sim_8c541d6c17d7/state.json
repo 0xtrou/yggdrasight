@@ -1,0 +1,19 @@
+{
+  "simulation_id": "sim_8c541d6c17d7",
+  "project_id": "proj_bb7091755b7a",
+  "graph_id": "mirofish_5f4db76e9cfc4c6c",
+  "enable_twitter": true,
+  "enable_reddit": true,
+  "status": "failed",
+  "entities_count": 0,
+  "profiles_count": 0,
+  "entity_types": [],
+  "config_generated": false,
+  "config_reasoning": "",
+  "current_round": 0,
+  "twitter_status": "not_started",
+  "reddit_status": "not_started",
+  "created_at": "2026-03-18T06:58:59.194944",
+  "updated_at": "2026-03-18T06:59:00.174417",
+  "error": "没有找到符合条件的实体，请检查图谱是否正确构建"
+}

@@ -1,0 +1,62 @@
+{"timestamp": "2026-03-18T06:09:26.252239", "event_type": "simulation_start", "platform": "reddit", "total_rounds": 144, "agents_count": 1}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.252661", "event_type": "round_start", "simulated_hour": 0}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.252958", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "Given the current price of SENTUSDT at 0.02126 and a recent price change of -9.38% over the last 500 candles, what's your prediction for its price direction in the next 24-72 hours?"}, "result": null, "success": true}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.253115", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "The Fear & Greed index is currently at 26 (Fear). How much does this influence your SENTUSDT price prediction?"}, "result": null, "success": true}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.253247", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?"}, "result": null, "success": true}
+{"round": 0, "timestamp": "2026-03-18T06:11:59.253957", "event_type": "round_end", "actions_count": 3}
+{"round": 1, "timestamp": "2026-03-18T06:11:59.254329", "event_type": "round_start", "simulated_hour": 0}
+{"round": 1, "timestamp": "2026-03-18T06:11:59.254433", "event_type": "round_end", "actions_count": 0}
+{"round": 2, "timestamp": "2026-03-18T06:11:59.254522", "event_type": "round_start", "simulated_hour": 1}
+{"round": 2, "timestamp": "2026-03-18T06:11:59.254610", "event_type": "round_end", "actions_count": 0}
+{"round": 3, "timestamp": "2026-03-18T06:11:59.254688", "event_type": "round_start", "simulated_hour": 2}
+{"round": 3, "timestamp": "2026-03-18T06:11:59.254760", "event_type": "round_end", "actions_count": 0}
+{"round": 4, "timestamp": "2026-03-18T06:11:59.254837", "event_type": "round_start", "simulated_hour": 3}
+{"round": 4, "timestamp": "2026-03-18T06:11:59.254951", "event_type": "round_end", "actions_count": 0}
+{"round": 5, "timestamp": "2026-03-18T06:11:59.255053", "event_type": "round_start", "simulated_hour": 4}
+{"round": 5, "timestamp": "2026-03-18T06:11:59.255126", "event_type": "round_end", "actions_count": 0}
+{"round": 6, "timestamp": "2026-03-18T06:11:59.255248", "event_type": "round_start", "simulated_hour": 5}
+{"round": 6, "timestamp": "2026-03-18T06:11:59.255355", "event_type": "round_end", "actions_count": 0}
+{"round": 7, "timestamp": "2026-03-18T06:11:59.255476", "event_type": "round_start", "simulated_hour": 6}
+{"round": 7, "timestamp": "2026-03-18T06:11:59.255577", "event_type": "round_end", "actions_count": 0}
+{"round": 8, "timestamp": "2026-03-18T06:11:59.255725", "event_type": "round_start", "simulated_hour": 7}
+{"round": 8, "timestamp": "2026-03-18T06:11:59.255840", "event_type": "round_end", "actions_count": 0}
+{"round": 9, "timestamp": "2026-03-18T06:11:59.255992", "event_type": "round_start", "simulated_hour": 8}
+{"round": 9, "timestamp": "2026-03-18T06:11:59.256136", "event_type": "round_end", "actions_count": 0}
+{"round": 10, "timestamp": "2026-03-18T06:11:59.256291", "event_type": "round_start", "simulated_hour": 9}
+{"round": 10, "timestamp": "2026-03-18T06:12:01.780523", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "Given the current price of SENTUSDT at 0.02126 and a recent price change of -9.38% over the last 500 candles, what's your prediction for its price direction in the next 24-72 hours?", "post_id": 1}, "result": null, "success": true}
+{"round": 10, "timestamp": "2026-03-18T06:12:01.780859", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "The Fear & Greed index is currently at 26 (Fear). How much does this influence your SENTUSDT price prediction?", "post_id": 2}, "result": null, "success": true}
+{"round": 10, "timestamp": "2026-03-18T06:12:01.781613", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?", "post_id": 3}, "result": null, "success": true}
+{"round": 10, "timestamp": "2026-03-18T06:12:01.782002", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_COMMENT", "action_args": {"content": "Current price indicates a bearish trend. Further analysis needed to predict accurately.", "comment_id": 1}, "result": null, "success": true}
+{"round": 10, "timestamp": "2026-03-18T06:12:01.782322", "event_type": "round_end", "actions_count": 4}
+{"round": 11, "timestamp": "2026-03-18T06:12:01.782630", "event_type": "round_start", "simulated_hour": 10}
+{"round": 11, "timestamp": "2026-03-18T06:12:03.098366", "event_type": "round_end", "actions_count": 0}
+{"round": 12, "timestamp": "2026-03-18T06:12:03.099229", "event_type": "round_start", "simulated_hour": 11}
+{"round": 12, "timestamp": "2026-03-18T06:12:05.025299", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_COMMENT", "action_args": {"content": "The Fear & Greed index being at 'Fear' suggests investors are risk-averse, potentially leading to decreased buying pressure on SENTUSDT.", "comment_id": 2}, "result": null, "success": true}
+{"round": 12, "timestamp": "2026-03-18T06:12:05.025713", "event_type": "round_end", "actions_count": 1}
+{"round": 13, "timestamp": "2026-03-18T06:12:05.026497", "event_type": "round_start", "simulated_hour": 12}
+{"round": 13, "timestamp": "2026-03-18T06:12:06.198867", "event_type": "round_end", "actions_count": 0}
+{"round": 14, "timestamp": "2026-03-18T06:12:06.199395", "event_type": "round_start", "simulated_hour": 13}
+{"round": 14, "timestamp": "2026-03-18T06:12:06.200250", "event_type": "round_end", "actions_count": 0}
+{"round": 15, "timestamp": "2026-03-18T06:12:06.200872", "event_type": "round_start", "simulated_hour": 14}
+{"round": 15, "timestamp": "2026-03-18T06:12:07.672357", "event_type": "round_end", "actions_count": 0}
+{"round": 16, "timestamp": "2026-03-18T06:12:07.673200", "event_type": "round_start", "simulated_hour": 15}
+{"round": 16, "timestamp": "2026-03-18T06:12:09.068416", "event_type": "round_end", "actions_count": 0}
+{"round": 17, "timestamp": "2026-03-18T06:12:09.068793", "event_type": "round_start", "simulated_hour": 16}
+{"round": 17, "timestamp": "2026-03-18T06:12:10.279169", "event_type": "round_end", "actions_count": 0}
+{"round": 18, "timestamp": "2026-03-18T06:12:10.279412", "event_type": "round_start", "simulated_hour": 17}
+{"round": 18, "timestamp": "2026-03-18T06:12:11.844049", "event_type": "round_end", "actions_count": 0}
+{"round": 19, "timestamp": "2026-03-18T06:12:11.844898", "event_type": "round_start", "simulated_hour": 18}
+{"round": 19, "timestamp": "2026-03-18T06:12:11.845561", "event_type": "round_end", "actions_count": 0}
+{"round": 20, "timestamp": "2026-03-18T06:12:11.846010", "event_type": "round_start", "simulated_hour": 19}
+{"round": 20, "timestamp": "2026-03-18T06:12:11.846323", "event_type": "round_end", "actions_count": 0}
+{"round": 21, "timestamp": "2026-03-18T06:12:11.846620", "event_type": "round_start", "simulated_hour": 20}
+{"round": 21, "timestamp": "2026-03-18T06:12:13.031871", "event_type": "round_end", "actions_count": 0}
+{"round": 22, "timestamp": "2026-03-18T06:12:13.032234", "event_type": "round_start", "simulated_hour": 21}
+{"round": 22, "timestamp": "2026-03-18T06:12:14.499292", "event_type": "round_end", "actions_count": 0}
+{"round": 23, "timestamp": "2026-03-18T06:12:14.499710", "event_type": "round_start", "simulated_hour": 22}
+{"round": 23, "timestamp": "2026-03-18T06:12:15.945487", "event_type": "round_end", "actions_count": 0}
+{"round": 24, "timestamp": "2026-03-18T06:12:15.946109", "event_type": "round_start", "simulated_hour": 23}
+{"round": 24, "timestamp": "2026-03-18T06:12:15.946510", "event_type": "round_end", "actions_count": 0}
+{"round": 25, "timestamp": "2026-03-18T06:12:15.946872", "event_type": "round_start", "simulated_hour": 0}
+{"round": 25, "timestamp": "2026-03-18T06:12:15.947312", "event_type": "round_end", "actions_count": 0}
+{"timestamp": "2026-03-18T06:12:15.947791", "event_type": "simulation_end", "platform": "reddit", "total_rounds": 25, "total_actions": 8}

@@ -1,0 +1,25 @@
+{
+  "simulation_id": "sim_e15ccaca5665",
+  "project_id": "proj_7f4921de66f0",
+  "graph_id": "mirofish_a3aa7c3a7c2648a8",
+  "enable_twitter": true,
+  "enable_reddit": true,
+  "status": "running",
+  "entities_count": 6,
+  "profiles_count": 6,
+  "entity_types": [
+    "BNBChain",
+    "MarketDataAggregator",
+    "DeFiProtocol",
+    "GovernanceProposal",
+    "VenusProtocol"
+  ],
+  "config_generated": true,
+  "config_reasoning": "时间配置: 模拟XVS价格预测讨论，考虑到DeFi用户可能对晚间时间更活跃，因此将晚间设置为高峰期。凌晨设置为低谷期，工作时间保持中等活跃度。 | 事件配置: The hot topics are extracted from the key observations and market context. The narrative direction provides an overview of the likely discussion based on the provided data. The initial posts are designed to initiate discussion around the key aspects of the XVS market analysis, with each post assigned to a relevant poster type to ensure diverse perspectives and engagement. | Agent配置: 成功生成 6 个 | 初始帖子分配: 5 个帖子已分配发布者",
+  "current_round": 0,
+  "twitter_status": "not_started",
+  "reddit_status": "not_started",
+  "created_at": "2026-03-17T22:39:27.301525",
+  "updated_at": "2026-03-17T22:40:38.026391",
+  "error": null
+}

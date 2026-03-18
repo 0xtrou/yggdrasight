@@ -1,0 +1,247 @@
+{
+  "project_id": "proj_bb7091755b7a",
+  "name": "SENTUSDT-crypto-prediction",
+  "status": "graph_completed",
+  "created_at": "2026-03-18T06:57:40.343766",
+  "updated_at": "2026-03-18T06:58:53.916466",
+  "files": [
+    {
+      "filename": "SENTUSDT-seed.md",
+      "size": 3355
+    }
+  ],
+  "total_text_length": 3380,
+  "ontology": {
+    "entity_types": [
+      {
+        "name": "Cryptocurrency",
+        "description": "A digital or virtual currency that uses cryptography for security.",
+        "attributes": [
+          {
+            "name": "symbol",
+            "type": "text",
+            "description": "The ticker symbol of the cryptocurrency."
+          },
+          {
+            "name": "full_name",
+            "type": "text",
+            "description": "The full name of the cryptocurrency."
+          }
+        ],
+        "examples": [
+          "SENTUSDT",
+          "BTC"
+        ]
+      },
+      {
+        "name": "Exchange",
+        "description": "A platform where cryptocurrencies are traded.",
+        "attributes": [
+          {
+            "name": "exchange_name",
+            "type": "text",
+            "description": "The name of the exchange."
+          }
+        ],
+        "examples": [
+          "Binance",
+          "Coinbase"
+        ]
+      },
+      {
+        "name": "Trader",
+        "description": "An individual who buys and sells cryptocurrencies.",
+        "attributes": [
+          {
+            "name": "trading_strategy",
+            "type": "text",
+            "description": "The strategy used by the trader."
+          }
+        ],
+        "examples": [
+          "DayTrader",
+          "SwingTrader"
+        ]
+      },
+      {
+        "name": "Analyst",
+        "description": "An expert who analyzes cryptocurrency market trends.",
+        "attributes": [
+          {
+            "name": "expertise",
+            "type": "text",
+            "description": "Area of expertise in crypto analysis."
+          }
+        ],
+        "examples": [
+          "Technical Analyst",
+          "Market Analyst"
+        ]
+      },
+      {
+        "name": "FinancialNewsOutlet",
+        "description": "A media organization that reports on financial news, including crypto.",
+        "attributes": [
+          {
+            "name": "org_name",
+            "type": "text",
+            "description": "The name of the news outlet."
+          }
+        ],
+        "examples": [
+          "Bloomberg",
+          "Reuters"
+        ]
+      },
+      {
+        "name": "Algorithm",
+        "description": "Automated system for cryptocurrency trading.",
+        "attributes": [
+          {
+            "name": "algorithm_name",
+            "type": "text",
+            "description": "The name of the algorithm."
+          }
+        ],
+        "examples": [
+          "SMA Crossover",
+          "MACD"
+        ]
+      },
+      {
+        "name": "Regulator",
+        "description": "A government agency that regulates cryptocurrency markets.",
+        "attributes": [
+          {
+            "name": "jurisdiction",
+            "type": "text",
+            "description": "The jurisdiction of the regulator."
+          }
+        ],
+        "examples": [
+          "SEC",
+          "CFTC"
+        ]
+      },
+      {
+        "name": "CryptoInfluencer",
+        "description": "An individual with a large social media following who influences crypto opinions.",
+        "attributes": [
+          {
+            "name": "platform",
+            "type": "text",
+            "description": "The social media platform used by the influencer."
+          }
+        ],
+        "examples": [
+          "Twitter",
+          "YouTube"
+        ]
+      },
+      {
+        "name": "Person",
+        "description": "A general person not fitting into more specific categories.",
+        "attributes": [],
+        "examples": [
+          "John Doe",
+          "Jane Smith"
+        ]
+      },
+      {
+        "name": "Organization",
+        "description": "A general organization not fitting into more specific categories.",
+        "attributes": [],
+        "examples": [
+          "Local Crypto Club",
+          "Blockchain Startup"
+        ]
+      }
+    ],
+    "edge_types": [
+      {
+        "name": "TRADES_ON",
+        "description": "Cryptocurrency is traded on an exchange.",
+        "source_targets": [
+          {
+            "source": "Cryptocurrency",
+            "target": "Exchange"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "ANALYZES",
+        "description": "Analyst analyzes a cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "Analyst",
+            "target": "Cryptocurrency"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "REPORTS_ON",
+        "description": "Financial news outlet reports on a cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "FinancialNewsOutlet",
+            "target": "Cryptocurrency"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "FOLLOWS",
+        "description": "Trader follows a CryptoInfluencer.",
+        "source_targets": [
+          {
+            "source": "Trader",
+            "target": "CryptoInfluencer"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "REGULATES",
+        "description": "Regulator regulates a cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "Regulator",
+            "target": "Cryptocurrency"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "USES",
+        "description": "Trader uses an algorithm.",
+        "source_targets": [
+          {
+            "source": "Trader",
+            "target": "Algorithm"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "INFLUENCES",
+        "description": "CryptoInfluencer influences a Trader.",
+        "source_targets": [
+          {
+            "source": "CryptoInfluencer",
+            "target": "Trader"
+          }
+        ],
+        "attributes": []
+      }
+    ]
+  },
+  "analysis_summary": "该文本主要分析了加密货币SENTUSDT的价格走势，并预测了未来24-72小时内的价格趋势。涉及的实体包括加密货币本身、交易者、分析师、金融新闻媒体等。关系类型包括交易、分析、报道、关注和监管等。",
+  "graph_id": "mirofish_5f4db76e9cfc4c6c",
+  "graph_build_task_id": "15194041-a912-464e-adc4-7ce54b259a46",
+  "simulation_requirement": "Will SENTUSDT price be bullish, bearish, or neutral over the next 24-72 hours?",
+  "chunk_size": 500,
+  "chunk_overlap": 50,
+  "error": null
+}

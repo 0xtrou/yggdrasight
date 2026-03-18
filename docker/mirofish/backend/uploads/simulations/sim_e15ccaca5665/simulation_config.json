@@ -1,0 +1,265 @@
+{
+  "simulation_id": "sim_e15ccaca5665",
+  "project_id": "proj_7f4921de66f0",
+  "graph_id": "mirofish_a3aa7c3a7c2648a8",
+  "simulation_requirement": "Based on the 7-day price data of XVS (Venus Protocol) from March 9-15, 2026, predict the price of XVS on March 17, 2026. Consider the upward momentum, volume patterns, support/resistance levels, DeFi market context, and historical behavior to estimate where XVS will trade today.",
+  "time_config": {
+    "total_simulation_hours": 48,
+    "minutes_per_round": 60,
+    "agents_per_hour_min": 2,
+    "agents_per_hour_max": 3,
+    "peak_hours": [
+      19,
+      20,
+      21,
+      22
+    ],
+    "peak_activity_multiplier": 1.5,
+    "off_peak_hours": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "off_peak_activity_multiplier": 0.05,
+    "morning_hours": [
+      6,
+      7,
+      8
+    ],
+    "morning_activity_multiplier": 0.4,
+    "work_hours": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "work_activity_multiplier": 0.7
+  },
+  "agent_configs": [
+    {
+      "agent_id": 0,
+      "entity_uuid": "be2f8e2f-76aa-4081-b033-30b2bc4f98de",
+      "entity_name": "Compound",
+      "entity_type": "DeFiProtocol",
+      "activity_level": 0.5,
+      "posts_per_hour": 0.1,
+      "comments_per_hour": 0.2,
+      "active_hours": [
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        16,
+        20,
+        21
+      ],
+      "response_delay_min": 30,
+      "response_delay_max": 90,
+      "sentiment_bias": 0.2,
+      "stance": "neutral",
+      "influence_weight": 1.8
+    },
+    {
+      "agent_id": 1,
+      "entity_uuid": "8df8f43a-5662-4abe-802c-89fadd6458a2",
+      "entity_name": "BNB Chain",
+      "entity_type": "BNBChain",
+      "activity_level": 0.6,
+      "posts_per_hour": 0.2,
+      "comments_per_hour": 0.3,
+      "active_hours": [
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        16,
+        19,
+        20,
+        21
+      ],
+      "response_delay_min": 15,
+      "response_delay_max": 60,
+      "sentiment_bias": 0.3,
+      "stance": "supportive",
+      "influence_weight": 2.0
+    },
+    {
+      "agent_id": 2,
+      "entity_uuid": "8376e79f-880a-4e05-af1e-0cdab434eef8",
+      "entity_name": "governance proposals",
+      "entity_type": "GovernanceProposal",
+      "activity_level": 0.4,
+      "posts_per_hour": 0.1,
+      "comments_per_hour": 0.2,
+      "active_hours": [
+        10,
+        11,
+        14,
+        15,
+        19,
+        20
+      ],
+      "response_delay_min": 60,
+      "response_delay_max": 120,
+      "sentiment_bias": 0.1,
+      "stance": "neutral",
+      "influence_weight": 1.5
+    },
+    {
+      "agent_id": 3,
+      "entity_uuid": "75d7060b-4678-4dd9-8e74-7aa446ee4f3d",
+      "entity_name": "Venus Protocol",
+      "entity_type": "VenusProtocol",
+      "activity_level": 0.7,
+      "posts_per_hour": 0.3,
+      "comments_per_hour": 0.4,
+      "active_hours": [
+        10,
+        11,
+        14,
+        15,
+        16,
+        19,
+        20,
+        21,
+        22
+      ],
+      "response_delay_min": 5,
+      "response_delay_max": 30,
+      "sentiment_bias": 0.4,
+      "stance": "supportive",
+      "influence_weight": 2.2
+    },
+    {
+      "agent_id": 4,
+      "entity_uuid": "6e04e601-7e13-4b62-abdf-b2cdc8f5f05d",
+      "entity_name": "Aave",
+      "entity_type": "DeFiProtocol",
+      "activity_level": 0.5,
+      "posts_per_hour": 0.1,
+      "comments_per_hour": 0.2,
+      "active_hours": [
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        16,
+        20,
+        21
+      ],
+      "response_delay_min": 30,
+      "response_delay_max": 90,
+      "sentiment_bias": -0.2,
+      "stance": "opposing",
+      "influence_weight": 1.8
+    },
+    {
+      "agent_id": 5,
+      "entity_uuid": "2e22c4d9-b934-4c8a-9794-aa06379d34ba",
+      "entity_name": "CoinGecko",
+      "entity_type": "MarketDataAggregator",
+      "activity_level": 0.6,
+      "posts_per_hour": 0.4,
+      "comments_per_hour": 0.5,
+      "active_hours": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        16,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "response_delay_min": 5,
+      "response_delay_max": 30,
+      "sentiment_bias": 0.1,
+      "stance": "neutral",
+      "influence_weight": 2.3
+    }
+  ],
+  "event_config": {
+    "initial_posts": [
+      {
+        "content": "XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be broken. What are your thoughts on XVS's short-term prospects?",
+        "poster_type": "VenusProtocol",
+        "poster_agent_id": 3
+      },
+      {
+        "content": "CoinGecko data reveals a significant volume spike for XVS on March 14th. This suggests institutional buying pressure. Is this a sign of things to come for Venus Protocol?",
+        "poster_type": "MarketDataAggregator",
+        "poster_agent_id": 5
+      },
+      {
+        "content": "How does Venus Protocol's performance on BNB Chain compare to other DeFi lending protocols like Compound and Aave on different chains? Is Venus Protocol gaining market share?",
+        "poster_type": "DeFiProtocol",
+        "poster_agent_id": 0
+      },
+      {
+        "content": "The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the implications for XVS holders?",
+        "poster_type": "BNBChain",
+        "poster_agent_id": 1
+      },
+      {
+        "content": "Recent governance proposals for new collateral types on Venus Protocol could further influence the price of XVS. What are the potential impacts of these proposals on the protocol's overall health and token value?",
+        "poster_type": "GovernanceProposal",
+        "poster_agent_id": 2
+      }
+    ],
+    "scheduled_events": [],
+    "hot_topics": [
+      "XVS price prediction",
+      "Venus Protocol market analysis",
+      "DeFi lending on BNB Chain",
+      "XVS governance token",
+      "XVS price trend",
+      "XVS volume analysis",
+      "XVS market cap",
+      "XVS technical indicators",
+      "BNB Chain DeFi TVL",
+      "Venus Protocol TVL",
+      "DeFi market conditions"
+    ],
+    "narrative_direction": "The narrative focuses on the upward price trend of XVS, potential resistance levels, and the overall health of Venus Protocol within the context of the BNB Chain DeFi ecosystem. The discussion will likely revolve around whether XVS can break through resistance and sustain its growth, considering volume patterns and broader market conditions."
+  },
+  "twitter_config": {
+    "platform": "twitter",
+    "recency_weight": 0.4,
+    "popularity_weight": 0.3,
+    "relevance_weight": 0.3,
+    "viral_threshold": 10,
+    "echo_chamber_strength": 0.5
+  },
+  "reddit_config": {
+    "platform": "reddit",
+    "recency_weight": 0.3,
+    "popularity_weight": 0.4,
+    "relevance_weight": 0.3,
+    "viral_threshold": 15,
+    "echo_chamber_strength": 0.6
+  },
+  "llm_model": "google/gemini-2.0-flash-001",
+  "llm_base_url": "https://openrouter.ai/api/v1",
+  "generated_at": "2026-03-17T22:40:15.402710",
+  "generation_reasoning": "时间配置: 模拟XVS价格预测讨论，考虑到DeFi用户可能对晚间时间更活跃，因此将晚间设置为高峰期。凌晨设置为低谷期，工作时间保持中等活跃度。 | 事件配置: The hot topics are extracted from the key observations and market context. The narrative direction provides an overview of the likely discussion based on the provided data. The initial posts are designed to initiate discussion around the key aspects of the XVS market analysis, with each post assigned to a relevant poster type to ensure diverse perspectives and engagement. | Agent配置: 成功生成 6 个 | 初始帖子分配: 5 个帖子已分配发布者"
+}
