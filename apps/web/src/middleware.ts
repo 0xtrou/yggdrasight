@@ -58,54 +58,44 @@ function applySecurityHeaders(response: NextResponse): void {
   }
 }
 
+const MODE = process.env.MODE
+
 export function middleware(req: NextRequest): NextResponse {
   scheduleCleanup()
 
   const { pathname } = req.nextUrl
   const host = req.headers.get('host') || ''
   const hostname = host.split(':')[0]
-
-  // Domain-based routing:
-  // yggdrasight.com / www.yggdrasight.com -> landing page
-  // terminal.yggdrasight.com -> terminal app (pass through)
-  // localhost -> pass through (dev mode)
-  const isLandingDomain =
-    hostname === 'yggdrasight.com' || hostname === 'www.yggdrasight.com'
   const isLocalhost = hostname.startsWith('localhost') || hostname === '127.0.0.1'
 
-  // Route landing domain and localhost to landing page
-  if (isLandingDomain || isLocalhost) {
-    // Root path -> landing page
-    if (pathname === '/') {
-      const url = req.nextUrl.clone()
-      url.pathname = '/landing'
-      const response = NextResponse.rewrite(url)
-      applySecurityHeaders(response)
-      return response
-    }
+  // ── MODE=terminal: pure terminal deployment, no landing page ────────────────
+  if (MODE === 'terminal') {
+    const response = NextResponse.next()
+    applySecurityHeaders(response)
+    return response
+  }
 
-    // /landing -> landing page (keep route accessible)
-    if (pathname === '/landing') {
+  // ── MODE=landing: pure landing deployment, block all terminal routes ────────
+  if (MODE === 'landing') {
+    if (pathname === '/landing' || pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.startsWith('/public')) {
       const response = NextResponse.next()
       applySecurityHeaders(response)
       return response
     }
+    const url = req.nextUrl.clone()
+    url.pathname = '/landing'
+    const response = pathname === '/' ? NextResponse.rewrite(url) : NextResponse.redirect(url)
+    applySecurityHeaders(response)
+    return response
+  }
 
-    // /app or /terminal -> actual app
-    if (pathname === '/app' || pathname === '/terminal' || pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.startsWith('/public') || pathname.startsWith('/assets')) {
-      const response = NextResponse.next()
-      applySecurityHeaders(response)
-      return response
-    }
-
-    // Other paths -> landing page (fallback)
-    if (isLocalhost && !pathname.startsWith('/api') && !pathname.startsWith('/_next') && !pathname.startsWith('/public')) {
-      const url = req.nextUrl.clone()
-      url.pathname = '/landing'
-      const response = NextResponse.rewrite(url)
-      applySecurityHeaders(response)
-      return response
-    }
+  // ── No MODE set: pass everything through unchanged ──────────────────────────
+  if (pathname === '/') {
+    const url = req.nextUrl.clone()
+    url.pathname = '/landing'
+    const response = NextResponse.rewrite(url)
+    applySecurityHeaders(response)
+    return response
   }
 
   const limitConfig = RATE_LIMITS[pathname]

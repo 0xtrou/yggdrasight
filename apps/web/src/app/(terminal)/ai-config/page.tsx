@@ -30,6 +30,7 @@ const SECTION_COLORS = {
   intelligence: '#8e7cc3',
   globalDiscovery: '#00ddcc',
   signals: '#ff6b35',
+  mirofish: '#00ddcc',
 }
 
 
@@ -173,6 +174,48 @@ function AgentRow({
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   MIROFISH HEALTH ROW
+───────────────────────────────────────────────────────────────────────────── */
+
+function MirofishHealthRow({ color }: { color: string }) {
+  const [health, setHealth] = useState<{ running: boolean; error?: string } | null>(null)
+
+  useEffect(() => {
+    fetch('/api/system/mirofish-health')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setHealth(data))
+      .catch(() => setHealth({ running: false, error: 'unreachable' }))
+  }, [])
+
+  return (
+    <div style={{
+      padding: '8px 10px',
+      background: 'var(--color-terminal-bg)',
+      border: '1px solid var(--color-terminal-border)',
+      borderRadius: '2px',
+      marginBottom: '6px',
+      borderLeft: `2px solid ${color}`,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--color-terminal-text)', letterSpacing: '0.05em', textTransform: 'uppercase' as const }}>
+          Mirofish Backend
+        </span>
+        {health === null ? (
+          <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-dim)' }}>checking...</span>
+        ) : health.running ? (
+          <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-up)' }}>● RUNNING</span>
+        ) : (
+          <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-down)' }}>● STOPPED</span>
+        )}
+      </div>
+      <div style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-muted)', marginTop: '3px' }}>
+        {health?.running ? 'backend ready' : (health?.error ? `error: ${health.error}` : 'start with: docker compose up -d')}
+      </div>
+    </div>
+  )
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    MAIN PAGE
 ───────────────────────────────────────────────────────────────────────────── */
 
@@ -271,6 +314,7 @@ export default function AIConfigPage() {
       'master_planner', 'discovery_agent', 'global_synthesizer',
       'signal_crawler',
       'chat',
+      'mirofish',
     ]
     const next: Record<string, string> = {}
     for (const key of allKeys) {
@@ -319,6 +363,13 @@ export default function AIConfigPage() {
     name: 'Signal Crawler',
     description: 'AI agent that researches crypto assets and generates structured trading signals with entry, stop-loss, take-profit and confidence score.',
     category: 'signals',
+  }
+
+  const mirofishAgent: AgentInfo = {
+    id: 'mirofish',
+    name: 'Mirofish Prediction',
+    description: 'Swarm intelligence prediction engine. Spawns AI agents on simulated social platforms, runs consensus simulation (20-30 rounds), extracts crowd-derived crypto price prediction.',
+    category: 'mirofish',
   }
 
   return (
@@ -599,6 +650,17 @@ export default function AIConfigPage() {
                   <option value="120">Every 2 minutes</option>
                 </select>
               </div>
+            </section>
+
+            {/* ── MIROFISH PREDICTION section ── */}
+            <section>
+              <SectionHeader
+                icon="◎"
+                label="Mirofish Prediction"
+                color={SECTION_COLORS.mirofish}
+                description="Swarm intelligence prediction agent. Spawns AI personas on simulated social platforms and extracts crowd consensus price predictions."
+              />
+              <MirofishHealthRow color={SECTION_COLORS.mirofish} />
             </section>
 
             {/* ── INTELLIGENCE section ── */}

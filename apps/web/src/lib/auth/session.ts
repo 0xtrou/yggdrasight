@@ -222,7 +222,8 @@ export async function getCurrentSession(): Promise<AuthSession | null> {
     const connection = await connectUserDB(sessionId, creds)
 
     return { sessionId, passwordHash, connection }
-  } catch {
+  } catch (err) {
+    console.error('[session] getCurrentSession failed:', err instanceof Error ? err.message : err)
     return null
   }
 }

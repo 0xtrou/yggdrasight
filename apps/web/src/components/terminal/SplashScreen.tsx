@@ -82,24 +82,26 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       body: JSON.stringify({}),
       signal: controller.signal,
     })
-      .then((res) => res.json())
-      .then((data: { steps: Array<{ name: string; status: string; message: string }>; ready: boolean }) => {
+      .then(async (res) => {
         clearTimeout(fetchTimeoutId)
-        // Collapse all steps into a single "CHAT AGENT RUNTIME" line
-        const hasError = data.steps.some((s) => s.status === 'error')
-        const errorStep = data.steps.find((s) => s.status === 'error')
+        if (res.status === 401) {
+          setInitLines([{ text: 'CHAT AGENT RUNTIME ▸ WAITING FOR SESSION', color: '#888888' }])
+          goToProgress(400)
+          return
+        }
+        const data = await res.json() as { steps: Array<{ name: string; status: string; message: string }>; ready: boolean }
+        const hasError = Array.isArray(data.steps) && data.steps.some((s) => s.status === 'error')
+        const errorStep = Array.isArray(data.steps) ? data.steps.find((s) => s.status === 'error') : null
         const lines: StatusLine[] = hasError
-          ? [{ text: `CHAT AGENT RUNTIME ▸ ERROR: ${errorStep?.message ?? 'unknown'}`, color: '#ffaa00' }]
+          ? [{ text: `CHAT AGENT RUNTIME ▸ ERROR: ${errorStep?.message ?? 'UNKNOWN'}`, color: '#ffaa00' }]
           : [{ text: 'CHAT AGENT RUNTIME ▸ READY', color: '#00ff88' }]
         setInitLines(lines)
         goToProgress(400)
       })
-
       .catch(() => {
         clearTimeout(fetchTimeoutId)
-        setInitLines([{ text: 'CHAT AGENT RUNTIME ▸ ERROR: TIMEOUT', color: '#ffaa00' }])
-        // Graceful degradation — proceed after 3s even on failure
-        goToProgress(3000)
+        setInitLines([{ text: 'CHAT AGENT RUNTIME ▸ OFFLINE', color: '#888888' }])
+        goToProgress(1000)
       })
 
     return () => {
