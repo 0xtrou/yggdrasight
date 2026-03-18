@@ -1,4 +1,5 @@
 import type { Analyst } from '../../types'
+import { mirofishAnalyst, mirofishDefinition } from './mirofish.analyst'
 import { wyckoffAnalyst, wyckoffDefinition } from './wyckoff.analyst'
 import { elliottWaveAnalyst, elliottWaveDefinition } from './elliott-wave.analyst'
 import { sorosReflexivityAnalyst, sorosReflexivityDefinition } from './soros-reflexivity.analyst'
@@ -7,11 +8,8 @@ import { warrenBuffettAnalyst, warrenBuffettDefinition } from './warren-buffett.
 import { longTermConvictionAnalyst, longTermConvictionDefinition } from './long-term-conviction.analyst'
 import type { LLMAnalystDefinition } from '../../types'
 
-/**
- * All LLM-powered analyst instances.
- * Each analyst calls OpenCode CLI with a philosophy-specific system prompt.
- */
 export const LLM_ANALYSTS: Analyst[] = [
+  mirofishAnalyst,
   wyckoffAnalyst,
   elliottWaveAnalyst,
   sorosReflexivityAnalyst,
@@ -20,10 +18,8 @@ export const LLM_ANALYSTS: Analyst[] = [
   longTermConvictionAnalyst,
 ]
 
-/**
- * All LLM analyst definitions (for UI display, filtering by category, etc.)
- */
 export const LLM_ANALYST_DEFINITIONS: LLMAnalystDefinition[] = [
+  mirofishDefinition,
   wyckoffDefinition,
   elliottWaveDefinition,
   sorosReflexivityDefinition,
@@ -41,8 +37,8 @@ export function getLLMAnalysts(agentIds?: string[]): Analyst[] {
   return LLM_ANALYSTS.filter((a) => agentIds.includes(a.meta.id))
 }
 
-// Re-export individual analysts
 export {
+  mirofishAnalyst,
   wyckoffAnalyst,
   elliottWaveAnalyst,
   sorosReflexivityAnalyst,
