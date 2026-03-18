@@ -25,6 +25,7 @@ export interface LLMAnalystMeta extends AnalystMeta {
  * Categories for grouping analysts in the UI
  */
 export type AnalystCategory =
+  | 'mirofish-prediction'
   | 'value-investing'
   | 'technical-analysis'
   | 'quantitative'
@@ -117,8 +118,8 @@ export interface AnalysisContext {
   // ── LLM analysis config ──
   model?: string                  // OpenCode model ID (e.g. 'google/gemini-2.5-pro')
   agentIds?: string[]             // Which LLM agents to run (empty = all)
-  /** Decrypted auth.json path for Docker container mounts */
   authJsonPath?: string
+  forceFresh?: boolean
 
   // ── Extended data providers (graceful degradation — may return null) ──
   getOnChainData?: () => Promise<OnChainData | null>
@@ -166,6 +167,23 @@ export interface VerdictRecord {
   confluence: number
   analysts: AnalystVerdict[]
   llmModel?: string
+  createdAt: string
+}
+
+export interface MirofishPredictionRecord {
+  id: string
+  symbol: string
+  direction: SignalDirection
+  confidence: number
+  reason: string
+  modelId: string
+  indicators: {
+    consensusBullPct?: number
+    consensusBearPct?: number
+    simulationRounds?: number
+    agentsCount?: number
+    durationMs?: number
+  }
   createdAt: string
 }
 
