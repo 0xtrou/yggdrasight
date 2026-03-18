@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "progress": 100,
+  "message": "报告生成完成",
+  "current_section": null,
+  "completed_sections": [
+    "XVS Price Trajectory: Bullish Momentum vs. Market Realities",
+    "Agent Reactions: Trader Sentiment and Analyst Forecasts",
+    "Predicted Price and Confidence Range: March 31, 2026"
+  ],
+  "updated_at": "2026-03-17T22:55:43.770178"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "result_2_xvs_mar31",
+  "category": "crypto",
+  "created_at": "2026-03-17T22:50:00Z",
+  "prediction_question": "Predict XVS price on March 31, 2026",
+  "seed_summary": "9-day XVS price data Mar 9-17 showing +17.5% rally from $2.842 to $3.34, enriched with technical analysis, DeFi context, risk factors",
+  "project_id": "proj_90f5954b1cd8",
+  "simulation_id": "sim_6c330da39df5",
+  "report_id": "report_8ca5b2652ba8",
+  "graph_id": "mirofish_6a3439e1be294c51",
+  "agents_count": 9,
+  "rounds": 40,
+  "total_actions": 108,
+  "prediction": {
+    "target_date": "2026-03-31",
+    "predicted_value": "$3.80",
+    "confidence_range": "$3.20 - $4.70",
+    "entry_price": "$3.34",
+    "long_kill": "$3.00",
+    "short_kill": "$3.50",
+    "key_factors": [
+      "Whale accumulation detected via volume spike",
+      "BNB Chain DeFi TVL recovery",
+      "Fibonacci 1.618 extension targets $3.62",
+      "Overbought concerns after 10+ day rally",
+      "Trader sentiment split between bulls and profit-takers"
+    ]
+  },
+  "report_markdown": "",
+  "referenceable": true,
+  "expires_at": "2026-03-31T23:59:59Z"
+}

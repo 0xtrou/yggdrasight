@@ -1,0 +1,280 @@
+{
+  "project_id": "proj_7f4921de66f0",
+  "name": "XVS Price Prediction Mar 17",
+  "status": "graph_completed",
+  "created_at": "2026-03-17T22:29:02.507408",
+  "updated_at": "2026-03-17T22:39:18.816430",
+  "files": [
+    {
+      "filename": "xvs_seed_data.md",
+      "size": 2766
+    }
+  ],
+  "total_text_length": 2780,
+  "ontology": {
+    "entity_types": [
+      {
+        "name": "CryptoTrader",
+        "description": "Individuals or entities actively trading XVS or other cryptocurrencies.",
+        "attributes": [
+          {
+            "name": "trading_strategy",
+            "type": "text",
+            "description": "The trader's typical investment strategy."
+          }
+        ],
+        "examples": [
+          "@CryptoWhale",
+          "Jane Doe"
+        ]
+      },
+      {
+        "name": "DeFiAnalyst",
+        "description": "Analysts providing insights on the DeFi market and Venus Protocol.",
+        "attributes": [
+          {
+            "name": "expertise",
+            "type": "text",
+            "description": "Area of expertise within DeFi."
+          }
+        ],
+        "examples": [
+          "@DeFiReport",
+          "John Smith"
+        ]
+      },
+      {
+        "name": "VenusProtocol",
+        "description": "The Venus Protocol itself, as a decentralized lending platform.",
+        "attributes": [
+          {
+            "name": "tvl",
+            "type": "text",
+            "description": "Total Value Locked in the Venus Protocol."
+          }
+        ],
+        "examples": [
+          "Venus Protocol"
+        ]
+      },
+      {
+        "name": "BNBChain",
+        "description": "The BNB Chain blockchain on which Venus Protocol is built.",
+        "attributes": [
+          {
+            "name": "ecosystem_size",
+            "type": "text",
+            "description": "Size of the BNB Chain ecosystem."
+          }
+        ],
+        "examples": [
+          "BNB Chain"
+        ]
+      },
+      {
+        "name": "GovernanceProposal",
+        "description": "Proposals within the Venus Protocol governance system.",
+        "attributes": [
+          {
+            "name": "proposal_id",
+            "type": "text",
+            "description": "Unique identifier for the governance proposal."
+          }
+        ],
+        "examples": [
+          "VIP-42",
+          "VIP-43"
+        ]
+      },
+      {
+        "name": "MarketDataAggregator",
+        "description": "Platforms providing price and market data for XVS and other cryptocurrencies.",
+        "attributes": [
+          {
+            "name": "data_source",
+            "type": "text",
+            "description": "Specific data sources used by the aggregator."
+          }
+        ],
+        "examples": [
+          "CoinGecko",
+          "CoinMarketCap"
+        ]
+      },
+      {
+        "name": "DeFiProtocol",
+        "description": "Other DeFi protocols that compete with or influence Venus Protocol.",
+        "attributes": [
+          {
+            "name": "chain",
+            "type": "text",
+            "description": "Blockchain on which the DeFi protocol operates."
+          }
+        ],
+        "examples": [
+          "Aave",
+          "Compound"
+        ]
+      },
+      {
+        "name": "CryptoNewsOutlet",
+        "description": "News outlets reporting on cryptocurrency and DeFi market trends.",
+        "attributes": [
+          {
+            "name": "reporting_focus",
+            "type": "text",
+            "description": "Specific areas of focus in crypto reporting."
+          }
+        ],
+        "examples": [
+          "CoinDesk",
+          "The Block"
+        ]
+      },
+      {
+        "name": "Person",
+        "description": "Any individual involved in the XVS market or Venus Protocol.",
+        "attributes": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "description": "The person's full name."
+          }
+        ],
+        "examples": [
+          "Alice",
+          "Bob"
+        ]
+      },
+      {
+        "name": "Organization",
+        "description": "Any organization related to the XVS market or Venus Protocol.",
+        "attributes": [
+          {
+            "name": "org_name",
+            "type": "text",
+            "description": "The organization's name."
+          }
+        ],
+        "examples": [
+          "Example Corp",
+          "Test DAO"
+        ]
+      }
+    ],
+    "edge_types": [
+      {
+        "name": "ANALYZES",
+        "description": "A DeFi analyst analyzes a specific entity.",
+        "source_targets": [
+          {
+            "source": "DeFiAnalyst",
+            "target": "VenusProtocol"
+          },
+          {
+            "source": "DeFiAnalyst",
+            "target": "BNBChain"
+          },
+          {
+            "source": "DeFiAnalyst",
+            "target": "DeFiProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "TRADES",
+        "description": "A crypto trader trades a specific cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "CryptoTrader",
+            "target": "VenusProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "GOVERNS",
+        "description": "Venus Protocol is governed by a governance proposal.",
+        "source_targets": [
+          {
+            "source": "GovernanceProposal",
+            "target": "VenusProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "REPORTS_ON",
+        "description": "A news outlet reports on a specific entity.",
+        "source_targets": [
+          {
+            "source": "CryptoNewsOutlet",
+            "target": "VenusProtocol"
+          },
+          {
+            "source": "CryptoNewsOutlet",
+            "target": "BNBChain"
+          },
+          {
+            "source": "CryptoNewsOutlet",
+            "target": "DeFiProtocol"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "USES_DATA_FROM",
+        "description": "An entity uses data from a market data aggregator.",
+        "source_targets": [
+          {
+            "source": "VenusProtocol",
+            "target": "MarketDataAggregator"
+          },
+          {
+            "source": "CryptoTrader",
+            "target": "MarketDataAggregator"
+          },
+          {
+            "source": "DeFiAnalyst",
+            "target": "MarketDataAggregator"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "OPERATES_ON",
+        "description": "A DeFi protocol operates on a specific blockchain.",
+        "source_targets": [
+          {
+            "source": "VenusProtocol",
+            "target": "BNBChain"
+          },
+          {
+            "source": "DeFiProtocol",
+            "target": "BNBChain"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "PROPOSES",
+        "description": "A person proposes a governance proposal.",
+        "source_targets": [
+          {
+            "source": "Person",
+            "target": "GovernanceProposal"
+          }
+        ],
+        "attributes": []
+      }
+    ]
+  },
+  "analysis_summary": "该文本描述了Venus Protocol (XVS)在特定时间段内的市场表现，并预测了未来的价格走势。实体类型的设计围绕着DeFi生态系统中的关键参与者，包括交易者、分析师、协议本身、区块链、治理提案、数据提供商和新闻媒体。关系类型则反映了这些实体之间的互动方式，例如分析、交易、治理和报告。",
+  "graph_id": "mirofish_a3aa7c3a7c2648a8",
+  "graph_build_task_id": "8e3c85a1-023e-4621-90dc-6c8a7ca06a40",
+  "simulation_requirement": "Based on the 7-day price data of XVS (Venus Protocol) from March 9-15, 2026, predict the price of XVS on March 17, 2026. Consider the upward momentum, volume patterns, support/resistance levels, DeFi market context, and historical behavior to estimate where XVS will trade today.",
+  "chunk_size": 500,
+  "chunk_overlap": 50,
+  "error": null
+}

@@ -6,7 +6,7 @@ import { useIntelligence } from '@/hooks/useIntelligence'
 import { useProjectInfo } from '@/hooks/useProjectInfo'
 import { useMarketGlobal } from '@/hooks/useMarketGlobal'
 import { useSignals } from '@/hooks/useSignals'
-import type { AnalystVerdict, VerdictRecord } from '@/lib/intelligence/types'
+import type { AnalystVerdict, VerdictRecord, MirofishPredictionRecord } from '@/lib/intelligence/types'
 import type { DiscoveryHistoryEntry } from '@/hooks/useProjectInfo'
 import { DiscoveryDialog } from '@/components/terminal/DiscoveryDialog'
 import { ProjectInfoContent } from '@/components/terminal/ProjectInfoContent'
@@ -281,15 +281,11 @@ function ModelDropdown({
 
 /** Map analyst id/category to a display group */
 const CATEGORY_LABELS: Record<string, string> = {
+  'mirofish-prediction': 'MIROFISH PREDICTION',
   'technical-analysis': 'TECHNICAL ANALYSIS',
   'quantitative': 'QUANTITATIVE',
   'macro-economic': 'MACRO & SENTIMENT',
-  'behavioral-finance': 'BEHAVIORAL FINANCE',
-  'crypto-native': 'CRYPTO NATIVE',
-  'risk-management': 'RISK MANAGEMENT',
-  'market-microstructure': 'MARKET MICROSTRUCTURE',
-  'value-investing': 'VALUE & FUNDAMENTALS',
-  'long-term-investing': 'VALUE & FUNDAMENTALS',
+  'agentic-analysis': 'AGENTIC ANALYSIS',
 }
 
 const DETERMINISTIC_CATEGORY: Record<string, string> = {
@@ -302,26 +298,18 @@ const DETERMINISTIC_CATEGORY: Record<string, string> = {
 }
 
 const CATEGORY_ORDER = [
+  'mirofish-prediction',
   'technical-analysis',
+  'agentic-analysis',
   'quantitative',
   'macro-economic',
-  'crypto-native',
-  'value-investing',
-  'long-term-investing',
-  'behavioral-finance',
-  'risk-management',
-  'market-microstructure',
 ]
 const CATEGORY_COLORS: Record<string, string> = {
+  'mirofish-prediction': '#00ddcc',
   'technical-analysis': '#5b9bd5',
   'quantitative': '#8e7cc3',
   'macro-economic': '#e2b53a',
-  'behavioral-finance': '#c27ba0',
-  'crypto-native': '#6aa84f',
-  'risk-management': '#e06666',
-  'market-microstructure': '#76a5af',
-  'value-investing': '#e69138',
-  'long-term-investing': '#e69138',
+  'agentic-analysis': '#aa66ff',
 }
 
 function getCategoryColor(category: string): string {
@@ -330,9 +318,18 @@ function getCategoryColor(category: string): string {
 
 
 function getAnalystCategory(analyst: AnalystVerdict): string {
-  const meta = analyst.meta as AnalystVerdict['meta'] & { type?: string; category?: string }
-  if (meta.type === 'llm' && meta.category) return meta.category
-  return DETERMINISTIC_CATEGORY[meta.id] ?? 'technical-analysis'
+  if (analyst.meta.id === 'mirofish') return 'mirofish-prediction'
+  if (isLLMAnalyst(analyst)) return 'agentic-analysis'
+  return DETERMINISTIC_CATEGORY[analyst.meta.id] ?? 'technical-analysis'
+}
+
+const DETERMINISTIC_IDS = new Set([
+  'trend', 'signal-consensus', 'market-regime',
+  'volume-profile', 'key-levels', 'mtf-alignment',
+])
+
+function isLLMAnalyst(analyst: AnalystVerdict): boolean {
+  return !DETERMINISTIC_IDS.has(analyst.meta.id)
 }
 
 function groupAnalystsByCategory(analysts: AnalystVerdict[]): { category: string; label: string; analysts: AnalystVerdict[] }[] {
@@ -442,8 +439,9 @@ function IndicatorBadge({ k, v }: { k: string; v: number | string }) {
 
 /* ── Category Delimiter (list view) ── */
 
-function CategoryDelimiter({ label, count, color, analysts }: { label: string; count: number; color: string; analysts: AnalystVerdict[] }) {
+function CategoryDelimiter({ label, count, color, analysts, category }: { label: string; count: number; color: string; analysts: AnalystVerdict[]; category?: string }) {
   const sentiment = getDominantSentiment(analysts)
+  const isMirofish = category === 'mirofish-prediction'
   return (
     <div
       style={{
@@ -455,6 +453,8 @@ function CategoryDelimiter({ label, count, color, analysts }: { label: string; c
         borderBottom: '1px solid var(--color-terminal-border)',
         fontFamily: 'var(--font-mono)',
         minHeight: '24px',
+        position: 'relative',
+        ...(isMirofish ? { animation: 'mirofishBorderBlink 1.4s ease-in-out infinite' } : {}),
       }}
     >
       <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.1em', color, whiteSpace: 'nowrap' }}>
@@ -467,14 +467,230 @@ function CategoryDelimiter({ label, count, color, analysts }: { label: string; c
       <span style={{ fontSize: '9px', color: 'var(--color-terminal-dim)', whiteSpace: 'nowrap' }}>
         {count}
       </span>
+      {isMirofish && (
+        <span style={{
+          fontSize: '8px',
+          fontWeight: 700,
+          letterSpacing: '0.12em',
+          color: '#0a0a0a',
+          background: '#ff8800',
+          padding: '1px 5px',
+          borderRadius: '2px',
+          flexShrink: 0,
+        }}>
+          NEW
+        </span>
+      )}
+    </div>
+  )
+}
+
+const MIROFISH_COLOR = '#00ddcc'
+
+function MirofishPredictionSection({
+  analysts,
+  expandedAnalysts,
+  toggleAnalyst,
+  analyzeAgent,
+  loadingAgents,
+}: {
+  analysts: AnalystVerdict[]
+  expandedAnalysts: Set<string>
+  toggleAnalyst: (k: string) => void
+  analyzeAgent: (id: string, options?: { forceFresh?: boolean }) => void
+  loadingAgents: Set<string>
+}) {
+  const [forceFresh, setForceFresh] = useState(false)
+  const mirofishAnalysts = analysts.filter(a => a.meta.id === 'mirofish')
+  const sentiment = mirofishAnalysts.length > 0 ? getDominantSentiment(mirofishAnalysts) : null
+  const analyzing = loadingAgents.has('mirofish')
+
+  return (
+    <div>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 10px',
+        background: 'var(--color-terminal-surface)', borderBottom: '1px solid var(--color-terminal-border)',
+        fontFamily: 'var(--font-mono)', minHeight: '24px', position: 'relative',
+        animation: 'mirofishBorderBlink 1.4s ease-in-out infinite',
+      }}>
+        <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.1em', color: MIROFISH_COLOR, whiteSpace: 'nowrap' }}>MIROFISH PREDICTION</span>
+        {sentiment && (
+          <span style={{ fontSize: '10px', fontWeight: 'bold', color: sentiment.color, whiteSpace: 'nowrap' }}>{sentiment.label}</span>
+        )}
+        <div style={{ flex: 1, height: '1px', background: MIROFISH_COLOR, opacity: 0.25 }} />
+        <span style={{ fontSize: '9px', color: 'var(--color-terminal-dim)', whiteSpace: 'nowrap' }}>{mirofishAnalysts.length}</span>
+        <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.12em', color: '#0a0a0a', background: '#ff8800', padding: '1px 5px', borderRadius: '2px', flexShrink: 0 }}>NEW</span>
+      </div>
+      {mirofishAnalysts.length === 0 ? (
+        <div style={{
+          padding: '14px 28px', background: 'var(--color-terminal-surface)',
+          borderBottom: '1px solid var(--color-terminal-border)', fontFamily: 'var(--font-mono)',
+          borderLeft: `2px solid ${MIROFISH_COLOR}30`, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div>
+            <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px', letterSpacing: '0.08em' }}>
+              NO PREDICTION YET
+            </span>
+            <br />
+            <span style={{ color: 'var(--color-terminal-muted)', fontSize: '9px' }}>
+              Swarm intelligence consensus prediction
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-dim)' }}>
+              <input type="checkbox" checked={forceFresh} onChange={(e) => setForceFresh(e.target.checked)} style={{ accentColor: MIROFISH_COLOR, width: '11px', height: '11px' }} />
+              FRESH
+            </label>
+            <button
+              type="button"
+              onClick={() => analyzeAgent('mirofish', { forceFresh })}
+              disabled={analyzing}
+              style={{
+                background: 'transparent',
+                border: `1px solid ${MIROFISH_COLOR}`,
+                color: analyzing ? 'var(--color-terminal-dim)' : MIROFISH_COLOR,
+                fontFamily: 'var(--font-mono)',
+                fontSize: '9px',
+                letterSpacing: '0.08em',
+                padding: '3px 10px',
+                cursor: analyzing ? 'wait' : 'pointer',
+                flexShrink: 0,
+              }}
+            >
+              {analyzing ? '...' : '▸ RUN PREDICTION'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          {mirofishAnalysts.map((analyst, idx) => {
+            const key = analyst.meta.id ?? `mirofish-${idx}`
+            return (
+              <AnalystRow
+                key={key}
+                analyst={analyst}
+                expanded={expandedAnalysts.has(key)}
+                onToggle={() => toggleAnalyst(key)}
+                categoryColor={MIROFISH_COLOR}
+                onAnalyze={() => analyzeAgent(analyst.meta.id, { forceFresh })}
+                analyzing={loadingAgents.has(analyst.meta.id)}
+              />
+            )
+          })}
+          <div style={{ padding: '4px 28px', borderBottom: '1px solid var(--color-terminal-border)', background: 'var(--color-terminal-surface)' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--color-terminal-dim)' }}>
+              <input type="checkbox" checked={forceFresh} onChange={(e) => setForceFresh(e.target.checked)} style={{ accentColor: MIROFISH_COLOR, width: '11px', height: '11px' }} />
+              FORCE FRESH PREDICTION (skip cache)
+            </label>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+const AGENTIC_COLOR = '#aa66ff'
+
+function AgenticAnalysisSection({
+  analysts,
+  expandedAnalysts,
+  toggleAnalyst,
+  analyzeAgent,
+  loadingAgents,
+  view,
+}: {
+  analysts: AnalystVerdict[]
+  expandedAnalysts: Set<string>
+  toggleAnalyst: (k: string) => void
+  analyzeAgent: (id: string) => void
+  loadingAgents: Set<string>
+  view: 'list' | 'grid'
+}) {
+  const sentiment = analysts.length > 0 ? getDominantSentiment(analysts) : null
+
+  const header = view === 'list' ? (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 10px',
+      background: 'var(--color-terminal-surface)', borderBottom: '1px solid var(--color-terminal-border)',
+      fontFamily: 'var(--font-mono)', minHeight: '24px', position: 'relative',
+    }}>
+      <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.1em', color: AGENTIC_COLOR, whiteSpace: 'nowrap' }}>AGENTIC ANALYSIS</span>
+      {sentiment && (
+        <span style={{ fontSize: '10px', fontWeight: 'bold', color: sentiment.color, whiteSpace: 'nowrap' }}>{sentiment.label}</span>
+      )}
+      <div style={{ flex: 1, height: '1px', background: AGENTIC_COLOR, opacity: 0.25 }} />
+      <span style={{ fontSize: '9px', color: 'var(--color-terminal-dim)', whiteSpace: 'nowrap' }}>{analysts.length}</span>
+    </div>
+  ) : (
+    <div style={{
+      width: '100%', display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 6px',
+      fontFamily: 'var(--font-mono)',
+    }}>
+      <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.1em', color: AGENTIC_COLOR, whiteSpace: 'nowrap' }}>AGENTIC ANALYSIS</span>
+      {sentiment && (
+        <span style={{ fontSize: '10px', fontWeight: 'bold', color: sentiment.color, whiteSpace: 'nowrap' }}>{sentiment.label}</span>
+      )}
+      <div style={{ flex: 1, height: '1px', background: AGENTIC_COLOR, opacity: 0.25 }} />
+      <span style={{ fontSize: '9px', color: 'var(--color-terminal-dim)', whiteSpace: 'nowrap' }}>{analysts.length}</span>
+    </div>
+  )
+
+  if (analysts.length === 0) {
+    return (
+      <div>
+        {header}
+        <div style={{
+          padding: '14px 28px', background: 'var(--color-terminal-surface)',
+          borderBottom: '1px solid var(--color-terminal-border)', fontFamily: 'var(--font-mono)',
+          borderLeft: `2px solid ${AGENTIC_COLOR}30`,
+        }}>
+          <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px', letterSpacing: '0.08em' }}>
+            CURRENTLY NO AGENTIC ANALYSIS AVAILABLE
+          </span>
+          <br />
+          <span style={{ color: 'var(--color-terminal-muted)', fontSize: '9px' }}>
+            Click ▸ RUN on any agent or use ANALYZE to run all
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {header}
+      {analysts.map((analyst, idx) => {
+        const key = analyst.meta.id ?? `agentic-${idx}`
+        return view === 'list' ? (
+          <AnalystRow
+            key={key}
+            analyst={analyst}
+            expanded={expandedAnalysts.has(key)}
+            onToggle={() => toggleAnalyst(key)}
+            categoryColor={AGENTIC_COLOR}
+            onAnalyze={() => analyzeAgent(analyst.meta.id)}
+            analyzing={loadingAgents.has(analyst.meta.id)}
+          />
+        ) : (
+          <AnalystCard
+            key={key}
+            analyst={analyst}
+            expanded={expandedAnalysts.has(key)}
+            onToggle={() => toggleAnalyst(key)}
+            onAnalyze={() => analyzeAgent(analyst.meta.id)}
+            analyzing={loadingAgents.has(analyst.meta.id)}
+          />
+        )
+      })}
     </div>
   )
 }
 
 /* ── Category Grid Header (grid view) ── */
 
-function CategoryGridHeader({ label, count, color, analysts }: { label: string; count: number; color: string; analysts: AnalystVerdict[] }) {
+function CategoryGridHeader({ label, count, color, analysts, category }: { label: string; count: number; color: string; analysts: AnalystVerdict[]; category?: string }) {
   const sentiment = getDominantSentiment(analysts)
+  const isMirofish = category === 'mirofish-prediction'
   return (
     <div
       style={{
@@ -482,8 +698,11 @@ function CategoryGridHeader({ label, count, color, analysts }: { label: string; 
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        padding: '4px 0',
+        padding: '4px 6px',
         fontFamily: 'var(--font-mono)',
+        borderRadius: '2px',
+        position: 'relative',
+        ...(isMirofish ? { animation: 'mirofishBorderBlink 1.4s ease-in-out infinite' } : {}),
       }}
     >
       <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.1em', color, whiteSpace: 'nowrap' }}>
@@ -496,6 +715,20 @@ function CategoryGridHeader({ label, count, color, analysts }: { label: string; 
       <span style={{ fontSize: '9px', color: 'var(--color-terminal-dim)', whiteSpace: 'nowrap' }}>
         {count}
       </span>
+      {isMirofish && (
+        <span style={{
+          fontSize: '8px',
+          fontWeight: 700,
+          letterSpacing: '0.12em',
+          color: '#0a0a0a',
+          background: '#ff8800',
+          padding: '1px 5px',
+          borderRadius: '2px',
+          flexShrink: 0,
+        }}>
+          NEW
+        </span>
+      )}
     </div>
   )
 }
@@ -586,7 +819,7 @@ const cardBaseStyle: React.CSSProperties = {
 
 /* ── Analyst Card (grid view) ── */
 
-function AnalystCard({ analyst, expanded, onToggle }: { analyst: AnalystVerdict; expanded: boolean; onToggle: () => void }) {
+function AnalystCard({ analyst, expanded, onToggle, onAnalyze, analyzing }: { analyst: AnalystVerdict; expanded: boolean; onToggle: () => void; onAnalyze?: () => void; analyzing?: boolean }) {
   const chip = getDirectionChip(analyst.direction)
   const dirColor = getDirectionColor(analyst.direction)
   const meta = analyst.meta as AnalystVerdict['meta'] & { type?: string }
@@ -602,13 +835,34 @@ function AnalystCard({ analyst, expanded, onToggle }: { analyst: AnalystVerdict;
       onClick={onToggle}
     >
       {/* Row 1: name + direction chip */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px' }}>
         <span style={{ color: 'var(--color-terminal-dim)', fontSize: '11px', letterSpacing: '0.1em', fontFamily: 'var(--font-mono)' }}>
           {analyst.meta.name.toUpperCase()}
         </span>
         <span style={{ color: chip.color, fontSize: '10px', fontWeight: 'bold', fontFamily: 'var(--font-mono)' }}>
           {chip.label}
         </span>
+        {onAnalyze && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onAnalyze() }}
+            disabled={analyzing}
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--color-terminal-dim)',
+              color: analyzing ? 'var(--color-terminal-dim)' : 'var(--color-terminal-amber)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '9px',
+              letterSpacing: '0.08em',
+              padding: '1px 6px',
+              cursor: analyzing ? 'wait' : 'pointer',
+              flexShrink: 0,
+              transition: 'all 0.15s',
+            }}
+          >
+            {analyzing ? '...' : '▸ RUN'}
+          </button>
+        )}
       </div>
 
       {/* Description */}
@@ -678,7 +932,14 @@ function AnalystCard({ analyst, expanded, onToggle }: { analyst: AnalystVerdict;
 
 /* ── Analyst List Row (list view) with expand/collapse ── */
 
-function AnalystRow({ analyst, expanded, onToggle, categoryColor }: { analyst: AnalystVerdict; expanded: boolean; onToggle: () => void; categoryColor: string }) {
+function AnalystRow({ analyst, expanded, onToggle, categoryColor, onAnalyze, analyzing }: {
+  analyst: AnalystVerdict
+  expanded: boolean
+  onToggle: () => void
+  categoryColor: string
+  onAnalyze?: () => void
+  analyzing?: boolean
+}) {
   const chip = getDirectionChip(analyst.direction)
   const dirColor = getDirectionColor(analyst.direction)
   const meta = analyst.meta as AnalystVerdict['meta'] & { type?: string }
@@ -718,6 +979,28 @@ function AnalystRow({ analyst, expanded, onToggle, categoryColor }: { analyst: A
           {analyst.meta.name.toUpperCase()}
         </span>
 
+        {onAnalyze && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onAnalyze() }}
+            disabled={analyzing}
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--color-terminal-dim)',
+              color: analyzing ? 'var(--color-terminal-dim)' : 'var(--color-terminal-amber)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '9px',
+              letterSpacing: '0.08em',
+              padding: '1px 6px',
+              cursor: analyzing ? 'wait' : 'pointer',
+              flexShrink: 0,
+              transition: 'all 0.15s',
+            }}
+          >
+            {analyzing ? '...' : '▸ RUN'}
+          </button>
+        )}
+
         {/* Direction */}
         <span style={{ color: chip.color, fontSize: '11px', fontWeight: 'bold', width: '80px', flexShrink: 0 }}>
           {chip.label}
@@ -744,7 +1027,7 @@ function AnalystRow({ analyst, expanded, onToggle, categoryColor }: { analyst: A
         </span>
 
         {/* LLM badge */}
-        {meta.type === 'llm' && (
+        {isLLMAnalyst(analyst) && (
           <span style={{ color: 'var(--color-terminal-blue)', fontSize: '9px', fontFamily: 'var(--font-mono)', padding: '0 3px', border: '1px solid var(--color-terminal-border)', flexShrink: 0 }}>
             LLM
           </span>
@@ -1061,7 +1344,62 @@ function DiscoveryActivityEntry({ entry, expanded, onToggle }: { entry: Discover
   )
 }
 
-/* ── Activity Entry Row (history tab) ── */
+function MirofishActivityEntry({ prediction, expanded, onToggle }: { prediction: MirofishPredictionRecord; expanded: boolean; onToggle: () => void }) {
+  const chip = getDirectionChip(prediction.direction)
+  const dirColor = getDirectionColor(prediction.direction)
+  const ind = prediction.indicators ?? {}
+
+  return (
+    <div style={{ borderBottom: '1px solid var(--color-terminal-border)', background: 'var(--color-terminal-panel)', fontFamily: 'var(--font-mono)' }}>
+      <div
+        onClick={onToggle}
+        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 10px', minHeight: '34px', cursor: 'pointer', borderLeft: '2px solid #00ddcc' }}
+      >
+        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '10px', width: '10px', flexShrink: 0 }}>
+          {expanded ? '▼' : '▶'}
+        </span>
+        <span style={{ color: 'var(--color-terminal-muted)', fontSize: '10px', width: '60px', flexShrink: 0 }}>
+          {timeAgo(prediction.createdAt)}
+        </span>
+        <span style={{ color: '#00ddcc', fontSize: '10px', fontWeight: 'bold', width: '80px', flexShrink: 0 }}>
+          MIROFISH
+        </span>
+        <span style={{ color: chip.color, fontSize: '11px', fontWeight: 'bold', flexShrink: 0 }}>
+          {chip.label}
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+          <div style={{ width: '40px', height: '2px', background: 'var(--color-terminal-border)' }}>
+            <div style={{ height: '2px', background: dirColor, width: `${prediction.confidence * 100}%` }} />
+          </div>
+          <span style={{ color: 'var(--color-terminal-blue)', fontSize: '10px', fontWeight: 'bold' }}>
+            {(prediction.confidence * 100).toFixed(0)}%
+          </span>
+        </div>
+        {ind.consensusBullPct != null && (
+          <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', flexShrink: 0 }}>
+            ▲{ind.consensusBullPct}% ▼{ind.consensusBearPct ?? 100 - ind.consensusBullPct}%
+          </span>
+        )}
+        <span style={{ color: 'var(--color-terminal-dim)', fontSize: '9px', marginLeft: 'auto', flexShrink: 0 }}>
+          {prediction.symbol}
+        </span>
+      </div>
+      {expanded && (
+        <div style={{ borderTop: '1px solid var(--color-terminal-border)', background: 'var(--color-terminal-surface)', padding: '8px 28px' }}>
+          <div style={{ color: 'var(--color-terminal-muted)', fontSize: '9px', marginBottom: '6px' }}>
+            {new Date(prediction.createdAt).toLocaleString()}
+            {prediction.modelId && <span style={{ marginLeft: '8px', color: 'var(--color-terminal-blue)' }}>{prediction.modelId.split('/').pop()}</span>}
+            {ind.simulationRounds && <span style={{ marginLeft: '8px' }}>{ind.simulationRounds} rounds</span>}
+            {ind.agentsCount && <span style={{ marginLeft: '8px' }}>{ind.agentsCount} agents</span>}
+          </div>
+          <div style={{ color: 'var(--color-terminal-text)', fontSize: '11px', lineHeight: 1.6 }}>
+            {prediction.reason}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 function ActivityEntry({ verdict, expanded, onToggle }: { verdict: VerdictRecord; expanded: boolean; onToggle: () => void }) {
   const chip = getDirectionChip(verdict.direction)
@@ -1198,7 +1536,7 @@ function ActivityEntry({ verdict, expanded, onToggle }: { verdict: VerdictRecord
 type ActiveTab = 'analysis' | 'activities' | 'project-info'
 
 export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisComplete, onAgentModelMapChange }: AnalysisStripProps) {
-  const { result, loading, error, history, isStale, analyze } = useIntelligence(symbol, { refreshKey })
+  const { result, loading, loadingAgents, error, history, isStale, analyze, analyzeAgent } = useIntelligence(symbol, { refreshKey })
   const projectInfo = useProjectInfo(symbol)
 
   const analysts = result?.analysts ?? []
@@ -1212,7 +1550,15 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
   const [selectedAgents, setSelectedAgents] = useState<string[]>([])
   const [availableModels, setAvailableModels] = useState<ModelInfo[]>([])
   const [availableAgents, setAvailableAgents] = useState<AgentInfo[]>([])
+  const [mirofishHistory, setMirofishHistory] = useState<MirofishPredictionRecord[]>([])
   const router = useRouter()
+
+  useEffect(() => {
+    fetch(`/api/intelligence/mirofish?symbol=${encodeURIComponent(symbol)}&limit=20&_v=${refreshKey}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d?.predictions) setMirofishHistory(d.predictions) })
+      .catch(() => {})
+  }, [symbol, refreshKey])
 
 
   const toggleFullscreen = useCallback(() => {
@@ -1251,11 +1597,9 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
 
   const handleAnalyze = () => {
     if (!loading) {
-      const activeAgents = selectedAgents.length > 0 ? selectedAgents : availableAgents.map((a) => a.id)
-      const modelMap: Record<string, string> = {}
-      for (const id of activeAgents) {
-        modelMap[id] = getAgentModel(id)
-      }
+      const modelMap: Record<string, string> = selectedAgents.length > 0
+        ? Object.fromEntries(selectedAgents.map(id => [id, getAgentModel(id)]))
+        : { ...(agentModelMap ?? {}) }
       analyze(undefined, {
         agentModelMap: modelMap,
         agentIds: selectedAgents.length > 0 ? selectedAgents : undefined,
@@ -1544,9 +1888,9 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
             <MarketContextCard />
             <SignalStatsCard symbol={symbol} />
             <CategorySummaryCard analysts={analysts} />
-            {groupAnalystsByCategory(analysts).map((group) => (
+            {groupAnalystsByCategory(analysts).filter(g => g.category !== 'agentic-analysis').map((group) => (
               <div key={group.category} style={{ width: '100%', display: 'contents' }}>
-                <CategoryGridHeader label={group.label} count={group.analysts.length} color={getCategoryColor(group.category)} analysts={group.analysts} />
+                <CategoryGridHeader label={group.label} count={group.analysts.length} color={getCategoryColor(group.category)} analysts={group.analysts} category={group.category} />
                 {group.analysts.map((analyst, idx) => {
                   const key = analyst.meta.id ?? `${group.category}-${idx}`
                   return (
@@ -1555,11 +1899,23 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
                       analyst={analyst}
                       expanded={expandedAnalysts.has(key)}
                       onToggle={() => toggleAnalyst(key)}
+                      onAnalyze={isLLMAnalyst(analyst) ? () => analyzeAgent(analyst.meta.id) : undefined}
+                      analyzing={loadingAgents.has(analyst.meta.id)}
                     />
                   )
                 })}
               </div>
             ))}
+            <div style={{ width: '100%', display: 'contents' }}>
+              <AgenticAnalysisSection
+                analysts={groupAnalystsByCategory(analysts).find(g => g.category === 'agentic-analysis')?.analysts ?? []}
+                expandedAnalysts={expandedAnalysts}
+                toggleAnalyst={toggleAnalyst}
+                analyzeAgent={analyzeAgent}
+                loadingAgents={loadingAgents}
+                view="grid"
+              />
+            </div>
           </div>
         ) : (
           <div
@@ -1575,23 +1931,30 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
             <MarketContextRow />
             <SignalStatsRow symbol={symbol} />
             <CategorySummaryRow analysts={analysts} />
-            {groupAnalystsByCategory(analysts).map((group) => (
-              <div key={group.category}>
-                <CategoryDelimiter label={group.label} count={group.analysts.length} color={getCategoryColor(group.category)} analysts={group.analysts} />
-                {group.analysts.map((analyst, idx) => {
-                  const key = analyst.meta.id ?? `${group.category}-${idx}`
-                  return (
-                    <AnalystRow
-                      key={key}
-                      analyst={analyst}
-                      expanded={expandedAnalysts.has(key)}
-                      onToggle={() => toggleAnalyst(key)}
-                      categoryColor={getCategoryColor(group.category)}
-                    />
-                  )
-                })}
-              </div>
-            ))}
+            {(() => {
+              const groups = groupAnalystsByCategory(analysts)
+              const agenticAnalysts = groups.find(g => g.category === 'agentic-analysis')?.analysts ?? []
+              const ordered = groups.filter(g => g.category !== 'agentic-analysis' && g.category !== 'mirofish-prediction')
+              const insertAfter = ordered.findIndex(g => g.category === 'technical-analysis')
+              const splitAt = insertAfter >= 0 ? insertAfter + 1 : ordered.length
+              const renderGroup = (group: typeof ordered[0]) => (
+                <div key={group.category}>
+                  <CategoryDelimiter label={group.label} count={group.analysts.length} color={getCategoryColor(group.category)} analysts={group.analysts} category={group.category} />
+                  {group.analysts.map((analyst, idx) => {
+                    const key = analyst.meta.id ?? `${group.category}-${idx}`
+                    return <AnalystRow key={key} analyst={analyst} expanded={expandedAnalysts.has(key)} onToggle={() => toggleAnalyst(key)} categoryColor={getCategoryColor(group.category)} onAnalyze={isLLMAnalyst(analyst) ? () => analyzeAgent(analyst.meta.id) : undefined} analyzing={loadingAgents.has(analyst.meta.id)} />
+                  })}
+                </div>
+              )
+              return (
+                <>
+                  <MirofishPredictionSection analysts={analysts} expandedAnalysts={expandedAnalysts} toggleAnalyst={toggleAnalyst} analyzeAgent={analyzeAgent} loadingAgents={loadingAgents} />
+                  {ordered.slice(0, splitAt).map(renderGroup)}
+                  <AgenticAnalysisSection analysts={agenticAnalysts} expandedAnalysts={expandedAnalysts} toggleAnalyst={toggleAnalyst} analyzeAgent={analyzeAgent} loadingAgents={loadingAgents} view="list" />
+                  {ordered.slice(splitAt).map(renderGroup)}
+                </>
+              )
+            })()}
           </div>
         )
       ) : activeTab === 'activities' ? (
@@ -1606,7 +1969,7 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
             overflowX: 'hidden',
           }}
         >
-          {history.length === 0 && projectInfo.discoveryHistory.length === 0 ? (
+          {history.length === 0 && projectInfo.discoveryHistory.length === 0 && mirofishHistory.length === 0 ? (
             <div
               style={{
                 flex: 1,
@@ -1625,9 +1988,11 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
             type MergedItem =
               | { kind: 'verdict'; id: string; ts: number; data: VerdictRecord }
               | { kind: 'discovery'; id: string; ts: number; data: DiscoveryHistoryEntry }
+              | { kind: 'mirofish'; id: string; ts: number; data: MirofishPredictionRecord }
             const items: MergedItem[] = [
               ...history.map((v, i): MergedItem => ({ kind: 'verdict', id: v.id ?? `h-${i}`, ts: new Date(v.createdAt).getTime(), data: v })),
               ...projectInfo.discoveryHistory.map((d): MergedItem => ({ kind: 'discovery', id: d.id, ts: new Date(d.completedAt).getTime(), data: d })),
+              ...mirofishHistory.map((m): MergedItem => ({ kind: 'mirofish', id: m.id, ts: new Date(m.createdAt).getTime(), data: m })),
             ]
             items.sort((a, b) => b.ts - a.ts)
             return items.map(item => {
@@ -1636,6 +2001,16 @@ export function AnalysisStrip({ symbol, refreshKey, agentModelMap, onAnalysisCom
                   <ActivityEntry
                     key={item.id}
                     verdict={item.data as VerdictRecord}
+                    expanded={expandedActivities.has(item.id)}
+                    onToggle={() => toggleActivity(item.id)}
+                  />
+                )
+              }
+              if (item.kind === 'mirofish') {
+                return (
+                  <MirofishActivityEntry
+                    key={item.id}
+                    prediction={item.data as MirofishPredictionRecord}
                     expanded={expandedActivities.has(item.id)}
                     onToggle={() => toggleActivity(item.id)}
                   />

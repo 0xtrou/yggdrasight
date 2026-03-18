@@ -10,6 +10,7 @@ const OPENCODE_BIN = process.env.OPENCODE_BIN ?? 'opencode'
 const DOCKER_BIN = process.env.DOCKER_BIN ?? 'docker'
 const OPENCODE_IMAGE = process.env.OPENCODE_IMAGE ?? 'ghcr.io/anomalyco/opencode'
 const DEFAULT_TIMEOUT_MS = 600_000 // 10 minutes per agent call (agents may do deep research)
+const AGENT_CONFIG_PATH = path.resolve(process.cwd(), 'docker', 'opencode', 'agent-config.json')
 // Search multiple candidate paths for the models cache file
 const MODELS_CACHE_CANDIDATES = [
   path.join(process.cwd(), 'data', 'models-cache.json'),
@@ -497,6 +498,12 @@ export interface RunOpenCodeOptions {
   timeoutMs?: number
   /** Decrypted auth.json path for per-user auth — when provided, overrides HOME_DIR mount */
   authJsonPath?: string
+  /** Extra volume mounts to add to the Docker container (e.g., for Mirofish results directory) */
+  extraVolumes?: Array<{ host: string; container: string; mode?: string }>
+  /** Docker network to join. Defaults to 'host'. Use a named network to reach other containers by service name. */
+  network?: string
+  /** Docker image to run. Defaults to OPENCODE_IMAGE env var or ghcr.io/anomalyco/opencode. */
+  image?: string
 }
 
 export interface RunOpenCodeResult {
@@ -523,32 +530,35 @@ export interface RunOpenCodeResult {
  * Falls back to inline prompt if no workDir is provided.
  */
 export async function runOpenCode(options: RunOpenCodeOptions): Promise<RunOpenCodeResult> {
-  const { model, prompt, workDir, timeoutMs = DEFAULT_TIMEOUT_MS, authJsonPath } = options
+  const { model, prompt, workDir, timeoutMs = DEFAULT_TIMEOUT_MS, authJsonPath, extraVolumes, network, image } = options
   const startTime = Date.now()
 
   try {
     const HOME_DIR = process.env.HOME ?? '/root'
 
-    // If a workDir is provided (pre-built data files), mount it as /workspace
-    // and use --dir so the agent's read tool resolves relative paths there.
-    // Otherwise create an isolated temp dir (no data files needed — prompt is short).
     let tmpDir: string | null = null
     let mountDir: string | null = null
     const dockerArgs: string[] = [
       'run', '--rm',
-      '--network', 'host',
-      // Mount auth credentials (API keys, provider tokens) — only file OpenCode needs
+      '--network', network ?? 'host',
       '-v', `${authJsonPath ?? `${HOME_DIR}/.local/share/opencode/auth.json`}:/root/.local/share/opencode/auth.json:ro`,
       '-e', 'HOME=/root',
     ]
+    if (existsSync(AGENT_CONFIG_PATH)) {
+      dockerArgs.push('-v', `${AGENT_CONFIG_PATH}:/workspace/opencode.json:ro`)
+    }
+    if (extraVolumes) {
+      for (const vol of extraVolumes) {
+        dockerArgs.push('-v', `${vol.host}:${vol.container}:${vol.mode ?? 'ro'}`)
+      }
+    }
+    const resolvedImage = image ?? OPENCODE_IMAGE
     if (workDir) {
-      // Mount the pre-built workspace and tell opencode to run from /workspace
       dockerArgs.push('-v', `${workDir}:/workspace:rw`)
-      dockerArgs.push(OPENCODE_IMAGE)
+      dockerArgs.push(resolvedImage)
       dockerArgs.push('run', '-m', model, '--format', 'json', '--dir', '/workspace', prompt)
     } else {
-      // No data files — just pass the prompt as positional arg directly
-      dockerArgs.push(OPENCODE_IMAGE)
+      dockerArgs.push(resolvedImage)
       dockerArgs.push('run', '-m', model, '--format', 'json', prompt)
     }
 

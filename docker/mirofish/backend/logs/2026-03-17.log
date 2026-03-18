@@ -1,0 +1,1178 @@
+[2026-03-17 22:25:42] INFO [mirofish.create_app:38] ==================================================
+[2026-03-17 22:25:42] INFO [mirofish.create_app:39] MiroFish Backend 启动中...
+[2026-03-17 22:25:42] INFO [mirofish.create_app:40] ==================================================
+[2026-03-17 22:25:42] INFO [mirofish.create_app:49] 已注册模拟进程清理函数
+[2026-03-17 22:25:42] INFO [mirofish.create_app:77] MiroFish Backend 启动完成
+[2026-03-17 22:29:02] DEBUG [mirofish.request.log_request:55] 请求: POST /api/graph/ontology/generate
+[2026-03-17 22:29:02] INFO [mirofish.api.generate_ontology:150] === 开始生成本体定义 ===
+[2026-03-17 22:29:02] DEBUG [mirofish.api.generate_ontology:157] 项目名称: XVS Price Prediction Mar 17
+[2026-03-17 22:29:02] DEBUG [mirofish.api.generate_ontology:158] 模拟需求: Based on the 7-day price data of XVS (Venus Protocol) from March 9-15, 2026, predict the price of XV...
+[2026-03-17 22:29:02] INFO [mirofish.api.generate_ontology:177] 创建项目: proj_7f4921de66f0
+[2026-03-17 22:29:02] INFO [mirofish.api.generate_ontology:212] 文本提取完成，共 2780 字符
+[2026-03-17 22:29:02] INFO [mirofish.api.generate_ontology:215] 调用 LLM 生成本体定义...
+[2026-03-17 22:29:16] INFO [mirofish.api.generate_ontology:226] 本体生成完成: 10 个实体类型, 7 个关系类型
+[2026-03-17 22:29:16] INFO [mirofish.api.generate_ontology:235] === 本体生成完成 === 项目ID: proj_7f4921de66f0
+[2026-03-17 22:29:16] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:29:26] DEBUG [mirofish.request.log_request:55] 请求: POST /api/graph/build
+[2026-03-17 22:29:26] DEBUG [mirofish.request.log_request:57] 请求体: {'project_id': 'proj_7f4921de66f0', 'graph_name': 'XVS Venus Protocol Prediction'}
+[2026-03-17 22:29:26] INFO [mirofish.api.build_graph:283] === 开始构建图谱 ===
+[2026-03-17 22:29:26] DEBUG [mirofish.api.build_graph:299] 请求参数: project_id=proj_7f4921de66f0
+[2026-03-17 22:29:26] INFO [mirofish.api.build_graph:366] 创建图谱构建任务: task_id=b14a5687-5a83-4fdc-8a6d-a5a05aa6ae22, project_id=proj_7f4921de66f0
+[2026-03-17 22:29:26] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:29:26] INFO [mirofish.build.build_task:377] [b14a5687-5a83-4fdc-8a6d-a5a05aa6ae22] 开始构建图谱...
+[2026-03-17 22:29:26] ERROR [mirofish.build.build_task:492] [b14a5687-5a83-4fdc-8a6d-a5a05aa6ae22] 图谱构建失败: headers: {'date': 'Tue, 17 Mar 2026 15:29:26 GMT', 'content-type': 'text/plain; charset=utf-8', 'content-length': '13', 'connection': 'keep-alive', 'vary': 'Origin', 'x-content-type-options': 'nosniff', 'strict-transport-security': 'max-age=31536000; includeSubDomains', 'cf-cache-status': 'DYNAMIC', 'server': 'cloudflare', 'cf-ray': '9ddd087e6a29a67c-HKG'}, status_code: 401, body: unauthorized
+
+[2026-03-17 22:29:26] DEBUG [mirofish.build.build_task:493] Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/zep_cloud/graph/raw_client.py", line 713, in create
+    _response_json = _response.json()
+                     ^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/httpx/_models.py", line 832, in json
+    return jsonlib.loads(self.content, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/.pyenv/versions/3.12.2/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/.pyenv/versions/3.12.2/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/.pyenv/versions/3.12.2/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/api/graph.py", line 406, in build_task
+    graph_id = builder.create_graph(name=graph_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/graph_builder.py", line 191, in create_graph
+    self.client.graph.create(
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/zep_cloud/graph/client.py", line 457, in create
+    _response = self._raw_client.create(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/zep_cloud/graph/raw_client.py", line 715, in create
+    raise core_api_error_ApiError(
+zep_cloud.core.api_error.ApiError: headers: {'date': 'Tue, 17 Mar 2026 15:29:26 GMT', 'content-type': 'text/plain; charset=utf-8', 'content-length': '13', 'connection': 'keep-alive', 'vary': 'Origin', 'x-content-type-options': 'nosniff', 'strict-transport-security': 'max-age=31536000; includeSubDomains', 'cf-cache-status': 'DYNAMIC', 'server': 'cloudflare', 'cf-ray': '9ddd087e6a29a67c-HKG'}, status_code: 401, body: unauthorized
+
+
+[2026-03-17 22:29:37] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/b14a5687-5a83-4fdc-8a6d-a5a05aa6ae22
+[2026-03-17 22:29:37] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:37:43] INFO [mirofish.create_app:38] ==================================================
+[2026-03-17 22:37:43] INFO [mirofish.create_app:39] MiroFish Backend 启动中...
+[2026-03-17 22:37:43] INFO [mirofish.create_app:40] ==================================================
+[2026-03-17 22:37:43] INFO [mirofish.create_app:49] 已注册模拟进程清理函数
+[2026-03-17 22:37:43] INFO [mirofish.create_app:77] MiroFish Backend 启动完成
+[2026-03-17 22:37:56] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_7f4921de66f0
+[2026-03-17 22:37:56] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:38:04] DEBUG [mirofish.request.log_request:55] 请求: POST /api/graph/project/proj_7f4921de66f0/reset
+[2026-03-17 22:38:04] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:38:11] DEBUG [mirofish.request.log_request:55] 请求: POST /api/graph/build
+[2026-03-17 22:38:11] DEBUG [mirofish.request.log_request:57] 请求体: {'project_id': 'proj_7f4921de66f0', 'graph_name': 'XVS Venus Protocol Prediction'}
+[2026-03-17 22:38:11] INFO [mirofish.api.build_graph:283] === 开始构建图谱 ===
+[2026-03-17 22:38:11] DEBUG [mirofish.api.build_graph:299] 请求参数: project_id=proj_7f4921de66f0
+[2026-03-17 22:38:11] INFO [mirofish.api.build_graph:366] 创建图谱构建任务: task_id=8e3c85a1-023e-4621-90dc-6c8a7ca06a40, project_id=proj_7f4921de66f0
+[2026-03-17 22:38:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:38:11] INFO [mirofish.build.build_task:377] [8e3c85a1-023e-4621-90dc-6c8a7ca06a40] 开始构建图谱...
+[2026-03-17 22:38:30] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/8e3c85a1-023e-4621-90dc-6c8a7ca06a40
+[2026-03-17 22:38:30] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:38:35] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/history
+[2026-03-17 22:38:35] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:38:48] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/8e3c85a1-023e-4621-90dc-6c8a7ca06a40
+[2026-03-17 22:38:48] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:38:58] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/8e3c85a1-023e-4621-90dc-6c8a7ca06a40
+[2026-03-17 22:38:58] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:39:09] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/8e3c85a1-023e-4621-90dc-6c8a7ca06a40
+[2026-03-17 22:39:09] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:39:18] INFO [mirofish.build.build_task:473] [8e3c85a1-023e-4621-90dc-6c8a7ca06a40] 图谱构建完成: graph_id=mirofish_a3aa7c3a7c2648a8, 节点=11, 边=19
+[2026-03-17 22:39:19] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/8e3c85a1-023e-4621-90dc-6c8a7ca06a40
+[2026-03-17 22:39:19] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:39:27] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/create
+[2026-03-17 22:39:27] DEBUG [mirofish.request.log_request:57] 请求体: {'project_id': 'proj_7f4921de66f0', 'enable_twitter': True, 'enable_reddit': True}
+[2026-03-17 22:39:27] INFO [mirofish.simulation.create_simulation:225] 创建模拟: sim_e15ccaca5665, project=proj_7f4921de66f0, graph=mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:39:27] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:39:36] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare
+[2026-03-17 22:39:36] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665', 'use_llm_for_profiles': True, 'parallel_profile_count': 5}
+[2026-03-17 22:39:36] INFO [mirofish.api.simulation.prepare_simulation:425] 开始处理 /prepare 请求: simulation_id=sim_e15ccaca5665, force_regenerate=False
+[2026-03-17 22:39:36] DEBUG [mirofish.api.simulation.prepare_simulation:429] 检查模拟 sim_e15ccaca5665 是否已准备完成...
+[2026-03-17 22:39:36] DEBUG [mirofish.api.simulation.prepare_simulation:431] 检查结果: is_prepared=False, prepare_info={'reason': '缺少必要文件', 'missing_files': ['simulation_config.json', 'reddit_profiles.json', 'twitter_profiles.csv'], 'existing_files': ['state.json']}
+[2026-03-17 22:39:36] INFO [mirofish.api.simulation.prepare_simulation:445] 模拟 sim_e15ccaca5665 未准备完成，将启动准备任务
+[2026-03-17 22:39:36] INFO [mirofish.api.simulation.prepare_simulation:473] 同步获取实体数量: graph_id=mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.filter_defined_entities:236] 开始筛选图谱 mirofish_a3aa7c3a7c2648a8 的实体...
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.get_all_nodes:137] 获取图谱 mirofish_a3aa7c3a7c2648a8 的所有节点...
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.get_all_nodes:151] 共获取 11 个节点
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.filter_defined_entities:323] 筛选完成: 总节点 11, 符合条件 6, 实体类型: {'BNBChain', 'MarketDataAggregator', 'DeFiProtocol', 'GovernanceProposal', 'VenusProtocol'}
+[2026-03-17 22:39:36] INFO [mirofish.api.simulation.prepare_simulation:484] 预期实体数量: 6, 类型: {'BNBChain', 'MarketDataAggregator', 'DeFiProtocol', 'GovernanceProposal', 'VenusProtocol'}
+[2026-03-17 22:39:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.filter_defined_entities:236] 开始筛选图谱 mirofish_a3aa7c3a7c2648a8 的实体...
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.get_all_nodes:137] 获取图谱 mirofish_a3aa7c3a7c2648a8 的所有节点...
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.get_all_nodes:151] 共获取 11 个节点
+[2026-03-17 22:39:36] INFO [mirofish.zep_entity_reader.get_all_edges:164] 获取图谱 mirofish_a3aa7c3a7c2648a8 的所有边...
+[2026-03-17 22:39:37] INFO [mirofish.zep_entity_reader.get_all_edges:179] 共获取 19 条边
+[2026-03-17 22:39:37] INFO [mirofish.zep_entity_reader.filter_defined_entities:323] 筛选完成: 总节点 11, 符合条件 6, 实体类型: {'BNBChain', 'MarketDataAggregator', 'DeFiProtocol', 'GovernanceProposal', 'VenusProtocol'}
+[2026-03-17 22:39:37] INFO [mirofish.oasis_profile.generate_profiles_from_entities:948] 开始并行生成 6 个Agent人设（并行数: 5）...
+[2026-03-17 22:39:37] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: Aave, 获取 15 条事实, 21 个相关节点
+[2026-03-17 22:39:37] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: Venus Protocol, 获取 15 条事实, 21 个相关节点
+[2026-03-17 22:39:37] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: BNB Chain, 获取 15 条事实, 21 个相关节点
+[2026-03-17 22:39:37] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: Compound, 获取 15 条事实, 21 个相关节点
+[2026-03-17 22:39:37] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: governance proposals, 获取 15 条事实, 21 个相关节点
+[2026-03-17 22:39:43] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [1/6] 成功生成人设: governance proposals (GovernanceProposal)
+[2026-03-17 22:39:43] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [2/6] 成功生成人设: Aave (DeFiProtocol)
+[2026-03-17 22:39:43] WARNING [mirofish.oasis_profile._generate_profile_with_llm:572] LLM调用失败 (attempt 1): list indices must be integers or slices, not str
+[2026-03-17 22:39:44] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [3/6] 成功生成人设: BNB Chain (BNBChain)
+[2026-03-17 22:39:44] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: CoinGecko, 获取 15 条事实, 21 个相关节点
+[2026-03-17 22:39:44] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [4/6] 成功生成人设: Venus Protocol (VenusProtocol)
+[2026-03-17 22:39:50] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [5/6] 成功生成人设: CoinGecko (MarketDataAggregator)
+[2026-03-17 22:39:50] WARNING [mirofish.oasis_profile._generate_profile_with_llm:572] LLM调用失败 (attempt 2): list indices must be integers or slices, not str
+[2026-03-17 22:39:56] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare/status
+[2026-03-17 22:39:56] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'e6c992be-d61a-469e-8e8d-4b369318dbd0', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:39:56] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:39:57] WARNING [mirofish.oasis_profile._generate_profile_with_llm:572] LLM调用失败 (attempt 3): list indices must be integers or slices, not str
+[2026-03-17 22:40:00] WARNING [mirofish.oasis_profile._generate_profile_with_llm:577] LLM生成人设失败（3次尝试）: list indices must be integers or slices, not str, 使用规则生成
+[2026-03-17 22:40:00] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [6/6] 成功生成人设: Compound (DeFiProtocol)
+[2026-03-17 22:40:00] INFO [mirofish.oasis_profile._save_reddit_json:1188] 已保存 6 个Reddit Profile到 /Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/../../uploads/simulations/sim_e15ccaca5665/reddit_profiles.json (JSON格式，包含user_id字段)
+[2026-03-17 22:40:00] INFO [mirofish.oasis_profile._save_twitter_csv:1114] 已保存 6 个Twitter Profile到 /Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/../../uploads/simulations/sim_e15ccaca5665/twitter_profiles.csv (OASIS CSV格式)
+[2026-03-17 22:40:00] INFO [mirofish.simulation_config.generate_config:271] 开始智能生成模拟配置: simulation_id=sim_e15ccaca5665, 实体数=6
+[2026-03-17 22:40:00] INFO [mirofish.simulation_config.report_progress:283] [1/4] 生成时间配置...
+[2026-03-17 22:40:03] WARNING [mirofish.simulation_config._parse_time_config:621] agents_per_hour_max (30) 超过总Agent数 (6)，已修正
+[2026-03-17 22:40:03] INFO [mirofish.simulation_config.report_progress:283] [2/4] 生成事件配置和热点话题...
+[2026-03-17 22:40:06] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare/status
+[2026-03-17 22:40:06] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'e6c992be-d61a-469e-8e8d-4b369318dbd0', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:40:06] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:40:08] INFO [mirofish.simulation_config.report_progress:283] [3/4] 生成Agent配置 (1-6/6)...
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config.generate_config:330] 为初始帖子分配合适的发布者 Agent...
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='venusprotocol' -> agent_id=3
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='marketdataaggregator' -> agent_id=5
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='defiprotocol' -> agent_id=0
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='bnbchain' -> agent_id=1
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='governanceproposal' -> agent_id=2
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config.report_progress:283] [4/4] 生成平台配置...
+[2026-03-17 22:40:15] INFO [mirofish.simulation_config.generate_config:376] 模拟配置生成完成: 6 个Agent配置
+[2026-03-17 22:40:15] INFO [mirofish.simulation.prepare_simulation:444] 模拟准备完成: sim_e15ccaca5665, entities=6, profiles=6
+[2026-03-17 22:40:16] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare/status
+[2026-03-17 22:40:16] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'e6c992be-d61a-469e-8e8d-4b369318dbd0', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:40:16] DEBUG [mirofish.api.simulation._check_simulation_prepared:300] 检测模拟准备状态: sim_e15ccaca5665, status=ready, config_generated=True
+[2026-03-17 22:40:16] INFO [mirofish.api.simulation._check_simulation_prepared:335] 模拟 sim_e15ccaca5665 检测结果: 已准备完成 (status=ready, config_generated=True)
+[2026-03-17 22:40:16] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:40:38] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/start
+[2026-03-17 22:40:38] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665', 'platform': 'parallel', 'max_rounds': 20, 'enable_graph_memory_update': True}
+[2026-03-17 22:40:38] INFO [mirofish.api.simulation.start_simulation:1596] 启用图谱记忆更新: simulation_id=sim_e15ccaca5665, graph_id=mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:40:38] INFO [mirofish.simulation_runner.start_simulation:359] 轮数已截断: 48 -> 20 (max_rounds=20)
+[2026-03-17 22:40:38] INFO [mirofish.zep_graph_memory_updater.__init__:268] ZepGraphMemoryUpdater 初始化完成: graph_id=mirofish_a3aa7c3a7c2648a8, batch_size=5
+[2026-03-17 22:40:38] INFO [mirofish.zep_graph_memory_updater.start:286] ZepGraphMemoryUpdater 已启动: graph_id=mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:40:38] INFO [mirofish.zep_graph_memory_updater.create_updater:504] 创建图谱记忆更新器: simulation_id=sim_e15ccaca5665, graph_id=mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:40:38] INFO [mirofish.simulation_runner.start_simulation:379] 已启用图谱记忆更新: simulation_id=sim_e15ccaca5665, graph_id=mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:40:38] INFO [mirofish.simulation_runner.start_simulation:467] 模拟启动成功: sim_e15ccaca5665, pid=44141, platform=parallel
+[2026-03-17 22:40:38] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:41:03] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665/run-status
+[2026-03-17 22:41:03] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:41:19] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665/run-status
+[2026-03-17 22:41:19] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: governance proposals - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: governance proposals - CREATE_POST
+[2026-03-17 22:41:30] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:41:30] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Venus Protocol: 发布了一条帖子：「XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be...
+[2026-03-17 22:41:31] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:41:31] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Venus Protocol: 发布了一条帖子：「XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be...
+[2026-03-17 22:41:34] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665/run-status
+[2026-03-17 22:41:34] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:41:50] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665/run-status
+[2026-03-17 22:41:50] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: governance proposals - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - QUOTE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: governance proposals - CREATE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - LIKE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - LIKE_POST
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - CREATE_POST
+[2026-03-17 22:41:58] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:41:58] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Venus Protocol: 发布了一条帖子：「XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be...
+[2026-03-17 22:41:59] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:41:59] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Venus Protocol: 发布了一条帖子：「XVS (Venus Protocol) has shown a strong uptrend over the past 7 days, increasing by 13.3%. Key indicators suggest potential further growth, but resistance at $3.25 needs to be...
+[2026-03-17 22:42:00] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - LIKE_POST
+[2026-03-17 22:42:00] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - QUOTE_POST
+[2026-03-17 22:42:02] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - REPOST
+[2026-03-17 22:42:02] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_POST
+[2026-03-17 22:42:02] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_COMMENT
+[2026-03-17 22:42:02] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:42:02] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: CoinGecko: 点赞了CoinGecko的帖子：「CoinGecko data reveals a significant volume spike for XVS on March 14th. This suggests institutional buying pressure. Is this a sign of things to come for Venus Protocol?」
+...
+[2026-03-17 22:42:04] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - LIKE_POST
+[2026-03-17 22:42:04] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - LIKE_POST
+[2026-03-17 22:42:04] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - CREATE_COMMENT
+[2026-03-17 22:42:04] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:42:04] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: CoinGecko: 引用了BNB Chain的帖子「The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the imp...
+[2026-03-17 22:42:06] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665/run-status
+[2026-03-17 22:42:06] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:42:06] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - QUOTE_POST
+[2026-03-17 22:42:06] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - LIKE_COMMENT
+[2026-03-17 22:42:08] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_COMMENT
+[2026-03-17 22:42:08] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - CREATE_COMMENT
+[2026-03-17 22:42:08] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:42:08] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Aave: 点赞了Aave的帖子：「How does Venus Protocol's (XVS) approach to collateral and governance compare to Aave? What are the key differences in risk management and community involvement?」
+Compound: 评论道：「Inte...
+[2026-03-17 22:42:10] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: CoinGecko - LIKE_POST
+[2026-03-17 22:42:12] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - QUOTE_POST
+[2026-03-17 22:42:12] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - QUOTE_POST
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_POST
+[2026-03-17 22:42:14] INFO [mirofish.simulation_runner._read_action_log:622] Twitter 模拟已完成: sim_e15ccaca5665, total_rounds=20, total_actions=20
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_COMMENT
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: governance proposals - CREATE_COMMENT
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: governance proposals - LIKE_COMMENT
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: governance proposals - CREATE_POST
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - LIKE_COMMENT
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Compound - LIKE_COMMENT
+[2026-03-17 22:42:14] INFO [mirofish.simulation_runner._read_action_log:626] Reddit 模拟已完成: sim_e15ccaca5665, total_rounds=20, total_actions=26
+[2026-03-17 22:42:14] INFO [mirofish.simulation_runner._read_action_log:635] 所有平台模拟已完成: sim_e15ccaca5665
+[2026-03-17 22:42:14] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:42:14] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: BNB Chain: 引用了BNB Chain的帖子「The BNB Chain DeFi TVL is recovering, which is a positive sign for Venus Protocol. How much of this recovery is attributable to Venus Protocol's growth, and what are the imp...
+[2026-03-17 22:42:15] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:42:15] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Venus Protocol: 评论道：「We are actively tracking the TVL recovery on BNB Chain. A detailed report on Venus Protocol's contribution and its impact on XVS holders will be shared soon. Stay tuned for update...
+[2026-03-17 22:42:21] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665/run-status
+[2026-03-17 22:42:21] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:42:31] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate
+[2026-03-17 22:42:31] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:42:31] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:42:31] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 22:42:31] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_a3aa7c3a7c2648a8, simulation_id=sim_e15ccaca5665
+[2026-03-17 22:42:31] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_03e77acee6ef
+[2026-03-17 22:42:31] INFO [mirofish.report_agent.plan_outline:1151] 开始规划报告大纲...
+[2026-03-17 22:42:31] INFO [mirofish.zep_tools.get_simulation_context:909] 获取模拟上下文: Based on the 7-day price data of XVS (Venus Protoc...
+[2026-03-17 22:42:31] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=Based on the 7-day price data of XVS (Venus Protoc...
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 30 条相关事实
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.get_graph_statistics:865] 获取图谱 mirofish_a3aa7c3a7c2648a8 的统计信息...
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.get_all_nodes:660] 获取图谱 mirofish_a3aa7c3a7c2648a8 的所有节点...
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.get_all_nodes:675] 获取到 11 个节点
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.get_all_edges:689] 获取图谱 mirofish_a3aa7c3a7c2648a8 的所有边...
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.get_all_edges:713] 获取到 31 条边
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.get_all_nodes:660] 获取图谱 mirofish_a3aa7c3a7c2648a8 的所有节点...
+[2026-03-17 22:42:32] INFO [mirofish.zep_tools.get_all_nodes:675] 获取到 11 个节点
+[2026-03-17 22:42:37] INFO [mirofish.report_agent.plan_outline:1204] 大纲规划完成: 3 个章节
+[2026-03-17 22:42:37] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_03e77acee6ef
+[2026-03-17 22:42:37] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_03e77acee6ef
+[2026-03-17 22:42:37] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_03e77acee6ef
+[2026-03-17 22:42:37] INFO [mirofish.report_agent.generate_report:1628] 大纲已保存到文件: report_03e77acee6ef/outline.json
+[2026-03-17 22:42:37] INFO [mirofish.report_agent._generate_section_react:1248] ReACT生成章节: Bullish Momentum and Market Sentiment
+[2026-03-17 22:42:40] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 本章节旨在分析XVS价格上涨的动能和市场情绪，从而支持对2026年3月17日价格的预测。为了更全面地了解市场情绪和潜在影响因素，我将首先使用`insight_forge`工具来深入挖掘与XVS相关的市场情绪、交易者行为以及DeFi市场整体状况。
+
+<tool_call>
+{"name": "insight_forge", "parameters": {"query": "XVS (Venus Pr...
+[2026-03-17 22:42:40] INFO [mirofish.report_agent._execute_tool:967] 执行工具: insight_forge, 参数: {'query': 'XVS (Venus Protocol) 市场情绪分析，包括交易者行为、DeFi市场关联性、以及任何可能影响价格上涨的因素。', 'report_context': 'XVS (Venus Protocol) Price Prediction: March 17, 2026，基于2026年3月9-15日的价格数据预测3月17日的价格'}
+[2026-03-17 22:42:40] INFO [mirofish.zep_tools.insight_forge:973] InsightForge 深度洞察检索: XVS (Venus Protocol) 市场情绪分析，包括交易者行为、DeFi市场关联性、以及任何...
+[2026-03-17 22:42:44] INFO [mirofish.zep_tools.insight_forge:989] 生成 5 个子问题
+[2026-03-17 22:42:44] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=在2026年3月9日至15日期间，交易者对XVS的情绪是积极、消极还是中立？如何量化这种情绪（例如，...
+[2026-03-17 22:42:44] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:42:44] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=在2026年3月9日至15日期间，DeFi市场整体表现如何？XVS与哪些DeFi协议或代币关联性最强...
+[2026-03-17 22:42:45] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:42:45] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=在2026年3月9日至15日期间，哪些事件或新闻可能影响了XVS的价格上涨？这些事件的影响程度如何？...
+[2026-03-17 22:42:45] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:42:45] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=在2026年3月9日至15日期间，XVS的交易量模式是什么样的？是否存在交易量激增或下降的情况？这些...
+[2026-03-17 22:42:45] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:42:45] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=在2026年3月9日至15日期间，XVS的支撑位和阻力位分别在哪里？这些水平在多大程度上影响了价格的...
+[2026-03-17 22:42:46] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:42:46] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=XVS (Venus Protocol) 市场情绪分析，包括交易者行为、DeFi市场关联性、以及任何...
+[2026-03-17 22:42:46] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 20 条相关事实
+[2026-03-17 22:42:46] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: be2f8e2f...
+[2026-03-17 22:42:46] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: cd91bc6a...
+[2026-03-17 22:42:47] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2e22c4d9...
+[2026-03-17 22:42:47] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 75d7060b...
+[2026-03-17 22:42:47] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: a434f198...
+[2026-03-17 22:42:47] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 8df8f43a...
+[2026-03-17 22:42:48] INFO [mirofish.zep_tools.insight_forge:1089] InsightForge完成: 24条事实, 6个实体, 16条关系
+[2026-03-17 22:42:50] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 基于初步的分析结果，可以观察到XVS的市场情绪偏向积极。为了更深入了解交易者对XVS的看法，以及是否存在其他影响市场情绪的因素，我将使用`interview_agents`工具采访模拟Agent，了解他们对XVS价格上涨的看法。
+
+<tool_call>
+{"name": "interview_agents", "parameters": {"interview_topic": "XVS (Ven...
+[2026-03-17 22:42:50] INFO [mirofish.report_agent._execute_tool:967] 执行工具: interview_agents, 参数: {'interview_topic': 'XVS (Venus Protocol)价格上涨的原因和未来预期', 'max_agents': 5}
+[2026-03-17 22:42:50] INFO [mirofish.zep_tools.interview_agents:1309] InterviewAgents 深度采访（真实API）: XVS (Venus Protocol)价格上涨的原因和未来预期...
+[2026-03-17 22:42:50] INFO [mirofish.zep_tools._load_agent_profiles:1524] 从 reddit_profiles.json 加载了 6 个人设
+[2026-03-17 22:42:50] INFO [mirofish.zep_tools.interview_agents:1325] 加载到 6 个Agent人设
+[2026-03-17 22:42:53] INFO [mirofish.zep_tools.interview_agents:1337] 选择了 4 个Agent进行采访: [1, 2, 3, 5]
+[2026-03-17 22:42:54] INFO [mirofish.zep_tools.interview_agents:1346] 生成了 5 个采访问题
+[2026-03-17 22:42:54] INFO [mirofish.zep_tools.interview_agents:1376] 调用批量采访API（双平台）: 4 个Agent
+[2026-03-17 22:42:54] INFO [mirofish.simulation_runner.interview_agents_batch:1522] 发送批量Interview命令: simulation_id=sim_e15ccaca5665, count=4, platform=None
+[2026-03-17 22:42:54] INFO [mirofish.simulation_ipc.send_command:151] 发送IPC命令: batch_interview, command_id=9dccdd41-b4e1-4431-aa32-17a1d425da02
+[2026-03-17 22:42:56] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:42:56] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'b95c8df7-b3e8-4b78-9ab5-ece49c9001c5', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:42:56] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:43:02] INFO [mirofish.simulation_ipc.send_command:171] 收到IPC响应: command_id=9dccdd41-b4e1-4431-aa32-17a1d425da02, status=completed
+[2026-03-17 22:43:02] INFO [mirofish.zep_tools.interview_agents:1386] 采访API返回: 4 个结果, success=True
+[2026-03-17 22:43:09] INFO [mirofish.zep_tools.interview_agents:1481] InterviewAgents完成: 采访了 4 个Agent（双平台）
+[2026-03-17 22:43:11] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 通过对模拟Agent的采访，我们对XVS的市场情绪有了更深入的了解。为了进一步验证这些观点，并了解更广泛的市场参与者对XVS的看法，我将使用`quick_search`工具，搜索社交媒体上关于XVS市场情绪的讨论。
+
+<tool_call>
+{"name": "quick_search", "parameters": {"query": "XVS (Venus Protocol) 市场情绪 社交媒...
+[2026-03-17 22:43:11] INFO [mirofish.report_agent._execute_tool:967] 执行工具: quick_search, 参数: {'query': 'XVS (Venus Protocol) 市场情绪 社交媒体', 'limit': 5}
+[2026-03-17 22:43:11] INFO [mirofish.zep_tools.quick_search:1259] QuickSearch 简单搜索: XVS (Venus Protocol) 市场情绪 社交媒体...
+[2026-03-17 22:43:11] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=XVS (Venus Protocol) 市场情绪 社交媒体...
+[2026-03-17 22:43:11] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 5 条相关事实
+[2026-03-17 22:43:11] INFO [mirofish.zep_tools.quick_search:1269] QuickSearch完成: 5条结果
+[2026-03-17 22:43:11] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:43:11] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'b95c8df7-b3e8-4b78-9ab5-ece49c9001c5', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:43:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:43:16] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: **市场情绪概述**
+
+基于模拟Agent的采访和快速搜索结果，XVS的市场情绪整体偏向乐观。
+
+> "如果DeFi市场整体繁荣发展， Venus Protocol作为BNB Chain上的重要DeFi协议，自然也会从中受益。"
+
+BNB Chain生态的复苏是XVS价格上涨的重要基础。
+
+> "BNB Chain DeFi TVL的整体复苏为XVS提供了基础，因为Venus协议是建立在BNB C...
+[2026-03-17 22:43:16] INFO [mirofish.report_agent._generate_section_react:1393] 章节 Bullish Momentum and Market Sentiment 生成完成（工具调用: 3次）
+[2026-03-17 22:43:16] INFO [mirofish.report_agent.save_section:2127] 章节已保存: report_03e77acee6ef/section_01.md
+[2026-03-17 22:43:16] INFO [mirofish.report_agent.generate_report:1686] 章节已保存: report_03e77acee6ef/section_01.md
+[2026-03-17 22:43:16] INFO [mirofish.report_agent._generate_section_react:1248] ReACT生成章节: Volume Spike and Institutional Interest
+[2026-03-17 22:43:18] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，本章节需要分析XVS交易量的突然增加以及机构投资者可能对此产生的兴趣。我将首先使用`insight_forge`工具来深入了解交易量激增的原因，以及是否存在与机构投资者相关的任何信息。
+
+<tool_call>
+{"name": "insight_forge", "parameters": {"query": "XVS交易量激增的原因以及是否有机构投资者参与", "report_contex...
+[2026-03-17 22:43:18] INFO [mirofish.report_agent._execute_tool:967] 执行工具: insight_forge, 参数: {'query': 'XVS交易量激增的原因以及是否有机构投资者参与', 'report_context': '分析XVS在2026年3月17日的价格预测，重点关注交易量激增和机构兴趣。'}
+[2026-03-17 22:43:18] INFO [mirofish.zep_tools.insight_forge:973] InsightForge 深度洞察检索: XVS交易量激增的原因以及是否有机构投资者参与...
+[2026-03-17 22:43:21] INFO [mirofish.zep_tools.insight_forge:989] 生成 5 个子问题
+[2026-03-17 22:43:21] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=在2026年3月9日至15日期间，哪些事件或消息与XVS交易量的显著增加相关？...
+[2026-03-17 22:43:21] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:43:21] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=模拟机构投资者参与XVS交易的策略，并观察其对XVS价格和交易量的影响。...
+[2026-03-17 22:43:21] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:43:21] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=分析历史数据，确定XVS交易量激增后价格变化的典型模式。...
+[2026-03-17 22:43:22] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:43:22] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=模拟DeFi市场整体情绪对XVS交易量的影响，尤其是机构投资者情绪。...
+[2026-03-17 22:43:22] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:43:22] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=在模拟环境中，测试不同的交易量阈值，以确定哪些阈值能够可靠地预测XVS价格的上涨或下跌。...
+[2026-03-17 22:43:22] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:43:22] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=XVS交易量激增的原因以及是否有机构投资者参与...
+[2026-03-17 22:43:23] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 20 条相关事实
+[2026-03-17 22:43:23] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: be2f8e2f...
+[2026-03-17 22:43:23] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: cd91bc6a...
+[2026-03-17 22:43:23] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2e22c4d9...
+[2026-03-17 22:43:24] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 75d7060b...
+[2026-03-17 22:43:24] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: a434f198...
+[2026-03-17 22:43:24] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 8df8f43a...
+[2026-03-17 22:43:24] INFO [mirofish.zep_tools.insight_forge:1089] InsightForge完成: 23条事实, 6个实体, 22条关系
+[2026-03-17 22:43:27] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:43:27] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'b95c8df7-b3e8-4b78-9ab5-ece49c9001c5', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:43:27] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:43:27] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 根据`insight_forge`的分析结果，3月14日XVS的交易量确实出现了显著的增长，并且有迹象表明这可能与机构投资者的购买行为有关。为了更全面地了解机构投资者对XVS的兴趣，我将使用`interview_agents`工具采访一些相关的模拟Agent，例如DeFi分析师和机构投资者代表。
+
+<tool_call>
+{"name": "interview_agents", "paramete...
+[2026-03-17 22:43:27] INFO [mirofish.report_agent._execute_tool:967] 执行工具: interview_agents, 参数: {'interview_topic': '机构投资者对XVS交易量激增的看法以及未来投资计划', 'max_agents': 5}
+[2026-03-17 22:43:27] INFO [mirofish.zep_tools.interview_agents:1309] InterviewAgents 深度采访（真实API）: 机构投资者对XVS交易量激增的看法以及未来投资计划...
+[2026-03-17 22:43:27] INFO [mirofish.zep_tools._load_agent_profiles:1524] 从 reddit_profiles.json 加载了 6 个人设
+[2026-03-17 22:43:27] INFO [mirofish.zep_tools.interview_agents:1325] 加载到 6 个Agent人设
+[2026-03-17 22:43:29] INFO [mirofish.zep_tools.interview_agents:1337] 选择了 4 个Agent进行采访: [1, 3, 5, 2]
+[2026-03-17 22:43:31] INFO [mirofish.zep_tools.interview_agents:1346] 生成了 5 个采访问题
+[2026-03-17 22:43:31] INFO [mirofish.zep_tools.interview_agents:1376] 调用批量采访API（双平台）: 4 个Agent
+[2026-03-17 22:43:31] INFO [mirofish.simulation_runner.interview_agents_batch:1522] 发送批量Interview命令: simulation_id=sim_e15ccaca5665, count=4, platform=None
+[2026-03-17 22:43:31] INFO [mirofish.simulation_ipc.send_command:151] 发送IPC命令: batch_interview, command_id=d4ae2eb9-c266-4311-b46e-b990437375bb
+[2026-03-17 22:43:39] INFO [mirofish.simulation_ipc.send_command:171] 收到IPC响应: command_id=d4ae2eb9-c266-4311-b46e-b990437375bb, status=completed
+[2026-03-17 22:43:39] INFO [mirofish.zep_tools.interview_agents:1386] 采访API返回: 4 个结果, success=True
+[2026-03-17 22:43:42] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:43:42] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'b95c8df7-b3e8-4b78-9ab5-ece49c9001c5', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:43:42] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:43:46] INFO [mirofish.zep_tools.interview_agents:1481] InterviewAgents完成: 采访了 4 个Agent（双平台）
+[2026-03-17 22:43:48] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: `interview_agents`工具提供了非常有价值的信息，特别是从不同角度揭示了交易量激增的原因以及对DeFi借贷协议的影响。为了进一步确认机构投资者是否真的在积极参与XVS的交易，我将使用`quick_search`工具来查找是否有直接证据表明机构投资者购买了大量的XVS。
+
+<tool_call>
+{"name": "quick_search", "parameters": {"quer...
+[2026-03-17 22:43:48] INFO [mirofish.report_agent._execute_tool:967] 执行工具: quick_search, 参数: {'query': '机构投资者购买XVS', 'limit': 5}
+[2026-03-17 22:43:48] INFO [mirofish.zep_tools.quick_search:1259] QuickSearch 简单搜索: 机构投资者购买XVS...
+[2026-03-17 22:43:48] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_a3aa7c3a7c2648a8, query=机构投资者购买XVS...
+[2026-03-17 22:43:49] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 5 条相关事实
+[2026-03-17 22:43:49] INFO [mirofish.zep_tools.quick_search:1269] QuickSearch完成: 5条结果
+[2026-03-17 22:43:53] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: `quick_search`工具的结果再次确认了CoinGecko的报告，即3月14日XVS交易量的大幅增加可能表明机构投资者正在进行购买。虽然没有直接证据表明具体哪些机构投资者购买了多少XVS，但这些信息结合起来，足以支持本章节的论点。
+
+**交易量激增与机构兴趣**
+
+3月9日至15日期间，XVS（Venus Protocol）的交易量出现显著增长。CoinGecko报告称，3月14日XVS的...
+[2026-03-17 22:43:53] INFO [mirofish.report_agent._generate_section_react:1393] 章节 Volume Spike and Institutional Interest 生成完成（工具调用: 3次）
+[2026-03-17 22:43:53] INFO [mirofish.report_agent.save_section:2127] 章节已保存: report_03e77acee6ef/section_02.md
+[2026-03-17 22:43:53] INFO [mirofish.report_agent.generate_report:1686] 章节已保存: report_03e77acee6ef/section_02.md
+[2026-03-17 22:43:53] INFO [mirofish.report_agent._generate_section_react:1248] ReACT生成章节: Potential Resistance Levels and Comparative Performance
+[2026-03-17 22:43:55] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，本章节需要分析XVS潜在的阻力位以及与其他类似DeFi协议的性能对比，从而更全面地评估其未来价格走势。我将首先使用`insight_forge`工具来深度挖掘关于XVS阻力位和DeFi市场比较的信息。
+
+```tool_call
+{"name": "insight_forge", "parameters": {"query": "XVS (Venus Protocol) potential ...
+[2026-03-17 22:43:58] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:43:58] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'b95c8df7-b3e8-4b78-9ab5-ece49c9001c5', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:43:58] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:43:58] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 收到，我将继续调用工具来获取更多信息。
+
+**潜在阻力位分析**
+
+为了更具体地了解XVS的潜在阻力位，我将使用`quick_search`工具来查找模拟交易数据中显示的具体价格点。
+
+```tool_call
+{"name": "quick_search", "parameters": {"query": "XVS resistance levels March 17, 2026", "limi...
+[2026-03-17 22:44:00] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，我将使用`interview_agents`工具来获取不同DeFi用户和分析师对XVS潜在阻力位和市场表现的看法。
+
+```tool_call
+{"name": "interview_agents", "parameters": {"interview_topic": "What are your expectations for XVS (Venus Protocol) resistanc...
+[2026-03-17 22:44:03] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，为了更全面地了解XVS的市场表现，我将使用`panorama_search`工具来获取XVS与其他DeFi协议的历史价格数据和交易量数据，以便进行对比分析。
+
+```tool_call
+{"name": "panorama_search", "parameters": {"query": "XVS historical price and trading volume compared to...
+[2026-03-17 22:44:05] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 非常抱歉，我之前的理解有误，我以为已经调用了工具。现在我补上之前的工具调用，并确保完成至少3次调用。
+
+我将使用`insight_forge`工具来深度挖掘关于XVS阻力位和DeFi市场比较的信息。
+
+```tool_call
+{"name": "insight_forge", "parameters": {"query": "XVS (Venus Protocol) potential resi...
+[2026-03-17 22:44:05] WARNING [mirofish.report_agent._generate_section_react:1503] 章节 Potential Resistance Levels and Comparative Performance 达到最大迭代次数，强制生成
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.save_section:2127] 章节已保存: report_03e77acee6ef/section_03.md
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.generate_report:1686] 章节已保存: report_03e77acee6ef/section_03.md
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.assemble_full_report:2296] 完整报告已组装: report_03e77acee6ef
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_03e77acee6ef
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_03e77acee6ef
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.generate_report:1731] 报告生成完成: report_03e77acee6ef
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_03e77acee6ef
+[2026-03-17 22:44:10] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_03e77acee6ef
+[2026-03-17 22:44:13] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:44:13] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': 'b95c8df7-b3e8-4b78-9ab5-ece49c9001c5', 'simulation_id': 'sim_e15ccaca5665'}
+[2026-03-17 22:44:13] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:44:26] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-17 22:44:26] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:44:41] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 22:44:41] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665', 'message': 'Based on all the simulation data, agent discussions, and the 7-day price trend (from $2.842 on Mar 9 to $3.221 on Mar 15, showing +13.3% growth with a volume spike on Mar 14), what is your specific price prediction for XVS on March 17, 2026? Give me a specific number or range, and explain your reasoning based on what the simulated agents discussed.'}
+[2026-03-17 22:44:41] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 22:44:41] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_a3aa7c3a7c2648a8, simulation_id=sim_e15ccaca5665
+[2026-03-17 22:44:41] INFO [mirofish.report_agent.chat:1787] Report Agent对话: Based on all the simulation data, agent discussion...
+[2026-03-17 22:44:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:45:27] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/history
+[2026-03-17 22:45:27] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/agent-log
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/console-log
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665
+[2026-03-17 22:45:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:45:37] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_7f4921de66f0
+[2026-03-17 22:45:37] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:45:37] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_a3aa7c3a7c2648a8
+[2026-03-17 22:45:37] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:47:42] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 22:47:42] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665', 'message': 'Now that we know XVS actually hit $3.34 on March 17 (confirming the bullish trend), predict the price of XVS at the end of March 2026 (March 31). Consider: the confirmed uptrend from $2.84 to $3.34 (+17.6% in 8 days), the volume spike suggesting institutional entry, the DeFi sector momentum, and typical crypto price behavior after sustained rallies. Will the rally continue, consolidate, or reverse? Give a specific price range for March 31.'}
+[2026-03-17 22:47:42] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 22:47:42] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_a3aa7c3a7c2648a8, simulation_id=sim_e15ccaca5665
+[2026-03-17 22:47:42] INFO [mirofish.report_agent.chat:1787] Report Agent对话: Now that we know XVS actually hit $3.34 on March 1...
+[2026-03-17 22:47:45] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:48:46] DEBUG [mirofish.request.log_request:55] 请求: POST /api/graph/ontology/generate
+[2026-03-17 22:48:46] INFO [mirofish.api.generate_ontology:150] === 开始生成本体定义 ===
+[2026-03-17 22:48:46] DEBUG [mirofish.api.generate_ontology:157] 项目名称: XVS End-of-March Prediction
+[2026-03-17 22:48:46] DEBUG [mirofish.api.generate_ontology:158] 模拟需求: Predict the price of XVS (Venus Protocol) on March 31, 2026. The token has rallied +17.5% from $2.84...
+[2026-03-17 22:48:46] INFO [mirofish.api.generate_ontology:177] 创建项目: proj_90f5954b1cd8
+[2026-03-17 22:48:46] INFO [mirofish.api.generate_ontology:212] 文本提取完成，共 5904 字符
+[2026-03-17 22:48:46] INFO [mirofish.api.generate_ontology:215] 调用 LLM 生成本体定义...
+[2026-03-17 22:48:59] INFO [mirofish.api.generate_ontology:226] 本体生成完成: 10 个实体类型, 8 个关系类型
+[2026-03-17 22:48:59] INFO [mirofish.api.generate_ontology:235] === 本体生成完成 === 项目ID: proj_90f5954b1cd8
+[2026-03-17 22:48:59] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:49:10] DEBUG [mirofish.request.log_request:55] 请求: POST /api/graph/build
+[2026-03-17 22:49:10] DEBUG [mirofish.request.log_request:57] 请求体: {'project_id': 'proj_90f5954b1cd8', 'graph_name': 'XVS End-of-March Prediction'}
+[2026-03-17 22:49:10] INFO [mirofish.api.build_graph:283] === 开始构建图谱 ===
+[2026-03-17 22:49:10] DEBUG [mirofish.api.build_graph:299] 请求参数: project_id=proj_90f5954b1cd8
+[2026-03-17 22:49:10] INFO [mirofish.api.build_graph:366] 创建图谱构建任务: task_id=11d97ba9-ef04-43f8-b926-49c11ec966da, project_id=proj_90f5954b1cd8
+[2026-03-17 22:49:10] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:49:10] INFO [mirofish.build.build_task:377] [11d97ba9-ef04-43f8-b926-49c11ec966da] 开始构建图谱...
+[2026-03-17 22:49:31] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:49:31] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:49:41] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:49:41] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:49:52] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:49:52] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:50:02] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:50:02] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:50:12] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:50:12] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:50:22] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:50:22] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:50:33] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:50:33] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:50:43] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:50:43] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:50:53] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:50:53] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:51:03] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:51:03] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:51:14] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:51:14] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:51:24] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:51:24] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:51:34] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:51:34] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:51:36] INFO [mirofish.build.build_task:473] [11d97ba9-ef04-43f8-b926-49c11ec966da] 图谱构建完成: graph_id=mirofish_6a3439e1be294c51, 节点=30, 边=38
+[2026-03-17 22:51:44] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/task/11d97ba9-ef04-43f8-b926-49c11ec966da
+[2026-03-17 22:51:44] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:09] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/create
+[2026-03-17 22:52:09] DEBUG [mirofish.request.log_request:57] 请求体: {'project_id': 'proj_90f5954b1cd8', 'enable_twitter': True, 'enable_reddit': True}
+[2026-03-17 22:52:09] INFO [mirofish.simulation.create_simulation:225] 创建模拟: sim_6c330da39df5, project=proj_90f5954b1cd8, graph=mirofish_6a3439e1be294c51
+[2026-03-17 22:52:09] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:09] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare
+[2026-03-17 22:52:09] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_6c330da39df5', 'use_llm_for_profiles': True, 'parallel_profile_count': 5}
+[2026-03-17 22:52:09] INFO [mirofish.api.simulation.prepare_simulation:425] 开始处理 /prepare 请求: simulation_id=sim_6c330da39df5, force_regenerate=False
+[2026-03-17 22:52:09] DEBUG [mirofish.api.simulation.prepare_simulation:429] 检查模拟 sim_6c330da39df5 是否已准备完成...
+[2026-03-17 22:52:09] DEBUG [mirofish.api.simulation.prepare_simulation:431] 检查结果: is_prepared=False, prepare_info={'reason': '缺少必要文件', 'missing_files': ['simulation_config.json', 'reddit_profiles.json', 'twitter_profiles.csv'], 'existing_files': ['state.json']}
+[2026-03-17 22:52:09] INFO [mirofish.api.simulation.prepare_simulation:445] 模拟 sim_6c330da39df5 未准备完成，将启动准备任务
+[2026-03-17 22:52:09] INFO [mirofish.api.simulation.prepare_simulation:473] 同步获取实体数量: graph_id=mirofish_6a3439e1be294c51
+[2026-03-17 22:52:09] INFO [mirofish.zep_entity_reader.filter_defined_entities:236] 开始筛选图谱 mirofish_6a3439e1be294c51 的实体...
+[2026-03-17 22:52:09] INFO [mirofish.zep_entity_reader.get_all_nodes:137] 获取图谱 mirofish_6a3439e1be294c51 的所有节点...
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.get_all_nodes:151] 共获取 30 个节点
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.filter_defined_entities:323] 筛选完成: 总节点 30, 符合条件 9, 实体类型: {'BNBChain', 'MarketParticipant', 'NewsOutlet', 'DeFiAnalyst', 'Whale', 'CryptoTrader', 'VenusProtocol', 'Aave'}
+[2026-03-17 22:52:10] INFO [mirofish.api.simulation.prepare_simulation:484] 预期实体数量: 9, 类型: {'BNBChain', 'MarketParticipant', 'NewsOutlet', 'DeFiAnalyst', 'Whale', 'CryptoTrader', 'VenusProtocol', 'Aave'}
+[2026-03-17 22:52:10] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.filter_defined_entities:236] 开始筛选图谱 mirofish_6a3439e1be294c51 的实体...
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.get_all_nodes:137] 获取图谱 mirofish_6a3439e1be294c51 的所有节点...
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.get_all_nodes:151] 共获取 30 个节点
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.get_all_edges:164] 获取图谱 mirofish_6a3439e1be294c51 的所有边...
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.get_all_edges:179] 共获取 38 条边
+[2026-03-17 22:52:10] INFO [mirofish.zep_entity_reader.filter_defined_entities:323] 筛选完成: 总节点 30, 符合条件 9, 实体类型: {'BNBChain', 'MarketParticipant', 'NewsOutlet', 'DeFiAnalyst', 'Whale', 'CryptoTrader', 'VenusProtocol', 'Aave'}
+[2026-03-17 22:52:10] INFO [mirofish.oasis_profile.generate_profiles_from_entities:948] 开始并行生成 9 个Agent人设（并行数: 5）...
+[2026-03-17 22:52:10] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: whale, 获取 28 条事实, 39 个相关节点
+[2026-03-17 22:52:10] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: DeFi analysts, 获取 27 条事实, 39 个相关节点
+[2026-03-17 22:52:10] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: smaller depositors, 获取 28 条事实, 39 个相关节点
+[2026-03-17 22:52:10] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: protocol participants, 获取 27 条事实, 39 个相关节点
+[2026-03-17 22:52:11] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: BNB Chain, 获取 27 条事实, 39 个相关节点
+[2026-03-17 22:52:17] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [1/9] 成功生成人设: DeFi analysts (DeFiAnalyst)
+[2026-03-17 22:52:17] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: news outlets, 获取 28 条事实, 39 个相关节点
+[2026-03-17 22:52:17] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [2/9] 成功生成人设: BNB Chain (BNBChain)
+[2026-03-17 22:52:18] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [3/9] 成功生成人设: smaller depositors (MarketParticipant)
+[2026-03-17 22:52:18] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: Aave, 获取 28 条事实, 39 个相关节点
+[2026-03-17 22:52:18] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: crypto traders, 获取 28 条事实, 39 个相关节点
+[2026-03-17 22:52:18] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [4/9] 成功生成人设: whale (Whale)
+[2026-03-17 22:52:18] INFO [mirofish.oasis_profile._search_zep_for_entity:404] Zep混合检索完成: Venus Protocol, 获取 27 条事实, 39 个相关节点
+[2026-03-17 22:52:19] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [5/9] 成功生成人设: protocol participants (MarketParticipant)
+[2026-03-17 22:52:20] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare/status
+[2026-03-17 22:52:20] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '02d9358f-30e9-4802-868f-d8c44c27b0f6', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:52:20] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:24] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [6/9] 成功生成人设: crypto traders (CryptoTrader)
+[2026-03-17 22:52:25] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [7/9] 成功生成人设: Aave (Aave)
+[2026-03-17 22:52:25] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [8/9] 成功生成人设: Venus Protocol (VenusProtocol)
+[2026-03-17 22:52:26] INFO [mirofish.oasis_profile.generate_profiles_from_entities:987] [9/9] 成功生成人设: news outlets (NewsOutlet)
+[2026-03-17 22:52:26] INFO [mirofish.oasis_profile._save_reddit_json:1188] 已保存 9 个Reddit Profile到 /Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/../../uploads/simulations/sim_6c330da39df5/reddit_profiles.json (JSON格式，包含user_id字段)
+[2026-03-17 22:52:26] INFO [mirofish.oasis_profile._save_twitter_csv:1114] 已保存 9 个Twitter Profile到 /Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/../../uploads/simulations/sim_6c330da39df5/twitter_profiles.csv (OASIS CSV格式)
+[2026-03-17 22:52:26] INFO [mirofish.simulation_config.generate_config:271] 开始智能生成模拟配置: simulation_id=sim_6c330da39df5, 实体数=9
+[2026-03-17 22:52:26] INFO [mirofish.simulation_config.report_progress:283] [1/4] 生成时间配置...
+[2026-03-17 22:52:28] WARNING [mirofish.simulation_config._parse_time_config:621] agents_per_hour_max (35) 超过总Agent数 (9)，已修正
+[2026-03-17 22:52:28] INFO [mirofish.simulation_config.report_progress:283] [2/4] 生成事件配置和热点话题...
+[2026-03-17 22:52:30] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare/status
+[2026-03-17 22:52:30] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '02d9358f-30e9-4802-868f-d8c44c27b0f6', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:52:30] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:33] INFO [mirofish.simulation_config.report_progress:283] [3/4] 生成Agent配置 (1-9/9)...
+[2026-03-17 22:52:41] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare/status
+[2026-03-17 22:52:41] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '02d9358f-30e9-4802-868f-d8c44c27b0f6', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:52:41] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config.generate_config:330] 为初始帖子分配合适的发布者 Agent...
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='cryptotrader' -> agent_id=6
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='defianalyst' -> agent_id=3
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='bnbchain' -> agent_id=2
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='venusprotocol' -> agent_id=8
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='marketparticipant' -> agent_id=0
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='newsoutlet' -> agent_id=5
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='whale' -> agent_id=1
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config._assign_initial_post_agents:805] 初始帖子分配: poster_type='aave' -> agent_id=7
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config.report_progress:283] [4/4] 生成平台配置...
+[2026-03-17 22:52:45] INFO [mirofish.simulation_config.generate_config:376] 模拟配置生成完成: 9 个Agent配置
+[2026-03-17 22:52:45] INFO [mirofish.simulation.prepare_simulation:444] 模拟准备完成: sim_6c330da39df5, entities=9, profiles=9
+[2026-03-17 22:52:51] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/prepare/status
+[2026-03-17 22:52:51] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '02d9358f-30e9-4802-868f-d8c44c27b0f6', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:52:51] DEBUG [mirofish.api.simulation._check_simulation_prepared:300] 检测模拟准备状态: sim_6c330da39df5, status=ready, config_generated=True
+[2026-03-17 22:52:51] INFO [mirofish.api.simulation._check_simulation_prepared:335] 模拟 sim_6c330da39df5 检测结果: 已准备完成 (status=ready, config_generated=True)
+[2026-03-17 22:52:51] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:51] DEBUG [mirofish.request.log_request:55] 请求: POST /api/simulation/start
+[2026-03-17 22:52:51] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_6c330da39df5', 'platform': 'parallel', 'max_rounds': 40, 'enable_graph_memory_update': True}
+[2026-03-17 22:52:51] INFO [mirofish.api.simulation.start_simulation:1596] 启用图谱记忆更新: simulation_id=sim_6c330da39df5, graph_id=mirofish_6a3439e1be294c51
+[2026-03-17 22:52:51] INFO [mirofish.simulation_runner.start_simulation:359] 轮数已截断: 336 -> 40 (max_rounds=40)
+[2026-03-17 22:52:51] INFO [mirofish.zep_graph_memory_updater.__init__:268] ZepGraphMemoryUpdater 初始化完成: graph_id=mirofish_6a3439e1be294c51, batch_size=5
+[2026-03-17 22:52:51] INFO [mirofish.zep_graph_memory_updater.start:286] ZepGraphMemoryUpdater 已启动: graph_id=mirofish_6a3439e1be294c51
+[2026-03-17 22:52:51] INFO [mirofish.zep_graph_memory_updater.create_updater:504] 创建图谱记忆更新器: simulation_id=sim_6c330da39df5, graph_id=mirofish_6a3439e1be294c51
+[2026-03-17 22:52:51] INFO [mirofish.simulation_runner.start_simulation:379] 已启用图谱记忆更新: simulation_id=sim_6c330da39df5, graph_id=mirofish_6a3439e1be294c51
+[2026-03-17 22:52:51] INFO [mirofish.simulation_runner.start_simulation:467] 模拟启动成功: sim_6c330da39df5, pid=49964, platform=parallel
+[2026-03-17 22:52:51] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - CREATE_POST
+[2026-03-17 22:52:57] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_POST
+[2026-03-17 22:52:58] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:52:58] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: crypto traders: 发布了一条帖子：「XVS (Venus Protocol) has rallied +17.5% in 9 days! Is this sustainable? What's your price target for March 31, 2026?」
+DeFi analysts: 发布了一条帖子：「Analyzing the recent XVS surge. V...
+[2026-03-17 22:52:58] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:52:58] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: crypto traders: 发布了一条帖子：「XVS (Venus Protocol) has rallied +17.5% in 9 days! Is this sustainable? What's your price target for March 31, 2026?」
+DeFi analysts: 发布了一条帖子：「Analyzing the recent XVS surge. V...
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_POST
+[2026-03-17 22:53:03] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - QUOTE_POST
+[2026-03-17 22:53:04] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:04] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: news outlets: 发布了一条帖子：「Is XVS overbought? Risk of mean-reversion pullback increases as rally extends beyond 10 days. Watch out for potential profit taking.」
+whale: 发布了一条帖子：「Whale spotted accumulating ...
+[2026-03-17 22:53:04] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:04] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: BNB Chain: 发布了一条帖子：「Venus Protocol benefiting from the recovery of BNB Chain DeFi TVL. How does this impact XVS price prediction for EOM?」
+Venus Protocol: 发布了一条帖子：「New collateral type proposals under ...
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - LIKE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - QUOTE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - QUOTE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - CREATE_COMMENT
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - CREATE_COMMENT
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - LIKE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - LIKE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_COMMENT
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - LIKE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_COMMENT
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - LIKE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_COMMENT
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - LIKE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_COMMENT
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - LIKE_POST
+[2026-03-17 22:53:05] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - CREATE_COMMENT
+[2026-03-17 22:53:06] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:06] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Aave: 发布了一条帖子：「How does Venus Protocol compare to Aave in the DeFi lending space, especially considering BNB Chain dominance?」
+news outlets: 引用了BNB Chain的帖子「Venus Protocol benefiting from the recovery...
+[2026-03-17 22:53:06] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:06] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: news outlets: 发布了一条帖子：「Is XVS overbought? Risk of mean-reversion pullback increases as rally extends beyond 10 days. Watch out for potential profit taking.」
+whale: 发布了一条帖子：「Whale spotted accumulating ...
+[2026-03-17 22:53:06] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5/run-status
+[2026-03-17 22:53:06] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:53:07] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:07] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: BNB Chain: 发布了一条帖子：「Venus Protocol benefiting from the recovery of BNB Chain DeFi TVL. How does this impact XVS price prediction for EOM?」
+Venus Protocol: 发布了一条帖子：「New collateral type proposals under ...
+[2026-03-17 22:53:07] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - LIKE_POST
+[2026-03-17 22:53:07] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_POST
+[2026-03-17 22:53:07] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - QUOTE_POST
+[2026-03-17 22:53:08] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:08] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Aave: 发布了一条帖子：「How does Venus Protocol compare to Aave in the DeFi lending space, especially considering BNB Chain dominance?」
+protocol participants: 评论道：「The +17.5% rally is encouraging. Sustainabili...
+[2026-03-17 22:53:08] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:08] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: BNB Chain: 评论道：「Interesting rally! We're monitoring XVS and its contribution to the BNB Chain DeFi ecosystem closely. Sustainability depends on continued user adoption and platform utility.」
+BNB Chain...
+[2026-03-17 22:53:09] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - LIKE_POST
+[2026-03-17 22:53:09] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: smaller depositors - QUOTE_POST
+[2026-03-17 22:53:09] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - SEARCH_POSTS
+[2026-03-17 22:53:09] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - CREATE_COMMENT
+[2026-03-17 22:53:09] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - LIKE_POST
+[2026-03-17 22:53:09] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - CREATE_COMMENT
+[2026-03-17 22:53:09] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - LIKE_COMMENT
+[2026-03-17 22:53:10] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:10] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: news outlets: 点赞了protocol participants的帖子：「Venus Protocol benefiting from the recovery of BNB Chain DeFi TVL. How does this impact XVS price prediction for EOM?」
+Venus Protocol: 点赞了BNB Chain的帖子：「Venus...
+[2026-03-17 22:53:10] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:10] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: BNB Chain: 点赞了protocol participants的帖子：「Smaller depositors should note that Bitcoin is holding above key support levels, indicating a risk-on environment. Altcoin season indicators are mixed with sele...
+[2026-03-17 22:53:11] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: smaller depositors - CREATE_COMMENT
+[2026-03-17 22:53:11] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_COMMENT
+[2026-03-17 22:53:12] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:12] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: whale: 评论道：「Analyzing the volume spike on March 14. Data suggests significant accumulation. We'll continue to monitor XVS and its large transaction activities.」
+crypto traders: 点赞了DeFi analysts的帖子：「An...
+[2026-03-17 22:53:13] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - REPOST
+[2026-03-17 22:53:13] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: smaller depositors - QUOTE_POST
+[2026-03-17 22:53:13] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - LIKE_POST
+[2026-03-17 22:53:13] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - LIKE_POST
+[2026-03-17 22:53:13] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - REPOST
+[2026-03-17 22:53:14] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:14] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: protocol participants: 转发了whale的帖子：「Venus Protocol benefiting from the recovery of BNB Chain DeFi TVL. How does this impact XVS price prediction for EOM?」
+smaller depositors: 引用了whale的帖子「Venus Protoco...
+[2026-03-17 22:53:15] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: smaller depositors - CREATE_COMMENT
+[2026-03-17 22:53:15] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - CREATE_COMMENT
+[2026-03-17 22:53:15] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_COMMENT
+[2026-03-17 22:53:15] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - LIKE_POST
+[2026-03-17 22:53:15] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - LIKE_POST
+[2026-03-17 22:53:15] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_COMMENT
+[2026-03-17 22:53:16] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:16] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Aave: 评论道：「Aave and Venus Protocol both offer DeFi lending solutions, but Aave distinguishes itself through multi-chain deployment, including its presence on BNB Chain. We focus on robust risk managem...
+[2026-03-17 22:53:17] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - LIKE_POST
+[2026-03-17 22:53:17] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - QUOTE_POST
+[2026-03-17 22:53:19] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - LIKE_POST
+[2026-03-17 22:53:21] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - QUOTE_POST
+[2026-03-17 22:53:21] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_COMMENT
+[2026-03-17 22:53:21] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - LIKE_POST
+[2026-03-17 22:53:21] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_COMMENT
+[2026-03-17 22:53:21] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - LIKE_POST
+[2026-03-17 22:53:21] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - LIKE_COMMENT
+[2026-03-17 22:53:22] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5/run-status
+[2026-03-17 22:53:22] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:53:22] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:22] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: news outlets: 点赞了whale的帖子：「Whale spotted accumulating XVS around March 14. Keep an eye on volume and price action!」
+news outlets: 评论道：「Venus Protocol, primarily on BNB Chain, offers a streamlined lend...
+[2026-03-17 22:53:23] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_POST
+[2026-03-17 22:53:23] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - LIKE_COMMENT
+[2026-03-17 22:53:23] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: protocol participants - CREATE_COMMENT
+[2026-03-17 22:53:23] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - CREATE_COMMENT
+[2026-03-17 22:53:24] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:24] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: protocol participants: 点赞了smaller depositors的帖子：「Venus Protocol benefiting from the recovery of BNB Chain DeFi TVL. How does this impact XVS price prediction for EOM?」
+Aave: 引用了BNB Chain的帖子「Venus Prot...
+[2026-03-17 22:53:24] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:24] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: DeFi analysts: 点赞了crypto traders的帖子：「XVS (Venus Protocol) has rallied +17.5% in 9 days! Is this sustainable? What's your price target for March 31, 2026?」
+DeFi analysts: 点赞了crypto traders的评论：「Interest...
+[2026-03-17 22:53:25] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: smaller depositors - LIKE_POST
+[2026-03-17 22:53:25] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - LIKE_POST
+[2026-03-17 22:53:25] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: crypto traders - CREATE_COMMENT
+[2026-03-17 22:53:25] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - CREATE_COMMENT
+[2026-03-17 22:53:27] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_COMMENT
+[2026-03-17 22:53:33] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - LIKE_POST
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: whale - LIKE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_COMMENT
+[2026-03-17 22:53:35] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - LIKE_COMMENT
+[2026-03-17 22:53:36] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:36] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: crypto traders: 评论道：「While the +17.5% rally is impressive, it's crucial to analyze the underlying factors driving this growth. TVL, user adoption metrics, and overall market sentiment need to be consi...
+[2026-03-17 22:53:36] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:36] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Venus Protocol: 点赞了crypto traders的评论：「Interesting point! The introduction of new collateral types could significantly impact XVS. What are the potential risks and benefits associated with these propos...
+[2026-03-17 22:53:37] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: BNB Chain - REPOST
+[2026-03-17 22:53:37] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: smaller depositors - CREATE_COMMENT
+[2026-03-17 22:53:38] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5/run-status
+[2026-03-17 22:53:38] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:53:39] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - LIKE_POST
+[2026-03-17 22:53:39] INFO [mirofish.simulation_runner._read_action_log:622] Twitter 模拟已完成: sim_6c330da39df5, total_rounds=40, total_actions=40
+[2026-03-17 22:53:40] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界1活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:40] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: smaller depositors: 点赞了Aave的帖子：「Venus Protocol benefiting from the recovery of BNB Chain DeFi TVL. How does this impact XVS price prediction for EOM?」
+news outlets: 点赞了Aave的帖子：「Venus Protocol benefiti...
+[2026-03-17 22:53:43] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: DeFi analysts - LIKE_COMMENT
+[2026-03-17 22:53:43] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Aave - LIKE_POST
+[2026-03-17 22:53:44] INFO [mirofish.zep_graph_memory_updater._send_batch_activities:417] 成功批量发送 5 条世界2活动到图谱 mirofish_6a3439e1be294c51
+[2026-03-17 22:53:44] DEBUG [mirofish.zep_graph_memory_updater._send_batch_activities:418] 批量内容预览: Venus Protocol: 点赞了DeFi analysts的评论：「The risk management frameworks of Venus Protocol and Aave warrant a detailed comparison. Understanding the differences in liquidation thresholds, oracle dependenci...
+[2026-03-17 22:53:45] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: Venus Protocol - CREATE_COMMENT
+[2026-03-17 22:53:47] DEBUG [mirofish.zep_graph_memory_updater.add_activity:333] 添加活动到Zep队列: news outlets - CREATE_COMMENT
+[2026-03-17 22:53:49] INFO [mirofish.simulation_runner._read_action_log:626] Reddit 模拟已完成: sim_6c330da39df5, total_rounds=40, total_actions=68
+[2026-03-17 22:53:49] INFO [mirofish.simulation_runner._read_action_log:635] 所有平台模拟已完成: sim_6c330da39df5
+[2026-03-17 22:53:53] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5/run-status
+[2026-03-17 22:53:53] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:53:54] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate
+[2026-03-17 22:53:54] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:53:54] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 22:53:54] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_6a3439e1be294c51, simulation_id=sim_6c330da39df5
+[2026-03-17 22:53:54] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_8ca5b2652ba8
+[2026-03-17 22:53:54] INFO [mirofish.report_agent.plan_outline:1151] 开始规划报告大纲...
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.get_simulation_context:909] 获取模拟上下文: Predict the price of XVS (Venus Protocol) on March...
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=Predict the price of XVS (Venus Protocol) on March...
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 30 条相关事实
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.get_graph_statistics:865] 获取图谱 mirofish_6a3439e1be294c51 的统计信息...
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.get_all_nodes:660] 获取图谱 mirofish_6a3439e1be294c51 的所有节点...
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.get_all_nodes:675] 获取到 30 个节点
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.get_all_edges:689] 获取图谱 mirofish_6a3439e1be294c51 的所有边...
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.get_all_edges:713] 获取到 48 条边
+[2026-03-17 22:53:54] INFO [mirofish.zep_tools.get_all_nodes:660] 获取图谱 mirofish_6a3439e1be294c51 的所有节点...
+[2026-03-17 22:53:55] INFO [mirofish.zep_tools.get_all_nodes:675] 获取到 30 个节点
+[2026-03-17 22:54:01] INFO [mirofish.report_agent.plan_outline:1204] 大纲规划完成: 3 个章节
+[2026-03-17 22:54:01] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_8ca5b2652ba8
+[2026-03-17 22:54:01] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_8ca5b2652ba8
+[2026-03-17 22:54:01] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_8ca5b2652ba8
+[2026-03-17 22:54:01] INFO [mirofish.report_agent.generate_report:1628] 大纲已保存到文件: report_8ca5b2652ba8/outline.json
+[2026-03-17 22:54:01] INFO [mirofish.report_agent._generate_section_react:1248] ReACT生成章节: XVS Price Trajectory: Bullish Momentum vs. Market Realities
+[2026-03-17 22:54:04] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，本章节需要分析XVS价格在当前上涨势头下，未来两周（3月17日-3月31日）可能的价格走势，需要关注：
+
+1.  **市场情绪和交易者行为：** 了解交易者对XVS当前涨势的看法，以及他们可能采取的行动（继续买入、获利了结、观望等）。
+2.  **DeFi分析师的观点：** 分析师如何解读XVS的上涨，他们对未来价格的预测，以及他们关注的关键指标。
+3.  **新闻媒体的报道：** 媒体如何...
+[2026-03-17 22:54:06] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，收到。在上次调用`insight_forge`的基础上，我将补充调用`panorama_search`和`interview_agents`，以获取更全面的信息。
+
+首先，使用`panorama_search`工具，了解XVS价格走势的完整发展脉络，包括历史价格数据、交易量变化、市场情绪指标等。
+
+```tool_call
+{"name": "panorama_search", "param...
+[2026-03-17 22:54:09] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:54:09] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:54:09] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:54:09] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，收到。在调用`insight_forge`和`panorama_search`的基础上，我将补充调用`interview_agents`，以获取不同角色的第一人称观点和真实反应。我将采访加密货币交易者、DeFi分析师和新闻媒体代表，了解他们对XVS价格走势的看法。
+
+```tool_call
+{"name": "interview_agents", "parameters": {"inter...
+[2026-03-17 22:54:11] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 我意识到需要更具体地了解潜在风险，因此我将使用`quick_search`工具来查找可能影响XVS价格的负面信息或风险事件。
+
+```tool_call
+{"name": "quick_search", "parameters": {"query": "XVS 潜在风险 负面消息", "limit": 5}}
+```...
+[2026-03-17 22:54:12] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 好的，我将再次使用`insight_forge`，这次更侧重于分析XVS的技术面，例如支撑位、阻力位、交易量等，以便更准确地预测价格走势。
+
+```tool_call
+{"name": "insight_forge", "parameters": {"query": "XVS技术分析 支撑位 阻力位 交易量 3月17日-3月31日", "report_context": "预测Venus Prot...
+[2026-03-17 22:54:12] WARNING [mirofish.report_agent._generate_section_react:1503] 章节 XVS Price Trajectory: Bullish Momentum vs. Market Realities 达到最大迭代次数，强制生成
+[2026-03-17 22:54:22] INFO [mirofish.report_agent.save_section:2127] 章节已保存: report_8ca5b2652ba8/section_01.md
+[2026-03-17 22:54:22] INFO [mirofish.report_agent.generate_report:1686] 章节已保存: report_8ca5b2652ba8/section_01.md
+[2026-03-17 22:54:22] INFO [mirofish.report_agent._generate_section_react:1248] ReACT生成章节: Agent Reactions: Trader Sentiment and Analyst Forecasts
+[2026-03-17 22:54:24] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 本章节将深入探讨在XVS价格上涨至3.34美元后，加密货币交易者和DeFi分析师的具体反应和预测，并分析这些反应对XVS未来价格走势的潜在影响。我将着重关注他们对未来两周内XVS价格走势的预期，以及他们所依据的理由。
+
+<tool_call>
+{"name": "insight_forge", "parameters": {"query": "XVS价格上涨至3.34美元后，加密货币交易者和DeF...
+[2026-03-17 22:54:24] INFO [mirofish.report_agent._execute_tool:967] 执行工具: insight_forge, 参数: {'query': 'XVS价格上涨至3.34美元后，加密货币交易者和DeFi分析师对未来两周价格走势的预测和反应，包括他们的理由。', 'report_context': '分析XVS在2026年3月31日的价格预测，当前价格为3.34美元，并已上涨+17.5%。'}
+[2026-03-17 22:54:24] INFO [mirofish.zep_tools.insight_forge:973] InsightForge 深度洞察检索: XVS价格上涨至3.34美元后，加密货币交易者和DeFi分析师对未来两周价格走势的预测和反应，包括他...
+[2026-03-17 22:54:24] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:54:24] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:54:24] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:54:26] INFO [mirofish.zep_tools.insight_forge:989] 生成 5 个子问题
+[2026-03-17 22:54:26] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在XVS价格上涨至3.34美元后，模拟加密货币交易者如何调整他们的交易策略（例如，增加/减少持仓，设...
+[2026-03-17 22:54:27] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:54:27] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在XVS价格上涨至3.34美元后，模拟DeFi分析师如何评估Venus Protocol的健康状况和...
+[2026-03-17 22:54:27] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:54:27] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在XVS价格上涨至3.34美元后，模拟新闻媒体如何报道XVS的价格上涨，以及这些报道如何影响市场情绪...
+[2026-03-17 22:54:27] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:54:27] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在XVS价格上涨至3.34美元后，模拟市场参与者（包括散户和机构投资者）如何根据新闻、分析报告和市场...
+[2026-03-17 22:54:28] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:54:28] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在XVS价格上涨至3.34美元后，模拟不同类型的市场参与者（例如，长期持有者、短期交易者）对XVS价...
+[2026-03-17 22:54:28] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:54:28] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=XVS价格上涨至3.34美元后，加密货币交易者和DeFi分析师对未来两周价格走势的预测和反应，包括他...
+[2026-03-17 22:54:28] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 20 条相关事实
+[2026-03-17 22:54:28] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2761065c...
+[2026-03-17 22:54:28] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 799f1160...
+[2026-03-17 22:54:29] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: e7cb0839...
+[2026-03-17 22:54:29] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2757f130...
+[2026-03-17 22:54:29] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 734bce69...
+[2026-03-17 22:54:29] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2d13ec43...
+[2026-03-17 22:54:30] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: ee83814a...
+[2026-03-17 22:54:30] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 490cc424...
+[2026-03-17 22:54:30] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 9146faa5...
+[2026-03-17 22:54:30] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 0125f721...
+[2026-03-17 22:54:30] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 8eb112a9...
+[2026-03-17 22:54:31] INFO [mirofish.zep_tools.insight_forge:1089] InsightForge完成: 19条事实, 11个实体, 20条关系
+[2026-03-17 22:54:36] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 根据insight_forge的分析结果，可以更清晰地了解交易者和分析师的反应。
+
+**交易者情绪**
+
+交易者们对XVS近期的上涨表现出了浓厚的兴趣，纷纷询问价格目标：
+
+> "crypto traders posted about XVS (Venus Protocol) rallying +17.5% in 9 days and asked for a price target for Ma...
+[2026-03-17 22:54:36] INFO [mirofish.report_agent._execute_tool:967] 执行工具: interview_agents, 参数: {'interview_topic': '加密货币交易者和DeFi分析师对XVS未来两周价格走势的看法和预测，以及他们做出这些预测的原因。', 'max_agents': 5}
+[2026-03-17 22:54:36] INFO [mirofish.zep_tools.interview_agents:1309] InterviewAgents 深度采访（真实API）: 加密货币交易者和DeFi分析师对XVS未来两周价格走势的看法和预测，以及他们做出这些预测的原因。...
+[2026-03-17 22:54:36] INFO [mirofish.zep_tools._load_agent_profiles:1524] 从 reddit_profiles.json 加载了 9 个人设
+[2026-03-17 22:54:36] INFO [mirofish.zep_tools.interview_agents:1325] 加载到 9 个Agent人设
+[2026-03-17 22:54:39] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:54:39] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:54:39] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:54:41] INFO [mirofish.zep_tools.interview_agents:1337] 选择了 5 个Agent进行采访: [3, 6, 0, 8, 1]
+[2026-03-17 22:54:44] INFO [mirofish.zep_tools.interview_agents:1346] 生成了 5 个采访问题
+[2026-03-17 22:54:44] INFO [mirofish.zep_tools.interview_agents:1376] 调用批量采访API（双平台）: 5 个Agent
+[2026-03-17 22:54:44] INFO [mirofish.simulation_runner.interview_agents_batch:1522] 发送批量Interview命令: simulation_id=sim_6c330da39df5, count=5, platform=None
+[2026-03-17 22:54:44] INFO [mirofish.simulation_ipc.send_command:151] 发送IPC命令: batch_interview, command_id=fc40bcee-a582-414d-9be1-a33ed70873b7
+[2026-03-17 22:54:47] INFO [mirofish.simulation_ipc.send_command:171] 收到IPC响应: command_id=fc40bcee-a582-414d-9be1-a33ed70873b7, status=failed
+[2026-03-17 22:54:47] INFO [mirofish.zep_tools.interview_agents:1386] 采访API返回: 5 个结果, success=False
+[2026-03-17 22:54:47] WARNING [mirofish.zep_tools.interview_agents:1391] 采访API返回失败: 没有成功的采访
+[2026-03-17 22:54:49] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 由于interview_agents工具调用失败，无法获取交易者和分析师的直接采访信息。为了更全面地了解市场对XVS的预期，我将使用panorama_search工具，搜索更广泛的市场情绪和相关新闻报道，以弥补访谈信息的缺失。
+
+<tool_call>
+{"name": "panorama_search", "parameters": {"query": "XVS未来两周价格预测，市场情绪，相关新...
+[2026-03-17 22:54:49] INFO [mirofish.report_agent._execute_tool:967] 执行工具: panorama_search, 参数: {'query': 'XVS未来两周价格预测，市场情绪，相关新闻报道', 'include_expired': True}
+[2026-03-17 22:54:49] INFO [mirofish.zep_tools.panorama_search:1171] PanoramaSearch 广度搜索: XVS未来两周价格预测，市场情绪，相关新闻报道...
+[2026-03-17 22:54:49] INFO [mirofish.zep_tools.get_all_nodes:660] 获取图谱 mirofish_6a3439e1be294c51 的所有节点...
+[2026-03-17 22:54:50] INFO [mirofish.zep_tools.get_all_nodes:675] 获取到 33 个节点
+[2026-03-17 22:54:50] INFO [mirofish.zep_tools.get_all_edges:689] 获取图谱 mirofish_6a3439e1be294c51 的所有边...
+[2026-03-17 22:54:50] INFO [mirofish.zep_tools.get_all_edges:713] 获取到 56 条边
+[2026-03-17 22:54:50] INFO [mirofish.zep_tools.panorama_search:1234] PanoramaSearch完成: 34条有效, 22条历史
+[2026-03-17 22:54:55] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:54:55] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:54:55] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:54:57] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: panorama_search的结果进一步证实了市场对XVS未来价格走势的关注。
+
+**市场情绪与关键因素**
+
+*   **BNB Chain DeFi TVL复苏：** 协议参与者认为BNB Chain DeFi TVL的复苏是Venus Protocol的关键因素：
+
+    > "Protocol participants commented that the recovery of BN...
+[2026-03-17 22:54:57] INFO [mirofish.report_agent._execute_tool:967] 执行工具: quick_search, 参数: {'query': 'XVS price target March 31 2026 analyst', 'limit': 5}
+[2026-03-17 22:54:57] INFO [mirofish.zep_tools.quick_search:1259] QuickSearch 简单搜索: XVS price target March 31 2026 analyst...
+[2026-03-17 22:54:57] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=XVS price target March 31 2026 analyst...
+[2026-03-17 22:54:57] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 5 条相关事实
+[2026-03-17 22:54:57] INFO [mirofish.zep_tools.quick_search:1269] QuickSearch完成: 5条结果
+[2026-03-17 22:55:03] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: quick_search的结果显示，虽然有交易者询问了XVS的价格目标，并且有分析师预测XVS可能跟随比特币上涨至3.80-4.50美元，但并没有找到更多分析师对XVS在2026年3月31日给出明确目标价位的信息。
+
+**总结**
+
+综合以上分析，加密货币交易者对XVS的上涨表现出兴趣，但同时也存在对超买的担忧。DeFi分析师关注BNB Chain DeFi TVL的复苏和鲸鱼积累等因素，认为这些...
+[2026-03-17 22:55:03] INFO [mirofish.report_agent._generate_section_react:1393] 章节 Agent Reactions: Trader Sentiment and Analyst Forecasts 生成完成（工具调用: 4次）
+[2026-03-17 22:55:03] INFO [mirofish.report_agent.save_section:2127] 章节已保存: report_8ca5b2652ba8/section_02.md
+[2026-03-17 22:55:03] INFO [mirofish.report_agent.generate_report:1686] 章节已保存: report_8ca5b2652ba8/section_02.md
+[2026-03-17 22:55:03] INFO [mirofish.report_agent._generate_section_react:1248] ReACT生成章节: Predicted Price and Confidence Range: March 31, 2026
+[2026-03-17 22:55:05] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 本章节旨在给出XVS在2026年3月31日的预测价格和信心范围，并解释预测的依据。我们需要考察模拟市场中交易者、分析师和新闻媒体对XVS未来价格的预期，以及影响价格走势的关键因素。
+
+<tool_call>
+{"name": "insight_forge", "parameters": {"query": "XVS 2026年3月31日价格预测，影响因素，市场情绪，分析师观点", "report_...
+[2026-03-17 22:55:05] INFO [mirofish.report_agent._execute_tool:967] 执行工具: insight_forge, 参数: {'query': 'XVS 2026年3月31日价格预测，影响因素，市场情绪，分析师观点', 'report_context': '预测XVS在2026年3月31日的价格和信心范围'}
+[2026-03-17 22:55:05] INFO [mirofish.zep_tools.insight_forge:973] InsightForge 深度洞察检索: XVS 2026年3月31日价格预测，影响因素，市场情绪，分析师观点...
+[2026-03-17 22:55:09] INFO [mirofish.zep_tools.insight_forge:989] 生成 5 个子问题
+[2026-03-17 22:55:09] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在接下来的14天内，加密货币交易员如何根据XVS价格走势（上涨、盘整、均值回归）调整其交易策略和仓位...
+[2026-03-17 22:55:09] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:55:09] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=DeFi分析师如何解读XVS近期价格上涨，并评估其基本面（例如：协议使用率、TVL、治理参与度）对长...
+[2026-03-17 22:55:10] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:55:10] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=主流财经媒体和加密货币新闻网站如何报道XVS的价格波动，以及这些报道如何影响散户投资者的情绪和交易行...
+[2026-03-17 22:55:10] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:55:10] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:55:10] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:55:10] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:55:10] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在模拟的市场环境中，哪些宏观经济因素（例如：利率变化、监管政策、竞争币种表现）可能对XVS的价格产生...
+[2026-03-17 22:55:10] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:55:10] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=在不同市场情绪（乐观、中性、悲观）下，XVS的价格在2026年3月31日可能达到的范围是多少，并分析...
+[2026-03-17 22:55:11] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 15 条相关事实
+[2026-03-17 22:55:11] INFO [mirofish.zep_tools.search_graph:486] 图谱搜索: graph_id=mirofish_6a3439e1be294c51, query=XVS 2026年3月31日价格预测，影响因素，市场情绪，分析师观点...
+[2026-03-17 22:55:11] INFO [mirofish.zep_tools.search_graph:531] 搜索完成: 找到 20 条相关事实
+[2026-03-17 22:55:11] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2761065c...
+[2026-03-17 22:55:11] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 4d44166c...
+[2026-03-17 22:55:11] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 799f1160...
+[2026-03-17 22:55:12] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2757f130...
+[2026-03-17 22:55:12] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 2d13ec43...
+[2026-03-17 22:55:12] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 734bce69...
+[2026-03-17 22:55:12] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: ee83814a...
+[2026-03-17 22:55:12] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 490cc424...
+[2026-03-17 22:55:13] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 0125f721...
+[2026-03-17 22:55:13] INFO [mirofish.zep_tools.get_node_detail:726] 获取节点详情: 8eb112a9...
+[2026-03-17 22:55:13] INFO [mirofish.zep_tools.insight_forge:1089] InsightForge完成: 22条事实, 10个实体, 22条关系
+[2026-03-17 22:55:20] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 根据模拟数据，XVS在2026年3月31日的价格预测受到多种因素的影响。
+
+**关键影响因素**
+
+*   **比特币走势：** XVS的价格与比特币的走势密切相关。
+
+    > "XVS is expected to follow Bitcoin if a rally continues and Bitcoin breaks to new highs, with XVS potentially...
+[2026-03-17 22:55:20] INFO [mirofish.report_agent._execute_tool:967] 执行工具: panorama_search, 参数: {'query': 'Venus Protocol TVL, XVS价格预测, 2026年3月', 'include_expired': True}
+[2026-03-17 22:55:20] INFO [mirofish.zep_tools.panorama_search:1171] PanoramaSearch 广度搜索: Venus Protocol TVL, XVS价格预测, 2026年3月...
+[2026-03-17 22:55:20] INFO [mirofish.zep_tools.get_all_nodes:660] 获取图谱 mirofish_6a3439e1be294c51 的所有节点...
+[2026-03-17 22:55:20] INFO [mirofish.zep_tools.get_all_nodes:675] 获取到 33 个节点
+[2026-03-17 22:55:20] INFO [mirofish.zep_tools.get_all_edges:689] 获取图谱 mirofish_6a3439e1be294c51 的所有边...
+[2026-03-17 22:55:21] INFO [mirofish.zep_tools.get_all_edges:713] 获取到 67 条边
+[2026-03-17 22:55:21] INFO [mirofish.zep_tools.panorama_search:1234] PanoramaSearch完成: 42条有效, 25条历史
+[2026-03-17 22:55:25] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:55:25] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:55:25] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:55:28] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 进一步分析全景数据后，我们对XVS的价格预测和信心范围进行如下调整：
+
+**关键因素更新**
+
+*   **鲸鱼活动：** 模拟显示，鲸鱼在3月14日左右参与了Venus Protocol的积累活动。
+
+    > "A whale engaged in accumulation activity involving Venus Protocol around March 14."
+    >
+ ...
+[2026-03-17 22:55:28] INFO [mirofish.report_agent._execute_tool:967] 执行工具: interview_agents, 参数: {'interview_topic': 'XVS 2026年3月31日价格预测', 'max_agents': 5}
+[2026-03-17 22:55:28] INFO [mirofish.zep_tools.interview_agents:1309] InterviewAgents 深度采访（真实API）: XVS 2026年3月31日价格预测...
+[2026-03-17 22:55:28] INFO [mirofish.zep_tools._load_agent_profiles:1524] 从 reddit_profiles.json 加载了 9 个人设
+[2026-03-17 22:55:28] INFO [mirofish.zep_tools.interview_agents:1325] 加载到 9 个Agent人设
+[2026-03-17 22:55:31] INFO [mirofish.zep_tools.interview_agents:1337] 选择了 5 个Agent进行采访: [8, 3, 6, 1, 5]
+[2026-03-17 22:55:35] INFO [mirofish.zep_tools.interview_agents:1346] 生成了 5 个采访问题
+[2026-03-17 22:55:35] INFO [mirofish.zep_tools.interview_agents:1376] 调用批量采访API（双平台）: 5 个Agent
+[2026-03-17 22:55:35] INFO [mirofish.simulation_runner.interview_agents_batch:1522] 发送批量Interview命令: simulation_id=sim_6c330da39df5, count=5, platform=None
+[2026-03-17 22:55:35] INFO [mirofish.simulation_ipc.send_command:151] 发送IPC命令: batch_interview, command_id=adca6340-5d23-4d40-8f38-cfe69a6bc731
+[2026-03-17 22:55:39] INFO [mirofish.simulation_ipc.send_command:171] 收到IPC响应: command_id=adca6340-5d23-4d40-8f38-cfe69a6bc731, status=failed
+[2026-03-17 22:55:39] INFO [mirofish.zep_tools.interview_agents:1386] 采访API返回: 5 个结果, success=False
+[2026-03-17 22:55:39] WARNING [mirofish.zep_tools.interview_agents:1391] 采访API返回失败: 没有成功的采访
+[2026-03-17 22:55:40] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:55:40] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:55:40] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:55:43] DEBUG [mirofish.report_agent._generate_section_react:1320] LLM响应: 由于采访API调用失败，无法获取模拟Agent的直接观点。我们将依赖已有的数据进行分析。
+
+**最终价格预测与信心范围**
+
+综合考虑BNB Chain DeFi TVL的复苏、鲸鱼活动、斐波那契扩展位、交易量以及比特币的潜在影响等因素，我们维持对XVS在2026年3月31日的价格预测为**3.80美元**，信心范围为**3.20美元-4.70美元**。
+
+**总结**
+
+*   **基本情景：*...
+[2026-03-17 22:55:43] INFO [mirofish.report_agent._generate_section_react:1393] 章节 Predicted Price and Confidence Range: March 31, 2026 生成完成（工具调用: 3次）
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.save_section:2127] 章节已保存: report_8ca5b2652ba8/section_03.md
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.generate_report:1686] 章节已保存: report_8ca5b2652ba8/section_03.md
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.assemble_full_report:2296] 完整报告已组装: report_8ca5b2652ba8
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_8ca5b2652ba8
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_8ca5b2652ba8
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.generate_report:1731] 报告生成完成: report_8ca5b2652ba8
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.save_outline:2091] 大纲已保存: report_8ca5b2652ba8
+[2026-03-17 22:55:43] INFO [mirofish.report_agent.save_report:2443] 报告已保存: report_8ca5b2652ba8
+[2026-03-17 22:55:56] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/generate/status
+[2026-03-17 22:55:56] DEBUG [mirofish.request.log_request:57] 请求体: {'task_id': '2d7ad0dd-ff5f-4f45-b56c-b68a3a421cd7', 'simulation_id': 'sim_6c330da39df5'}
+[2026-03-17 22:55:56] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:56:06] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 22:56:06] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 22:56:17] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 22:56:17] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_6c330da39df5', 'message': 'Based on everything the 9 agents discussed across 40 rounds - the whale accumulation signals, the trader sentiment split between bulls and profit-takers, the DeFi analyst concerns about overbought conditions, and the BNB Chain TVL recovery - give me your final single best-estimate price for XVS on March 31, 2026. Not a range - your single most likely number. Then give the bull case and bear case extremes.'}
+[2026-03-17 22:56:17] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 22:56:17] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_6a3439e1be294c51, simulation_id=sim_6c330da39df5
+[2026-03-17 22:56:17] INFO [mirofish.report_agent.chat:1787] Report Agent对话: Based on everything the 9 agents discussed across ...
+[2026-03-17 22:56:18] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:00:25] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 23:00:25] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_6c330da39df5', 'message': 'Stop giving ranges and sentiment. I need exact numbers for a trade setup. Based on all simulation data, agent consensus, volume analysis, support/resistance, and whale behavior: 1. EXACT predicted price of XVS on March 31, 2026 — one number. 2. If I go LONG now at $3.34: what exact price would KILL the long (liquidation/stop-loss price)? 3. If I go SHORT now at $3.34: what exact price would KILL the short (liquidation/stop-loss price)? Answer ONLY with three numbers and brief reasoning for each. No hedging, no disclaimers.', 'chat_history': [{'role': 'user', 'content': 'give me exact price prediction for march 31'}, {'role': 'assistant', 'content': 'Best estimate: $3.80, Bull case: $4.70, Bear case: $3.20'}]}
+[2026-03-17 23:00:25] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 23:00:25] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_6a3439e1be294c51, simulation_id=sim_6c330da39df5
+[2026-03-17 23:00:25] INFO [mirofish.report_agent.chat:1787] Report Agent对话: Stop giving ranges and sentiment. I need exact num...
+[2026-03-17 23:00:27] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:06] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/list
+[2026-03-17 23:20:06] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/agent-log
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/console-log
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665
+[2026-03-17 23:20:29] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:30] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_7f4921de66f0
+[2026-03-17 23:20:30] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:30] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_a3aa7c3a7c2648a8
+[2026-03-17 23:20:31] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/agent-log
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/agent-log
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665/profiles/realtime
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_7f4921de66f0
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_a3aa7c3a7c2648a8
+[2026-03-17 23:20:36] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:54] DEBUG [mirofish.request.log_request:55] 请求: OPTIONS /api/report/chat
+[2026-03-17 23:20:54] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:20:54] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 23:20:54] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665', 'message': 'what is the price as of end of march?', 'chat_history': []}
+[2026-03-17 23:20:54] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 23:20:54] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_a3aa7c3a7c2648a8, simulation_id=sim_e15ccaca5665
+[2026-03-17 23:20:54] INFO [mirofish.report_agent.chat:1787] Report Agent对话: what is the price as of end of march?...
+[2026-03-17 23:20:59] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:21:09] DEBUG [mirofish.request.log_request:55] 请求: OPTIONS /api/report/chat
+[2026-03-17 23:21:09] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:21:09] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 23:21:09] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665', 'message': 'what is the result?', 'chat_history': [{'role': 'user', 'content': 'what is the price as of end of march?'}, {'role': 'assistant', 'content': 'The provided report does not include a specific price prediction for the end of March 2026. It focuses on the potential resistance levels and comparative performance of XVS as of March 17, 2026.'}]}
+[2026-03-17 23:21:10] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 23:21:10] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_a3aa7c3a7c2648a8, simulation_id=sim_e15ccaca5665
+[2026-03-17 23:21:10] INFO [mirofish.report_agent.chat:1787] Report Agent对话: what is the result?...
+[2026-03-17 23:21:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:21:56] DEBUG [mirofish.request.log_request:55] 请求: OPTIONS /api/report/chat
+[2026-03-17 23:21:56] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:21:56] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 23:21:56] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_e15ccaca5665', 'message': 'what is the predicted price?', 'chat_history': [{'role': 'user', 'content': 'what is the price as of end of march?'}, {'role': 'assistant', 'content': 'The provided report does not include a specific price prediction for the end of March 2026. It focuses on the potential resistance levels and comparative performance of XVS as of March 17, 2026.'}, {'role': 'user', 'content': 'what is the result?'}, {'role': 'assistant', 'content': 'Based on the provided report, XVS is projected to experience continued bullish behavior, potentially reaching new resistance levels by March 17, 2026. Key resistance levels to watch are around $15.50, $16.80, and $18.00.'}]}
+[2026-03-17 23:21:56] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 23:21:56] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_a3aa7c3a7c2648a8, simulation_id=sim_e15ccaca5665
+[2026-03-17 23:21:56] INFO [mirofish.report_agent.chat:1787] Report Agent对话: what is the predicted price?...
+[2026-03-17 23:21:57] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/agent-log
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/console-log
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_7f4921de66f0
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:11] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_a3aa7c3a7c2648a8
+[2026-03-17 23:22:12] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8/agent-log
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5/profiles/realtime
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_90f5954b1cd8
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8/agent-log
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:49] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_6a3439e1be294c51
+[2026-03-17 23:22:50] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:55] DEBUG [mirofish.request.log_request:55] 请求: OPTIONS /api/report/chat
+[2026-03-17 23:22:55] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:22:55] DEBUG [mirofish.request.log_request:55] 请求: POST /api/report/chat
+[2026-03-17 23:22:55] DEBUG [mirofish.request.log_request:57] 请求体: {'simulation_id': 'sim_6c330da39df5', 'message': 'what is the predicted price?', 'chat_history': []}
+[2026-03-17 23:22:55] INFO [mirofish.zep_tools.__init__:432] ZepToolsService 初始化完成
+[2026-03-17 23:22:55] INFO [mirofish.report_agent.__init__:916] ReportAgent 初始化完成: graph_id=mirofish_6a3439e1be294c51, simulation_id=sim_6c330da39df5
+[2026-03-17 23:22:55] INFO [mirofish.report_agent.chat:1787] Report Agent对话: what is the predicted price?...
+[2026-03-17 23:22:56] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:33] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/history
+[2026-03-17 23:24:33] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8/agent-log
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8/console-log
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5
+[2026-03-17 23:24:43] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:44] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_90f5954b1cd8
+[2026-03-17 23:24:44] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:44] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_6a3439e1be294c51
+[2026-03-17 23:24:44] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8/agent-log
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_6c330da39df5/profiles/realtime
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_8ca5b2652ba8/agent-log
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_90f5954b1cd8
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:24:46] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_6a3439e1be294c51
+[2026-03-17 23:24:48] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-17 23:25:02] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/history
+[2026-03-17 23:25:02] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/agent-log
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef/console-log
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_request:55] 请求: GET /api/report/report_03e77acee6ef
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/sim_e15ccaca5665
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/project/proj_7f4921de66f0
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-18 00:07:47] DEBUG [mirofish.request.log_request:55] 请求: GET /api/graph/data/mirofish_a3aa7c3a7c2648a8
+[2026-03-18 00:07:48] DEBUG [mirofish.request.log_response:62] 响应: 200
+[2026-03-18 00:07:50] DEBUG [mirofish.request.log_request:55] 请求: GET /api/simulation/history
+[2026-03-18 00:07:50] DEBUG [mirofish.request.log_response:62] 响应: 200

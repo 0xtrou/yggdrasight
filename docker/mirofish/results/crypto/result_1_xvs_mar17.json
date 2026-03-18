@@ -1,0 +1,30 @@
+{
+  "id": "result_1_xvs_mar17",
+  "category": "crypto",
+  "created_at": "2026-03-17T22:44:10Z",
+  "prediction_question": "Predict XVS price on March 17, 2026",
+  "seed_summary": "7-day XVS price data Mar 9-15 showing +13.3% rally from $2.842 to $3.221",
+  "project_id": "proj_7f4921de66f0",
+  "simulation_id": "sim_e15ccaca5665",
+  "report_id": "report_03e77acee6ef",
+  "graph_id": "mirofish_a3aa7c3a7c2648a8",
+  "agents_count": 6,
+  "rounds": 20,
+  "total_actions": 46,
+  "prediction": {
+    "target_date": "2026-03-17",
+    "predicted_value": "$3.35",
+    "confidence_range": "$3.35 - $3.50",
+    "actual_value": "$3.34",
+    "accuracy": "within $0.01",
+    "key_factors": [
+      "Strong upward momentum +13.3% in 7 days",
+      "Volume spike on Mar 14 suggesting institutional interest",
+      "Price above 7-day SMA",
+      "Support established at $2.95"
+    ]
+  },
+  "report_markdown": "",
+  "referenceable": true,
+  "expires_at": "2026-03-18T22:44:10Z"
+}

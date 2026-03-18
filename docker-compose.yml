@@ -67,6 +67,28 @@ services:
   #   networks:
   #     - yggdrasight-network
 
+  mirofish-backend:
+    build:
+      context: ./docker/mirofish/backend
+      dockerfile: Dockerfile
+    container_name: yggdrasight-mirofish
+    ports:
+      - "127.0.0.1:5001:5001"
+    env_file:
+      - ./docker/mirofish/.env
+    volumes:
+      - ./docker/mirofish/backend/uploads:/app/uploads
+      - ./docker/mirofish/results:/app/results
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - yggdrasight-network
+
 volumes:
   mongodb_data:
   redis_data:
@@ -74,3 +96,4 @@ volumes:
 networks:
   yggdrasight-network:
     driver: bridge
+    name: yggdrasight-network

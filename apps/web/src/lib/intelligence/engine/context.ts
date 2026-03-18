@@ -1,6 +1,7 @@
 import { Timeframe } from '@yggdrasight/core'
 import { cookies } from 'next/headers'
 import type { AnalysisContext, Candle, SignalDoc, MarketGlobal, OnChainData, SentimentData, OrderBookData, NewsData, DeveloperData, DefiProtocolData } from '../types'
+import { fetchOHLCV } from '../../data/ohlcv-provider'
 
 export interface BuildContextOptions {
   symbol: string
@@ -110,13 +111,7 @@ async function getInternalHeaders(): Promise<Record<string, string>> {
 }
 
 async function fetchCandles(symbol: string, tf: Timeframe): Promise<Candle[]> {
-  const pair = toBinancePair(symbol)
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const headers = await getInternalHeaders()
-  const res = await fetch(`${baseUrl}/api/prices/ohlcv?symbol=${encodeURIComponent(pair)}&interval=${tf}`, { headers })
-  if (!res.ok) throw new Error(`OHLCV fetch failed: ${res.status}`)
-  const data = await res.json() as { candles: Candle[] }
-  return data.candles ?? []
+  return fetchOHLCV({ symbol, interval: tf })
 }
 
 async function fetchSignals(symbol: string): Promise<SignalDoc[]> {

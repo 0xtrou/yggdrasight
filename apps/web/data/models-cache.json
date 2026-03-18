@@ -21,6 +21,11 @@
       "name": "minimax-m2.5-free"
     },
     {
+      "id": "opencode/nemotron-3-super-free",
+      "provider": "opencode",
+      "name": "nemotron-3-super-free"
+    },
+    {
       "id": "anthropic/claude-3-5-haiku-20241022",
       "provider": "anthropic",
       "name": "claude-3-5-haiku-20241022"
@@ -249,6 +254,11 @@
       "id": "github-copilot/gpt-5.4",
       "provider": "github-copilot",
       "name": "gpt-5.4"
+    },
+    {
+      "id": "github-copilot/gpt-5.4-mini",
+      "provider": "github-copilot",
+      "name": "gpt-5.4-mini"
     },
     {
       "id": "github-copilot/grok-code-fast-1",
@@ -629,6 +639,11 @@
       "id": "openrouter/google/gemini-3-pro-preview",
       "provider": "openrouter",
       "name": "google/gemini-3-pro-preview"
+    },
+    {
+      "id": "openrouter/google/gemini-3.1-flash-lite-preview",
+      "provider": "openrouter",
+      "name": "google/gemini-3.1-flash-lite-preview"
     },
     {
       "id": "openrouter/google/gemini-3.1-pro-preview",
@@ -1071,6 +1086,16 @@
       "name": "openrouter/free"
     },
     {
+      "id": "openrouter/openrouter/healer-alpha",
+      "provider": "openrouter",
+      "name": "openrouter/healer-alpha"
+    },
+    {
+      "id": "openrouter/openrouter/hunter-alpha",
+      "provider": "openrouter",
+      "name": "openrouter/hunter-alpha"
+    },
+    {
       "id": "openrouter/openrouter/sherlock-dash-alpha",
       "provider": "openrouter",
       "name": "openrouter/sherlock-dash-alpha"
@@ -1311,6 +1336,16 @@
       "name": "x-ai/grok-4.1-fast"
     },
     {
+      "id": "openrouter/x-ai/grok-4.20-beta",
+      "provider": "openrouter",
+      "name": "x-ai/grok-4.20-beta"
+    },
+    {
+      "id": "openrouter/x-ai/grok-4.20-multi-agent-beta",
+      "provider": "openrouter",
+      "name": "x-ai/grok-4.20-multi-agent-beta"
+    },
+    {
       "id": "openrouter/x-ai/grok-code-fast-1",
       "provider": "openrouter",
       "name": "x-ai/grok-code-fast-1"
@@ -1409,7 +1444,12 @@
       "id": "zai/glm-5",
       "provider": "zai",
       "name": "glm-5"
+    },
+    {
+      "id": "zai/glm-5-turbo",
+      "provider": "zai",
+      "name": "glm-5-turbo"
     }
   ],
-  "timestamp": 1773115623915
+  "timestamp": 1773824467841
 }

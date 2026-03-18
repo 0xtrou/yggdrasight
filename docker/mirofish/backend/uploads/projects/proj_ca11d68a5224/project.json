@@ -1,0 +1,254 @@
+{
+  "project_id": "proj_ca11d68a5224",
+  "name": "SENTUSDT-crypto-prediction",
+  "status": "graph_completed",
+  "created_at": "2026-03-18T06:08:25.197414",
+  "updated_at": "2026-03-18T06:08:45.003344",
+  "files": [
+    {
+      "filename": "SENTUSDT-seed.md",
+      "size": 345
+    }
+  ],
+  "total_text_length": 372,
+  "ontology": {
+    "entity_types": [
+      {
+        "name": "CryptoTrader",
+        "description": "Individual trader or analyst providing crypto market insights.",
+        "attributes": [
+          {
+            "name": "trading_experience",
+            "type": "text",
+            "description": "Years of experience in crypto trading."
+          }
+        ],
+        "examples": [
+          "@CryptoWhale",
+          "@TradingView"
+        ]
+      },
+      {
+        "name": "TradingPlatform",
+        "description": "Platform for trading cryptocurrencies.",
+        "attributes": [
+          {
+            "name": "platform_name",
+            "type": "text",
+            "description": "Name of the trading platform."
+          }
+        ],
+        "examples": [
+          "Binance",
+          "Coinbase"
+        ]
+      },
+      {
+        "name": "MarketAnalysisFirm",
+        "description": "Company specializing in crypto market analysis and reports.",
+        "attributes": [
+          {
+            "name": "firm_size",
+            "type": "text",
+            "description": "Number of employees in the firm."
+          }
+        ],
+        "examples": [
+          "Glassnode",
+          "Messari"
+        ]
+      },
+      {
+        "name": "FinancialNewsOutlet",
+        "description": "News organization reporting on financial markets, including crypto.",
+        "attributes": [
+          {
+            "name": "news_outlet_name",
+            "type": "text",
+            "description": "Name of the news outlet."
+          }
+        ],
+        "examples": [
+          "Bloomberg",
+          "Reuters"
+        ]
+      },
+      {
+        "name": "Cryptocurrency",
+        "description": "Specific cryptocurrency being traded or analyzed.",
+        "attributes": [
+          {
+            "name": "ticker_symbol",
+            "type": "text",
+            "description": "Cryptocurrency ticker symbol."
+          }
+        ],
+        "examples": [
+          "BTC",
+          "ETH"
+        ]
+      },
+      {
+        "name": "CryptoExchange",
+        "description": "Platform where cryptocurrencies are exchanged.",
+        "attributes": [
+          {
+            "name": "exchange_name",
+            "type": "text",
+            "description": "Name of the crypto exchange."
+          }
+        ],
+        "examples": [
+          "Kraken",
+          "Huobi"
+        ]
+      },
+      {
+        "name": "RegulatoryBody",
+        "description": "Organization regulating cryptocurrency markets.",
+        "attributes": [
+          {
+            "name": "country",
+            "type": "text",
+            "description": "Country of the regulatory body."
+          }
+        ],
+        "examples": [
+          "SEC",
+          "CFTC"
+        ]
+      },
+      {
+        "name": "InvestmentFund",
+        "description": "Fund investing in cryptocurrencies.",
+        "attributes": [
+          {
+            "name": "fund_size",
+            "type": "text",
+            "description": "Total assets under management."
+          }
+        ],
+        "examples": [
+          "Grayscale",
+          "Pantera Capital"
+        ]
+      },
+      {
+        "name": "Person",
+        "description": "Any individual involved in cryptocurrency markets.",
+        "attributes": [],
+        "examples": [
+          "John Doe",
+          "Satoshi Nakamoto"
+        ]
+      },
+      {
+        "name": "Organization",
+        "description": "Any organization involved in cryptocurrency markets.",
+        "attributes": [],
+        "examples": [
+          "Bitcoin Foundation",
+          "Ethereum Foundation"
+        ]
+      }
+    ],
+    "edge_types": [
+      {
+        "name": "ANALYZES",
+        "description": "Analyzes the price or market of a cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "CryptoTrader",
+            "target": "Cryptocurrency"
+          },
+          {
+            "source": "MarketAnalysisFirm",
+            "target": "Cryptocurrency"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "TRADES_ON",
+        "description": "Trades a cryptocurrency on a specific exchange.",
+        "source_targets": [
+          {
+            "source": "CryptoTrader",
+            "target": "CryptoExchange"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "REPORTS_ON",
+        "description": "Reports on cryptocurrency market trends.",
+        "source_targets": [
+          {
+            "source": "FinancialNewsOutlet",
+            "target": "Cryptocurrency"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "REGULATES",
+        "description": "Regulates a cryptocurrency or crypto exchange.",
+        "source_targets": [
+          {
+            "source": "RegulatoryBody",
+            "target": "Cryptocurrency"
+          },
+          {
+            "source": "RegulatoryBody",
+            "target": "CryptoExchange"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "INVESTS_IN",
+        "description": "Invests in a particular cryptocurrency.",
+        "source_targets": [
+          {
+            "source": "InvestmentFund",
+            "target": "Cryptocurrency"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "USES_PLATFORM",
+        "description": "Uses a trading platform.",
+        "source_targets": [
+          {
+            "source": "CryptoTrader",
+            "target": "TradingPlatform"
+          }
+        ],
+        "attributes": []
+      },
+      {
+        "name": "COMMENT_ON",
+        "description": "Comments on cryptocurrency market trends.",
+        "source_targets": [
+          {
+            "source": "Person",
+            "target": "Cryptocurrency"
+          },
+          {
+            "source": "Organization",
+            "target": "Cryptocurrency"
+          }
+        ],
+        "attributes": []
+      }
+    ]
+  },
+  "analysis_summary": "根据提供的文本，主要涉及加密货币SENTUSDT的价格预测。实体类型包括交易者、交易平台、分析公司、新闻媒体、加密货币本身、交易所、监管机构和投资基金。关系类型描述了它们之间的分析、交易、报告、监管和投资行为。",
+  "graph_id": "mirofish_66781f3cfa93451e",
+  "graph_build_task_id": "75b0f931-4082-465c-99b8-ca37b54a133b",
+  "simulation_requirement": "Will SENTUSDT price be bullish, bearish, or neutral over the next 24-72 hours?",
+  "chunk_size": 500,
+  "chunk_overlap": 50,
+  "error": null
+}

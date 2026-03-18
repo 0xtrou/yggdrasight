@@ -1,0 +1,234 @@
+{
+  "simulation_id": "sim_1f20f5ac8fb4",
+  "runner_status": "completed",
+  "current_round": 25,
+  "total_rounds": 25,
+  "simulated_hours": 0,
+  "total_simulation_hours": 72,
+  "progress_percent": 100.0,
+  "twitter_current_round": 25,
+  "reddit_current_round": 25,
+  "twitter_simulated_hours": 0,
+  "reddit_simulated_hours": 0,
+  "twitter_running": false,
+  "reddit_running": false,
+  "twitter_completed": true,
+  "reddit_completed": true,
+  "twitter_actions_count": 7,
+  "reddit_actions_count": 8,
+  "total_actions_count": 15,
+  "started_at": "2026-03-18T06:09:05.583801",
+  "updated_at": "2026-03-18T06:12:10.035813",
+  "completed_at": "2026-03-18T06:12:16.048450",
+  "error": null,
+  "process_pid": 966,
+  "recent_actions": [
+    {
+      "round_num": 15,
+      "timestamp": "2026-03-18T06:12:08.416844",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "DO_NOTHING",
+      "action_args": {},
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 12,
+      "timestamp": "2026-03-18T06:12:05.025299",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "The Fear & Greed index being at 'Fear' suggests investors are risk-averse, potentially leading to decreased buying pressure on SENTUSDT.",
+        "comment_id": 2
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 11,
+      "timestamp": "2026-03-18T06:12:03.860555",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "LIKE_POST",
+      "action_args": {
+        "post_id": 2,
+        "like_id": 1,
+        "post_content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?",
+        "post_author_name": "SENTUSDT"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-18T06:12:02.148528",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "QUOTE_POST",
+      "action_args": {
+        "quoted_id": 1,
+        "new_post_id": 2,
+        "original_content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?",
+        "original_author_name": "SENTUSDT",
+        "quote_content": "A slight market cap increase with BTC dominance suggests a cautious outlook for altcoins like SENTUSDT. Monitor BTC price movements closely."
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-18T06:12:02.148198",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?",
+        "post_id": 1
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-18T06:12:01.782002",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_COMMENT",
+      "action_args": {
+        "content": "Current price indicates a bearish trend. Further analysis needed to predict accurately.",
+        "comment_id": 1
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-18T06:12:01.781613",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?",
+        "post_id": 3
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-18T06:12:01.780859",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "The Fear & Greed index is currently at 26 (Fear). How much does this influence your SENTUSDT price prediction?",
+        "post_id": 2
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 10,
+      "timestamp": "2026-03-18T06:12:01.780523",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Given the current price of SENTUSDT at 0.02126 and a recent price change of -9.38% over the last 500 candles, what's your prediction for its price direction in the next 24-72 hours?",
+        "post_id": 1
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-18T06:09:26.253247",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-18T06:09:26.253115",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "The Fear & Greed index is currently at 26 (Fear). How much does this influence your SENTUSDT price prediction?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-18T06:09:26.252958",
+      "platform": "reddit",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Given the current price of SENTUSDT at 0.02126 and a recent price change of -9.38% over the last 500 candles, what's your prediction for its price direction in the next 24-72 hours?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-18T06:09:26.224275",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-18T06:09:26.224100",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "The Fear & Greed index is currently at 26 (Fear). How much does this influence your SENTUSDT price prediction?"
+      },
+      "result": null,
+      "success": true
+    },
+    {
+      "round_num": 0,
+      "timestamp": "2026-03-18T06:09:26.223912",
+      "platform": "twitter",
+      "agent_id": 0,
+      "agent_name": "SENTUSDT",
+      "action_type": "CREATE_POST",
+      "action_args": {
+        "content": "Given the current price of SENTUSDT at 0.02126 and a recent price change of -9.38% over the last 500 candles, what's your prediction for its price direction in the next 24-72 hours?"
+      },
+      "result": null,
+      "success": true
+    }
+  ],
+  "rounds_count": 0
+}

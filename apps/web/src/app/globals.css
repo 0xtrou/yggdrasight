@@ -20,6 +20,11 @@
   --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
+@keyframes mirofishBorderBlink {
+  0%, 100% { outline: 1.5px solid #ff8800; outline-offset: -1px; }
+  50%       { outline: 1.5px solid rgba(255, 136, 0, 0.08); outline-offset: -1px; }
+}
+
 body {
   background-color: var(--color-terminal-bg);
   color: var(--color-terminal-text);

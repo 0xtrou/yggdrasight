@@ -51,6 +51,14 @@ export function getIntelligenceModelsForConnection(connection: mongoose.Connecti
     ChatSessionSchema,
   } = require('../intelligence/models/chat-session.model')
 
+  const {
+    MirofishPredictionSchema,
+  } = require('../intelligence/models/mirofish-prediction.model')
+
+  const {
+    AnalysisJobSchema,
+  } = require('../intelligence/models/analysis-job.model')
+
   return {
     ClassificationJob:
       connection.models.ClassificationJob ||
@@ -87,6 +95,14 @@ export function getIntelligenceModelsForConnection(connection: mongoose.Connecti
     ChatSession:
       connection.models.ChatSession ||
       connection.model('ChatSession', ChatSessionSchema),
+
+    MirofishPrediction:
+      connection.models.MirofishPrediction ||
+      connection.model('MirofishPrediction', MirofishPredictionSchema),
+
+    AnalysisJob:
+      connection.models.AnalysisJob ||
+      connection.model('AnalysisJob', AnalysisJobSchema),
   }
 }
 

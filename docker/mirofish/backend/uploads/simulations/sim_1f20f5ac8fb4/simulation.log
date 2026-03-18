@@ -1,0 +1,504 @@
+2026-03-18 06:09:15 - INFO - ============================================================
+2026-03-18 06:09:15 - INFO - OASIS 双平台并行模拟
+2026-03-18 06:09:15 - INFO - 配置文件: /app/app/services/../../uploads/simulations/sim_1f20f5ac8fb4/simulation_config.json
+2026-03-18 06:09:15 - INFO - 模拟ID: sim_1f20f5ac8fb4
+2026-03-18 06:09:15 - INFO - 等待命令模式: 启用
+2026-03-18 06:09:15 - INFO - ============================================================
+2026-03-18 06:09:15 - INFO - 模拟参数:
+2026-03-18 06:09:15 - INFO -   - 总模拟时长: 72小时
+2026-03-18 06:09:15 - INFO -   - 每轮时间: 60分钟
+2026-03-18 06:09:15 - INFO -   - 配置总轮数: 72
+2026-03-18 06:09:15 - INFO -   - 最大轮数限制: 25
+2026-03-18 06:09:15 - INFO -   - 实际执行轮数: 25 (已截断)
+2026-03-18 06:09:15 - INFO -   - Agent数量: 1
+2026-03-18 06:09:15 - INFO - 日志结构:
+2026-03-18 06:09:15 - INFO -   - 主日志: simulation.log
+2026-03-18 06:09:15 - INFO -   - Twitter动作: twitter/actions.jsonl
+2026-03-18 06:09:15 - INFO -   - Reddit动作: reddit/actions.jsonl
+2026-03-18 06:09:15 - INFO - ============================================================
+2026-03-18 06:09:15 - INFO - [Twitter] 初始化...
+2026-03-18 06:09:26 - INFO - [Reddit] 初始化...
+2026-03-18 06:09:26 - INFO - [Twitter] 环境已启动
+2026-03-18 06:09:26 - INFO - [Reddit] 环境已启动
+2026-03-18 06:09:26 - INFO - [Twitter] 已发布 1 条初始帖子
+2026-03-18 06:09:26 - INFO - [Twitter] 轮数已截断: 72 -> 25 (max_rounds=25)
+2026-03-18 06:11:59 - INFO - [Reddit] 已发布 1 条初始帖子
+2026-03-18 06:11:59 - INFO - [Reddit] 轮数已截断: 72 -> 25 (max_rounds=25)
+2026-03-18 06:12:15 - INFO - [Twitter] 模拟循环完成! 耗时: 168.8秒, 总动作: 7
+2026-03-18 06:12:15 - INFO - [Reddit] 模拟循环完成! 耗时: 16.7秒, 总动作: 8
+2026-03-18 06:12:15 - INFO - ============================================================
+2026-03-18 06:12:15 - INFO - 模拟循环完成! 总耗时: 180.9秒
+2026-03-18 06:12:15 - INFO - 
+2026-03-18 06:12:15 - INFO - ============================================================
+2026-03-18 06:12:15 - INFO - 进入等待命令模式 - 环境保持运行
+2026-03-18 06:12:15 - INFO - 支持的命令: interview, batch_interview, close_env
+2026-03-18 06:12:15 - INFO - ============================================================
+夸张或误导性的词语。常用表达包括“当前价格”、“交易范围”、“市场分析”等。禁忌话题包括未经证实的传言、内幕交易信息以及任何可能损害SENTUSDT声誉的言论。发布内容主要包括价格更新、市场趋势分析、技术更新公告、社区活动信息等。发布频率根据市场情况和项目进展而定，活跃时间段主要集中在交易高峰时段。对核心话题的官方立场是客观、透明地提供信息，不作任何投资建议。面对争议，我们会以数据和事实为基础进行回应，并保持冷静和专业的态度。本账号代表着所有SENTUSDT的持有者和支持者。运营习惯是定期更新信息，积极回应用户提问，并保持与社区的良好互动。SENTUSDT作为一种加密货币，其价值受到市场供需关系的影响。本账号会密切关注市场动态，及时发布相关信息，帮助用户更好地了解SENTUSDT的价值波动。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+db_path /app/app/services/../../uploads/simulations/sim_1f20f5ac8fb4/reddit_simulation.db
+[06:09:26] [Twitter] 环境已启动
+[Twitter] 环境已启动
+[06:09:26] [Reddit] 环境已启动
+[Reddit] 环境已启动
+[06:09:26] [Twitter] 已发布 1 条初始帖子
+[Twitter] 已发布 1 条初始帖子
+[06:09:26] [Twitter] 轮数已截断: 72 -> 25 (max_rounds=25)
+[Twitter] 轮数已截断: 72 -> 25 (max_rounds=25)
+Some weights of BertModel were not initialized from the model checkpoint at Twitter/twhin-bert-base and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[06:11:59] [Reddit] 已发布 1 条初始帖子
+[Reddit] 已发布 1 条初始帖子
+[06:11:59] [Reddit] 轮数已截断: 72 -> 25 (max_rounds=25)
+[Reddit] 轮数已截断: 72 -> 25 (max_rounds=25)
+2026-03-18 06:12:03,090 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-18 06:12:05,399 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-18 06:12:06,190 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:06,190 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:06,850 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-18 06:12:07,667 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:07,668 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:09,064 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:09,065 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:10,036 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff14433fb0>
+2026-03-18 06:12:10,037 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:10,276 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:10,276 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:11,411 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff14433fb0>
+2026-03-18 06:12:11,412 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:11,835 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:11,836 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:12,565 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff14433fb0>
+2026-03-18 06:12:12,565 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:13,029 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:13,029 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:14,000 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff14433fb0>
+2026-03-18 06:12:14,001 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:14,495 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:14,496 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:15,138 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff14433fb0>
+2026-03-18 06:12:15,138 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+[06:12:15] [Twitter] 模拟循环完成! 耗时: 168.8秒, 总动作: 7
+[Twitter] 模拟循环完成! 耗时: 168.8秒, 总动作: 7
+2026-03-18 06:12:15,941 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:15,942 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+[06:12:15] [Reddit] 模拟循环完成! 耗时: 16.7秒, 总动作: 8
+[Reddit] 模拟循环完成! 耗时: 16.7秒, 总动作: 8
+[06:12:15] ============================================================
+[06:12:15] 模拟循环完成! 总耗时: 180.9秒
+[06:12:15] 
+[06:12:15] ============================================================
+[06:12:15] 进入等待命令模式 - 环境保持运行
+[06:12:15] 支持的命令: interview, batch_interview, close_env
+[06:12:15] ============================================================
+
+收到IPC命令: batch_interview, id=91418f4c-ddc4-4d16-a5c0-4650455eab9c
+2026-03-18 06:12:44,728 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff14433fb0>
+2026-03-18 06:12:44,728 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+  Twitter批量Interview失败: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-18 06:12:46,116 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0xffff126c5b20>
+2026-03-18 06:12:46,117 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+  Reddit批量Interview失败: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}

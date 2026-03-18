@@ -1,0 +1,61 @@
+{"timestamp": "2026-03-18T06:09:26.222944", "event_type": "simulation_start", "platform": "twitter", "total_rounds": 144, "agents_count": 1}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.223478", "event_type": "round_start", "simulated_hour": 0}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.223912", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "Given the current price of SENTUSDT at 0.02126 and a recent price change of -9.38% over the last 500 candles, what's your prediction for its price direction in the next 24-72 hours?"}, "result": null, "success": true}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.224100", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "The Fear & Greed index is currently at 26 (Fear). How much does this influence your SENTUSDT price prediction?"}, "result": null, "success": true}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.224275", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?"}, "result": null, "success": true}
+{"round": 0, "timestamp": "2026-03-18T06:09:26.341755", "event_type": "round_end", "actions_count": 3}
+{"round": 1, "timestamp": "2026-03-18T06:09:26.342480", "event_type": "round_start", "simulated_hour": 0}
+{"round": 1, "timestamp": "2026-03-18T06:09:26.342658", "event_type": "round_end", "actions_count": 0}
+{"round": 2, "timestamp": "2026-03-18T06:09:26.342807", "event_type": "round_start", "simulated_hour": 1}
+{"round": 2, "timestamp": "2026-03-18T06:09:26.342919", "event_type": "round_end", "actions_count": 0}
+{"round": 3, "timestamp": "2026-03-18T06:09:26.343075", "event_type": "round_start", "simulated_hour": 2}
+{"round": 3, "timestamp": "2026-03-18T06:09:26.343222", "event_type": "round_end", "actions_count": 0}
+{"round": 4, "timestamp": "2026-03-18T06:09:26.343336", "event_type": "round_start", "simulated_hour": 3}
+{"round": 4, "timestamp": "2026-03-18T06:09:26.343437", "event_type": "round_end", "actions_count": 0}
+{"round": 5, "timestamp": "2026-03-18T06:09:26.343541", "event_type": "round_start", "simulated_hour": 4}
+{"round": 5, "timestamp": "2026-03-18T06:09:26.343649", "event_type": "round_end", "actions_count": 0}
+{"round": 6, "timestamp": "2026-03-18T06:09:26.343795", "event_type": "round_start", "simulated_hour": 5}
+{"round": 6, "timestamp": "2026-03-18T06:09:26.343918", "event_type": "round_end", "actions_count": 0}
+{"round": 7, "timestamp": "2026-03-18T06:09:26.344021", "event_type": "round_start", "simulated_hour": 6}
+{"round": 7, "timestamp": "2026-03-18T06:09:26.344133", "event_type": "round_end", "actions_count": 0}
+{"round": 8, "timestamp": "2026-03-18T06:09:26.344272", "event_type": "round_start", "simulated_hour": 7}
+{"round": 8, "timestamp": "2026-03-18T06:09:26.344378", "event_type": "round_end", "actions_count": 0}
+{"round": 9, "timestamp": "2026-03-18T06:09:26.344476", "event_type": "round_start", "simulated_hour": 8}
+{"round": 9, "timestamp": "2026-03-18T06:09:26.344583", "event_type": "round_end", "actions_count": 0}
+{"round": 10, "timestamp": "2026-03-18T06:09:26.344736", "event_type": "round_start", "simulated_hour": 9}
+{"round": 10, "timestamp": "2026-03-18T06:12:02.148198", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "CREATE_POST", "action_args": {"content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?", "post_id": 1}, "result": null, "success": true}
+{"round": 10, "timestamp": "2026-03-18T06:12:02.148528", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "QUOTE_POST", "action_args": {"quoted_id": 1, "new_post_id": 2, "original_content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?", "original_author_name": "SENTUSDT", "quote_content": "A slight market cap increase with BTC dominance suggests a cautious outlook for altcoins like SENTUSDT. Monitor BTC price movements closely."}, "result": null, "success": true}
+{"round": 10, "timestamp": "2026-03-18T06:12:02.148906", "event_type": "round_end", "actions_count": 2}
+{"round": 11, "timestamp": "2026-03-18T06:12:02.149288", "event_type": "round_start", "simulated_hour": 10}
+{"round": 11, "timestamp": "2026-03-18T06:12:03.860555", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "LIKE_POST", "action_args": {"post_id": 2, "like_id": 1, "post_content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?", "post_author_name": "SENTUSDT"}, "result": null, "success": true}
+{"round": 11, "timestamp": "2026-03-18T06:12:03.861207", "event_type": "round_end", "actions_count": 1}
+{"round": 12, "timestamp": "2026-03-18T06:12:03.862009", "event_type": "round_start", "simulated_hour": 11}
+{"round": 12, "timestamp": "2026-03-18T06:12:05.404341", "event_type": "round_end", "actions_count": 0}
+{"round": 13, "timestamp": "2026-03-18T06:12:05.405527", "event_type": "round_start", "simulated_hour": 12}
+{"round": 13, "timestamp": "2026-03-18T06:12:06.851539", "event_type": "round_end", "actions_count": 0}
+{"round": 14, "timestamp": "2026-03-18T06:12:06.851791", "event_type": "round_start", "simulated_hour": 13}
+{"round": 14, "timestamp": "2026-03-18T06:12:06.852398", "event_type": "round_end", "actions_count": 0}
+{"round": 15, "timestamp": "2026-03-18T06:12:06.852623", "event_type": "round_start", "simulated_hour": 14}
+{"round": 15, "timestamp": "2026-03-18T06:12:08.416844", "agent_id": 0, "agent_name": "SENTUSDT", "action_type": "DO_NOTHING", "action_args": {}, "result": null, "success": true}
+{"round": 15, "timestamp": "2026-03-18T06:12:08.417200", "event_type": "round_end", "actions_count": 1}
+{"round": 16, "timestamp": "2026-03-18T06:12:08.417953", "event_type": "round_start", "simulated_hour": 15}
+{"round": 16, "timestamp": "2026-03-18T06:12:10.039911", "event_type": "round_end", "actions_count": 0}
+{"round": 17, "timestamp": "2026-03-18T06:12:10.040216", "event_type": "round_start", "simulated_hour": 16}
+{"round": 17, "timestamp": "2026-03-18T06:12:11.419843", "event_type": "round_end", "actions_count": 0}
+{"round": 18, "timestamp": "2026-03-18T06:12:11.420452", "event_type": "round_start", "simulated_hour": 17}
+{"round": 18, "timestamp": "2026-03-18T06:12:12.567377", "event_type": "round_end", "actions_count": 0}
+{"round": 19, "timestamp": "2026-03-18T06:12:12.567611", "event_type": "round_start", "simulated_hour": 18}
+{"round": 19, "timestamp": "2026-03-18T06:12:12.568185", "event_type": "round_end", "actions_count": 0}
+{"round": 20, "timestamp": "2026-03-18T06:12:12.568359", "event_type": "round_start", "simulated_hour": 19}
+{"round": 20, "timestamp": "2026-03-18T06:12:12.568519", "event_type": "round_end", "actions_count": 0}
+{"round": 21, "timestamp": "2026-03-18T06:12:12.568692", "event_type": "round_start", "simulated_hour": 20}
+{"round": 21, "timestamp": "2026-03-18T06:12:14.003342", "event_type": "round_end", "actions_count": 0}
+{"round": 22, "timestamp": "2026-03-18T06:12:14.003706", "event_type": "round_start", "simulated_hour": 21}
+{"round": 22, "timestamp": "2026-03-18T06:12:14.003954", "event_type": "round_end", "actions_count": 0}
+{"round": 23, "timestamp": "2026-03-18T06:12:14.004342", "event_type": "round_start", "simulated_hour": 22}
+{"round": 23, "timestamp": "2026-03-18T06:12:15.139347", "event_type": "round_end", "actions_count": 0}
+{"round": 24, "timestamp": "2026-03-18T06:12:15.139516", "event_type": "round_start", "simulated_hour": 23}
+{"round": 24, "timestamp": "2026-03-18T06:12:15.139618", "event_type": "round_end", "actions_count": 0}
+{"round": 25, "timestamp": "2026-03-18T06:12:15.139786", "event_type": "round_start", "simulated_hour": 0}
+{"round": 25, "timestamp": "2026-03-18T06:12:15.139951", "event_type": "round_end", "actions_count": 0}
+{"timestamp": "2026-03-18T06:12:15.142561", "event_type": "simulation_end", "platform": "twitter", "total_rounds": 25, "total_actions": 7}

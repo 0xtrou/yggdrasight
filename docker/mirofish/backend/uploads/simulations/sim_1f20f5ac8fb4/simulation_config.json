@@ -1,0 +1,124 @@
+{
+  "simulation_id": "sim_1f20f5ac8fb4",
+  "project_id": "proj_ca11d68a5224",
+  "graph_id": "mirofish_66781f3cfa93451e",
+  "simulation_requirement": "Will SENTUSDT price be bullish, bearish, or neutral over the next 24-72 hours?",
+  "time_config": {
+    "total_simulation_hours": 72,
+    "minutes_per_round": 60,
+    "agents_per_hour_min": 1,
+    "agents_per_hour_max": 2,
+    "peak_hours": [
+      19,
+      20,
+      21,
+      22
+    ],
+    "peak_activity_multiplier": 1.5,
+    "off_peak_hours": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "off_peak_activity_multiplier": 0.05,
+    "morning_hours": [
+      6,
+      7,
+      8
+    ],
+    "morning_activity_multiplier": 0.4,
+    "work_hours": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "work_activity_multiplier": 0.7
+  },
+  "agent_configs": [
+    {
+      "agent_id": 0,
+      "entity_uuid": "fc67881f-fe9f-410a-b7ef-a074b7a76fc8",
+      "entity_name": "SENTUSDT",
+      "entity_type": "Cryptocurrency",
+      "activity_level": 0.7,
+      "posts_per_hour": 2,
+      "comments_per_hour": 5,
+      "active_hours": [
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        16,
+        17,
+        19,
+        20,
+        21,
+        22
+      ],
+      "response_delay_min": 1,
+      "response_delay_max": 10,
+      "sentiment_bias": 0.0,
+      "stance": "neutral",
+      "influence_weight": 1.0
+    }
+  ],
+  "event_config": {
+    "initial_posts": [
+      {
+        "content": "Given the current price of SENTUSDT at 0.02126 and a recent price change of -9.38% over the last 500 candles, what's your prediction for its price direction in the next 24-72 hours?",
+        "poster_type": "Cryptocurrency",
+        "poster_agent_id": 0
+      },
+      {
+        "content": "The Fear & Greed index is currently at 26 (Fear). How much does this influence your SENTUSDT price prediction?",
+        "poster_type": "Cryptocurrency",
+        "poster_agent_id": 0
+      },
+      {
+        "content": "Considering BTC dominance is at 56.6% and the total market cap change in 24h is 0.15%, what impact will this have on SENTUSDT's price action in the short term?",
+        "poster_type": "Cryptocurrency",
+        "poster_agent_id": 0
+      }
+    ],
+    "scheduled_events": [],
+    "hot_topics": [
+      "SENTUSDT price prediction",
+      "Cryptocurrency market analysis",
+      "SENTUSDT price direction",
+      "SENTUSDT bullish bearish neutral"
+    ],
+    "narrative_direction": "The narrative revolves around predicting the short-term price movement of SENTUSDT, considering factors like current price, recent price changes, market sentiment (Fear & Greed index), BTC dominance, and overall market cap change. The discussion will likely involve bullish, bearish, and neutral viewpoints, with participants analyzing available data to support their predictions."
+  },
+  "twitter_config": {
+    "platform": "twitter",
+    "recency_weight": 0.4,
+    "popularity_weight": 0.3,
+    "relevance_weight": 0.3,
+    "viral_threshold": 10,
+    "echo_chamber_strength": 0.5
+  },
+  "reddit_config": {
+    "platform": "reddit",
+    "recency_weight": 0.3,
+    "popularity_weight": 0.4,
+    "relevance_weight": 0.3,
+    "viral_threshold": 15,
+    "echo_chamber_strength": 0.6
+  },
+  "llm_model": "google/gemini-2.0-flash-001",
+  "llm_base_url": "https://openrouter.ai/api/v1",
+  "generated_at": "2026-03-18T06:08:59.792583",
+  "generation_reasoning": "时间配置: This configuration simulates social media activity related to SENTUSDT price prediction over 72 hours, taking into account typical Chinese user behavior patterns. Peak hours are set for evening times, off-peak for late night/early morning, and moderate activity during work hours. | 事件配置: The hot topics focus on the core subject of predicting SENTUSDT's price movement. The narrative direction outlines a discussion considering various market factors. The initial posts are designed to stimulate conversation by posing questions related to the provided data, and each post is assigned to the 'Cryptocurrency' poster type as it is the only available entity type related to the topic. | Agent配置: 成功生成 1 个 | 初始帖子分配: 3 个帖子已分配发布者"
+}

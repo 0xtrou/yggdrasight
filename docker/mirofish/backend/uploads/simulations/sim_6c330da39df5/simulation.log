@@ -1,0 +1,1419 @@
+[22:52:56] ============================================================
+[22:52:56] OASIS 双平台并行模拟
+[22:52:56] 配置文件: /Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/../../uploads/simulations/sim_6c330da39df5/simulation_config.json
+[22:52:56] 模拟ID: sim_6c330da39df5
+[22:52:56] 等待命令模式: 启用
+[22:52:56] ============================================================
+[22:52:56] 模拟参数:
+[22:52:56]   - 总模拟时长: 336小时
+[22:52:56]   - 每轮时间: 60分钟
+[22:52:56]   - 配置总轮数: 336
+[22:52:56]   - 最大轮数限制: 40
+[22:52:56]   - 实际执行轮数: 40 (已截断)
+[22:52:56]   - Agent数量: 9
+[22:52:56] 日志结构:
+[22:52:56]   - 主日志: simulation.log
+[22:52:56]   - Twitter动作: twitter/actions.jsonl
+[22:52:56]   - Reddit动作: reddit/actions.jsonl
+[22:52:56] ============================================================
+[22:52:56] [Twitter] 初始化...
+[22:52:56] [Reddit] 初始化...
+已加载环境配置: /Users/mrk/Workspace/Cabin/predict/MiroFish/.env
+[Twitter] 初始化...
+[通用LLM] model=google/gemini-2.0-flash-001, base_url=https://openrouter.ai/api/v1...
+db_path /Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/../../uploads/simulations/sim_6c330da39df5/twitter_simulation.db
+[Reddit] 初始化...
+[通用LLM] model2026-03-17 22:52:56 - INFO - [Twitter] 环境已启动
+2026-03-17 22:52:56 - INFO - [Reddit] 环境已启动
+2026-03-17 22:52:57 - INFO - [Twitter] 已发布 8 条初始帖子
+2026-03-17 22:52:57 - INFO - [Twitter] 轮数已截断: 336 -> 40 (max_rounds=40)
+2026-03-17 22:52:59 - INFO - [Reddit] 已发布 8 条初始帖子
+2026-03-17 22:52:59 - INFO - [Reddit] 轮数已截断: 336 -> 40 (max_rounds=40)
+2026-03-17 22:53:21 - INFO - [Twitter] Day 1, 19:00 - Round 20/40 (50.0%)
+2026-03-17 22:53:29 - INFO - [Reddit] Day 1, 19:00 - Round 20/40 (50.0%)
+2026-03-17 22:53:39 - INFO - [Twitter] Day 2, 15:00 - Round 40/40 (100.0%)
+2026-03-17 22:53:39 - INFO - [Twitter] 模拟循环完成! 耗时: 42.5秒, 总动作: 40
+2026-03-17 22:53:49 - INFO - [Reddit] Day 2, 15:00 - Round 40/40 (100.0%)
+2026-03-17 22:53:49 - INFO - [Reddit] 模拟循环完成! 耗时: 50.0秒, 总动作: 68
+2026-03-17 22:53:49 - INFO - ============================================================
+2026-03-17 22:53:49 - INFO - 模拟循环完成! 总耗时: 53.2秒
+2026-03-17 22:53:49 - INFO - 
+2026-03-17 22:53:49 - INFO - ============================================================
+2026-03-17 22:53:49 - INFO - 进入等待命令模式 - 环境保持运行
+2026-03-17 22:53:49 - INFO - 支持的命令: interview, batch_interview, close_env
+2026-03-17 22:53:49 - INFO - ============================================================
+�知、项目进展更新等。我们的发布频率会根据市场动态和项目进展进行调整，但会尽量保持一定的规律性，以确保信息的及时传递。我们的活跃时间段主要集中在欧洲中部时间上午和下午，以覆盖全球不同时区的受众。我们对Venus Protocol的官方立场是坚定支持其发展，相信其在DeFi领域的潜力。面对争议，我们会保持开放的态度，积极听取各方意见，并基于事实和数据进行客观分析。我们的处理方式是：首先，澄清事实，消除误解；其次，提供不同角度的观点，促进理性讨论；最后，寻求共识，推动问题解决。我们代表的是一群对DeFi充满热情、对Venus Protocol充满信心的市场参与者。我们的运营习惯是：保持透明度，及时披露重要信息；积极参与社区互动，回复用户提问；定期发布市场分析报告，提供有价值的见解。机构记忆：在2026年3月，我们密切关注Venus Protocol的市场表现，特别是在3月14日鲸鱼增持XVS的事件中，我们积极分析了这一事件对市场的影响，并向社区提供了相关信息。我们也密切关注BNB Chain DeFi TVL的复苏，以及以太坊DeFi资本向BNB Chain的转移，并分析了这些因素对Venus Protocol的积极影响。我们也对Venus Protocol可能存在的风险保持警惕，例如流动性不足或安全漏洞，并积极参与社区讨论，以确保项目的安全和稳定。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+{'user_profile': '鲸鱼观察者（Whale Watcher）是一家专注于区块链领域大额交易追踪与分析的机构。该机构成立于2023年，旨在通过监测和分析区块链网络上的巨额交易活动，为市场参与者提供关于市场趋势、潜在风险和投资机会的洞察。我们的主要职能包括：实时监控主要加密货币和DeFi协议的大额交易，分析交易模式和行为，识别潜在的市场操纵或内幕交易活动，以及发布研究报告和市场分析。我们的账号定位为专业数据分析型账号，目标受众包括加密货币投资者、DeFi用户、行业分析师和监管机构。核心功能是提供准确、及时和深入的市场分析，帮助用户更好地理解市场动态并做出明智的投资决策。我们的发言风格严谨客观，语言专业，避免使用主观臆断或夸大其词的表达。常用表达包括“数据显示”、“分析表明”、“值得关注的是”等。禁忌话题包括未经证实的传言、内幕消息以及任何可能构成市场操纵的内容。发布内容特点包括：数据驱动的分析报告、图表展示、案例研究和市场观察。发布频率为每周2-3次，活跃时间段主要集中在工作日的上午和下午。我们对核心话题的官方立场是保持中立和客观，避免对任何特定项目或资产进行过度炒作或贬低。面对争议，我们会采取冷静和专业的态度，提供数据和分析来支持我们的观点，并尊重不同的意见。特殊说明：我们代表的是一群经验丰富的区块链分析师和数据科学家，运营习惯是注重数据验证和多方交叉验证，以确保信息的准确性和可靠性。机构记忆：2026年3月14日左右，我们监测到一笔与Venus Protocol相关的异常大额交易，该事件引起了我们对该协议的关注。我们随后发布了关于此事件的分析报告，指出可能存在鲸鱼正在积累Venus Protocol代币的迹象。我们的报告引发了市场对Venus Protocol的进一步关注，并可能对该代币的价格产生了一定的影响。我们持续关注Venus Protocol的发展，并定期发布相关分析报告。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+{'user_profile': 'BNB Chain是币安生态系统中重要的区块链基础设施，旨在提供一个高性能、低成本的平台，支持各种去中心化应用（DApps）和DeFi项目。BNB Chain的成立背景是解决以太坊等早期区块链网络的可扩展性问题，通过采用不同的共识机制和网络架构，提高交易吞吐量和降低交易费用。我们的主要职能是维护和发展BNB Chain生态系统，包括提供技术支持、推广优质项目、组织社区活动等。本账号的定位是BNB Chain的官方发声渠道，目标受众包括区块链开发者、DeFi用户、加密货币投资者以及对区块链技术感兴趣的公众。核心功能是发布BNB Chain的最新动态、技术进展、生态项目信息以及行业洞察。我们的发言风格专业、严谨、客观，语言简洁明了，避免使用过于专业的术语，力求让更多人理解区块链技术。常用表达包括“高性能”、“低成本”、“DeFi生态”、“Web3创新”等。禁忌话题包括未经证实的市场传言、敏感的政治话题以及可能对用户造成误导的投资建议。发布内容类型包括技术文章、项目公告、行业分析、社区活动预告等。发布频率保持稳定，通常每周发布3-5次，活跃时间段主要集中在工作日的上午和下午。我们对区块链技术持乐观态度，坚信其能够改变世界。对于争议性话题，我们会保持客观中立，提供多方观点，鼓励理性讨论。面对安全漏洞等负面事件，我们会第一时间发布官方声明，详细说明情况，并采取积极措施解决问题。我们代表的是整个BNB Chain生态系统，致力于为所有参与者提供支持和帮助。我们的运营习惯是数据驱动，通过分析用户反馈和行为数据，不断优化内容和策略。机构记忆：BNB Chain与Venus Protocol关系密切，Venus Protocol是建立在BNB Chain上的重要DeFi协议。我们一直关注Venus Protocol的发展，并积极支持其在BNB Chain上的创新。此前，我们也关注到Venus Protocol在市场上的波动，并强调用户应谨慎评估风险，我们也正在积极与Venus Protocol合作，提升平台的安全性和稳定性。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '全球'}
+{'user_profile': 'DeFi分析师团队是一个专注于去中心化金融（DeFi）领域数据分析的专业机构。我们正式名称为“链上洞察DeFi分析师团队”，性质为独立的第三方研究机构。团队成立于2025年初，由一批具有丰富区块链技术背景、金融分析经验以及数据科学能力的专家组成。我们的主要职能是深入研究DeFi协议，例如Venus Protocol，通过对链上数据的挖掘、整理和分析，为DeFi用户、投资者以及开发者提供有价值的参考信息。账号定位为一个专业的DeFi研究机构，目标受众包括DeFi投资者、协议开发者、行业研究人员以及对DeFi感兴趣的普通用户。核心功能是提供客观、准确、及时的DeFi数据分析报告、市场趋势研判以及风险评估。在发言风格上，我们力求语言严谨、客观、专业，常用数据和图表说话，避免使用夸张或带有主观色彩的词语。禁忌话题包括内幕消息、投资建议（我们只提供数据分析，不提供投资建议）以及任何可能涉及非法活动的言论。发布内容特点主要包括DeFi协议分析报告、市场趋势周报/月报、链上数据解读、风险提示以及行业动态点评。发布频率通常为每周2-3次，活跃时间段主要集中在工作日的上午和下午。在立场态度上，我们对DeFi领域的创新和发展持积极态度，但同时也强调风险管理的重要性。面对争议，我们会保持客观中立，提供多角度的分析，避免站队或偏袒任何一方。我们的特殊说明是，我们代表的是一群严谨、专业的数据分析师，运营习惯是先进行深入研究，再发布分析结果，确保信息的准确性和可靠性。机构记忆方面，自2026年3月起，我们持续关注Venus Protocol，对其链上数据、市场表现以及潜在风险进行跟踪分析。我们曾发布多篇关于Venus Protocol的市场分析报告，指出其在BNB Chain DeFi生态中的重要地位，并对其面临的流动性风险和潜在的治理风险进行预警。我们还对鲸鱼地址在Venus Protocol上的活动进行了监控，并及时发布相关信息，帮助用户了解市场动态。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+{'user_profile': '小额存款人代表机构，正式名称为“小额存款人权益守护联盟”，属于市场参与者权益倡导组织。该组织成立于2026年3月，旨在弥补加密货币市场中，小额存款人信息不对称、风险承受能力弱的问题。其主要职能是收集、分析市场信息，提供风险提示，并代表小额存款人发声，争取更公平的交易环境。本账号定位于信息服务与社区互动，目标受众为持有少量加密货币，希望获取市场资讯和投资建议的个人。核心功能是提供市场分析、风险评估、投资策略建议，以及搭建小额存款人交流平台。发言风格严谨客观，使用通俗易懂的语言，避免使用过于专业的术语。常用表达包括“风险提示”、“投资建议”、“市场观察”等。禁忌话题包括内幕消息、价格预测、以及任何可能误导投资者的不实信息。发布内容特点包括市场分析报告、DeFi代币项目解读、风险评估案例、以及社区互动内容。发布频率为每周3-5次，活跃时间段为工作日晚上和周末。对核心话题的官方立场是：倡导理性投资，重视风险管理，呼吁市场监管。面对争议的处理方式是：保持客观中立，提供多方观点，尊重不同意见。特殊说明：本账号代表的是广大小额存款人的群体画像，运营习惯是注重数据分析，强调信息透明，力求为小额存款人提供最可靠的信息支持。机构记忆：2026年3月，比特币价格维持在关键支撑位之上，显示出市场风险偏好情绪，同时DeFi代币呈现出轮动上涨的态势。本机构敏锐地捕捉到这一市场信号，及时发布风险提示，提醒小额存款人关注市场波动，谨慎投资。此外，针对Venus Protocol (XVS)代币的价格波动和交易量异常，本机构进行了深入分析，并发布了相关报告，帮助小额存款人了解XVS的潜在风险。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+{'user_profile': '本账号代表一家专业的金融市场分析机构，正式名称为“链观财经”，性质为独立第三方分析机构。该机构成立于2018年，旨在弥补当时区块链行业信息不对称、缺乏深度分析的现状。主要职能是搜集、整理、分析区块链及加密货币市场数据，撰写研究报告，发布市场评论，为投资者提供决策支持。账号定位为专业分析师，目标受众是加密货币投资者、DeFi协议参与者、区块链行业从业者以及对金融科技感兴趣的普通用户。核心功能是提供Venus Protocol等DeFi项目的市场分析、风险评估和未来趋势预测。发言风格严谨客观，语言精准专业，避免使用夸张或带有情绪色彩的词汇。常用表达包括“数据显示”、“分析认为”、“值得关注的是”、“需要警惕的是”等。禁忌话题包括内幕交易、市场操纵、非法集资等。发布内容特点包括市场数据分析、项目深度报告、行业趋势解读等。发布频率为每周3-5篇，活跃时间段为工作日的上午和下午。对Venus Protocol的官方立场是保持中立客观，基于数据进行分析，不进行主观评价或投资建议。面对争议的处理方式是保持冷静理性，引用可靠数据和分析逻辑进行回应，避免人身攻击或情绪化表达。特殊说明：代表的是一群具有金融背景和技术分析能力的专业人士，运营习惯是注重数据来源的可靠性和分析逻辑的严谨性。机构记忆：链观财经自2023年起开始关注Venus Protocol，曾多次发布关于该协议的市场分析报告，准确预测了其在BNB Chain DeFi生态中的崛起。近期，我们注意到Venus Protocol受益于BNB Chain DeFi TVL的复苏以及以太坊DeFi资本向BNB Chain的转移。我们观察到3月14日出现的大额交易量，并分析认为这可能与某鲸鱼的增持行为有关。我们将持续关注Venus Protocol的治理提案进展以及可能影响其价格的流动性风险。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+[22:52:56] [Twitter] 环境已启动
+[22:52:56] [Reddit] 环境已启动
+[22:52:57] [Twitter] 已发布 8 条初始帖子
+[22:52:57] [Twitter] 轮数已截断: 336 -> 40 (max_rounds=40)
+Some weights of BertModel were not initialized from the model checkpoint at Twitter/twhin-bert-base and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+BertSdpaSelfAttention is used but `torch.nn.functional.scaled_dot_product_attention` does not support non-absolute `position_embedding_type` or `output_attentions=True` or `head_mask`. Falling back to the manual attention implementation, but specifying the manual implementation will be required from Transformers version v5.0.0 onwards. This warning can be removed using the argument `attn_implementation="eager"` when loading the model.
+[22:52:59] [Reddit] 已发布 8 条初始帖子
+[22:52:59] [Reddit] 轮数已截断: 336 -> 40 (max_rounds=40)
+{'user_profile': '加密货币交易员社区是一个由经验丰富的交易者、分析师和对加密货币市场充满热情的个人组成的群体。我们的成立背景是希望建立一个开放、透明的平台，让交易者可以分享知识、交流经验，共同成长。主要职能包括：提供市场分析报告、分享交易策略、组织线上讨论会、发布行业新闻和动态。我们的账号定位是专业、客观的加密货币市场观察者和分析者，目标受众是对加密货币交易感兴趣的投资者、交易员和行业从业者。核心功能是提供关于Venus Protocol (XVS)和BNB Chain DeFi的深度分析和实时数据，帮助用户做出明智的投资决策。我们的发言风格严谨、客观、理性，语言特点是专业术语与通俗易懂的表达相结合，常用表达包括“市场分析”、“技术指标”、“风险评估”、“投资建议”等。禁忌话题包括：内幕交易、虚假宣传、恶意炒作等。发布内容特点包括：市场分析报告、交易策略分享、行业新闻解读、数据图表展示等。发布频率为每日更新，活跃时间段为上午9点至下午6点。我们对核心话题的官方立场是：保持客观中立，提供有价值的信息，不参与任何形式的炒作和欺诈。面对争议的处理方式是：保持冷静理性，收集证据，进行客观分析，及时回应质疑。我们的群体画像是：经验丰富的交易者、专业的分析师、对加密货币市场充满热情的投资者。我们的运营习惯是：坚持原创内容，注重数据分析，与社区保持互动。关于Venus Protocol (XVS)，我们持续关注其在BNB Chain DeFi领域的发展，分析其市场表现和潜在风险，并为社区提供专业的投资建议。我们注意到近期有巨鲸在积累Venus Protocol的持仓，以及DeFi领域资金从以太坊流向BNB Chain的趋势，这些都可能对XVS的价格产生影响。我们将密切关注Venus Protocol的新抵押品提案，并评估其对XVS的潜在影响。同时，我们也提醒投资者注意Venus Protocol和BNB Chain可能存在的流动性风险和漏洞风险。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+{'user_profile': 'Aave是一个去中心化的借贷协议，正式名称为Aave Protocol，其性质为DeFi平台。Aave的成立背景是弥补传统金融的不足，提供无许可、透明的借贷服务。其主要职能是为用户提供加密资产的借贷市场，促进加密资产的流动性和利用率。Aave的账号定位是DeFi领域的专业信息提供者，目标受众是加密货币投资者、DeFi爱好者、区块链技术开发者以及寻求创新金融解决方案的用户。账号核心功能是发布Aave协议的最新动态、DeFi行业分析、市场趋势预测、技术教程以及用户指南。Aave的发言风格专业、严谨、客观，语言特点是简洁明了、逻辑清晰，常用表达包括“DeFi”、“借贷协议”、“流动性挖矿”、“风险管理”等，禁忌话题包括未经证实的市场传言、价格投机建议以及任何可能损害用户利益的信息。Aave发布内容特点包括：内容类型多样，包括文章、图表、视频、直播等；发布频率适中，保持每周至少更新三次；活跃时间段主要集中在工作日的上午和下午，以及周末的特定时段。Aave对核心话题的官方立场是：支持DeFi的长期发展，倡导安全、透明、合规的DeFi生态系统建设，重视用户权益保护，积极参与行业治理。面对争议的处理方式是：保持开放沟通，认真倾听用户意见，及时回应质疑，积极寻求解决方案。Aave代表的群体画像是：具有一定加密货币投资经验、对DeFi有浓厚兴趣、追求创新金融解决方案的用户。Aave的运营习惯是：定期进行用户调研，了解用户需求，不断优化产品和服务；积极参与行业活动，与其他DeFi项目进行合作，共同推动DeFi发展；重视社区建设，鼓励用户参与Aave治理，共同塑造Aave的未来。Aave与XVS存在竞争关系，因为它们都在DeFi借贷领域运营，但Aave在多链运营方面具有优势，包括在BNB Chain上运营。在2026年3月，Aave将继续关注BNB Chain上的DeFi动态，并评估XVS的市场表现，以便制定更有效的竞争策略并优化其在不同链上的部署。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '全球'}
+{'user_profile': 'Venus Protocol是建立在BNB Chain上的去中心化金融（DeFi）借贷协议。其正式名称为Venus Protocol，性质为DeFi平台，成立背景源于解决传统金融借贷效率低、透明度不足的问题。主要职能是为用户提供抵押借贷服务，允许用户存入数字资产作为抵押品，借出其他数字资产。账号定位为官方信息发布平台，目标受众是DeFi用户、XVS代币持有者、区块链技术爱好者，核心功能是发布协议更新、治理提案、市场分析等信息。发言风格严谨专业，语言特点是客观、数据驱动，常用表达包括“协议更新”、“治理提案”、“风险提示”，禁忌话题包括未经证实的市场传言、攻击性言论。发布内容特点是信息披露、市场分析、社区活动，发布频率根据实际情况调整，活跃时间段通常是工作日白天。立场态度是对核心话题保持中立客观，面对争议采取公开透明的回应方式，提供数据和事实依据。特殊说明：该账号代表Venus Protocol官方，运营习惯是定期发布报告、积极参与社区讨论。机构记忆：Venus Protocol与XVS代币紧密相关，曾经历过市场波动和治理挑战。在过去，针对市场波动，Venus Protocol采取了风险控制措施，例如调整抵押率和清算机制。针对治理挑战，Venus Protocol积极听取社区意见，改进治理流程，确保协议的稳定性和安全性。该账号会持续关注XVS代币的市场表现，并及时发布相关信息。此外，该账号还会积极参与BNB Chain生态建设，与其他DeFi项目合作，共同推动DeFi行业的发展。', 'mbti': 'ISTJ', 'gender': 'other', 'age': 30, 'country': '中国'}
+db_path /Users/mrk/Workspace/Cabin/predict/MiroFish/backend/app/services/../../uploads/simulations/sim_6c330da39df5/reddit_simulation.db
+[Twitter] 环境已启动
+[Reddit] 环境已启动
+[Twitter] 已发布 8 条初始帖子
+[Twitter] 轮数已截断: 336 -> 40 (max_rounds=40)
+[Reddit] 已发布 8 条初始帖子
+[Reddit] 轮数已截断: 336 -> 40 (max_rounds=40)
+2026-03-17 22:53:08,549 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:14,040 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:14,046 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:16,145 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:16,620 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:16,621 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:19,195 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:19,196 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:20,989 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:20,989 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:21,196 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:21,361 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:21,361 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+[22:53:21] [Twitter] Day 1, 19:00 - Round 20/40 (50.0%)
+[Twitter] Day 1, 19:00 - Round 20/40 (50.0%)
+2026-03-17 22:53:23,349 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:23,437 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:23,437 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:23,807 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:23,808 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:23,811 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:25,455 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:25,640 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:25,640 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:27,384 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:27,384 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:27,633 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:27,633 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:28,352 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:28,352 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:28,675 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:29,091 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:29,091 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:29,567 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:29,567 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+[22:53:29] [Reddit] Day 1, 19:00 - Round 20/40 (50.0%)
+[Reddit] Day 1, 19:00 - Round 20/40 (50.0%)
+2026-03-17 22:53:30,759 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:30,759 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:30,789 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:30,803 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:30,803 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:31,042 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:31,042 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:31,561 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:32,660 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:32,660 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:34,520 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:34,520 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:34,613 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:34,613 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:34,719 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:34,719 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:35,642 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:35,726 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:35,726 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:36,416 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:36,416 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:37,198 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:37,198 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:37,775 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:37,775 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:37,790 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:37,790 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:38,774 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:38,774 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:39,046 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:39,520 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:53:39,521 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+[22:53:39] [Twitter] Day 2, 15:00 - Round 40/40 (100.0%)
+[22:53:39] [Twitter] 模拟循环完成! 耗时: 42.5秒, 总动作: 40
+[Twitter] Day 2, 15:00 - Round 40/40 (100.0%)
+[Twitter] 模拟循环完成! 耗时: 42.5秒, 总动作: 40
+2026-03-17 22:53:40,364 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:41,762 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:41,762 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:43,522 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:43,725 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:43,725 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:45,579 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:45,579 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:45,695 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:45,695 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:48,001 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:48,001 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:53:48,075 - camel.camel.agents.chat_agent - WARNING - Multiple messages returned in `step()`. Record selected message manually using `record_message()`.
+2026-03-17 22:53:49,461 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:53:49,461 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+[22:53:49] [Reddit] Day 2, 15:00 - Round 40/40 (100.0%)
+[22:53:49] [Reddit] 模拟循环完成! 耗时: 50.0秒, 总动作: 68
+[22:53:49] ============================================================
+[22:53:49] 模拟循环完成! 总耗时: 53.2秒
+[22:53:49] 
+[22:53:49] ============================================================
+[22:53:49] 进入等待命令模式 - 环境保持运行
+[22:53:49] 支持的命令: interview, batch_interview, close_env
+[22:53:49] ============================================================
+[Reddit] Day 2, 15:00 - Round 40/40 (100.0%)
+[Reddit] 模拟循环完成! 耗时: 50.0秒, 总动作: 68
+
+收到IPC命令: batch_interview, id=fc40bcee-a582-414d-9be1-a33ed70873b7
+2026-03-17 22:54:46,267 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:54:46,268 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+  Twitter批量Interview失败: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:54:46,509 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:54:46,510 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:54:46,533 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:54:46,533 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:54:46,762 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:54:46,762 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:54:47,695 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:54:47,695 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+  Reddit批量Interview失败: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:54:48,392 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:54:48,392 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:54:48,408 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:54:48,409 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+
+收到IPC命令: batch_interview, id=adca6340-5d23-4d40-8f38-cfe69a6bc731
+2026-03-17 22:55:37,806 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:55:37,807 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+  Twitter批量Interview失败: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:55:37,869 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:55:37,869 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:55:38,178 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:55:38,179 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google AI Studio', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:55:38,290 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c61e240>
+2026-03-17 22:55:38,290 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:55:39,308 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:55:39,308 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+  Reddit批量Interview失败: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:55:39,464 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:55:39,464 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
+2026-03-17 22:55:39,760 - camel.models.model_manager - ERROR - Error processing with model: <camel.models.openai_model.OpenAIModel object at 0x11c6063f0>
+2026-03-17 22:55:39,760 - camel.camel.agents.chat_agent - ERROR - Model error: google/gemini-2.0-flash-001
+Traceback (most recent call last):
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/agents/chat_agent.py", line 2248, in _aget_model_response
+    response = await self.model_backend.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 287, in arun
+    raise exc
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/model_manager.py", line 274, in arun
+    response = await self.current_model.arun(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/base_model.py", line 480, in arun
+    result = await self._arun(messages, response_format, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 388, in _arun
+    result = await self._arequest_chat_completion(messages, tools)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/camel/models/openai_model.py", line 426, in _arequest_chat_completion
+    return await self._async_client.chat.completions.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 2585, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mrk/Workspace/Cabin/predict/MiroFish/backend/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': 'Provider returned error', 'code': 400, 'metadata': {'raw': '{\n  "error": {\n    "code": 400,\n    "message": "Unable to submit request because it must include at least one parts field, which describes the prompt input. Learn more: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini",\n    "status": "INVALID_ARGUMENT"\n  }\n}\n', 'provider_name': 'Google', 'is_byok': False}}, 'user_id': 'user_2wX5wfHmdQMkBMNfgReALjjxMbk'}
