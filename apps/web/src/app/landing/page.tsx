@@ -16,6 +16,12 @@ const BLUE    = '#4488ff'
 const PURPLE  = '#aa66ff'
 const MONO    = "ui-monospace, 'SF Mono', 'JetBrains Mono', monospace"
 
+// In development the terminal runs on this same origin — keep CTA links local.
+// In production, point at the deployed terminal (override with NEXT_PUBLIC_TERMINAL_URL).
+const TERMINAL_URL = process.env.NODE_ENV === 'development'
+  ? '/'
+  : (process.env.NEXT_PUBLIC_TERMINAL_URL || 'https://terminal.yggdrasight.com')
+
 // ── Global Styles ─────────────────────────────────────────────────────────────
 function PageStyles() {
   return (
@@ -232,7 +238,7 @@ function NavBar({ scrolled }: { scrolled: boolean }) {
           GitHub
         </a>
         <a
-          href="https://terminal.yggdrasight.com"
+          href={TERMINAL_URL}
           className="ycta"
           style={{
             display: 'inline-flex',
@@ -493,7 +499,7 @@ function HeroSection({ mounted }: { mounted: boolean }) {
           }}
         >
           <a
-            href="https://terminal.yggdrasight.com"
+            href={TERMINAL_URL}
             className="ycta"
             style={{
               display: 'inline-flex',
@@ -1279,7 +1285,7 @@ function FooterSection() {
 
         <div className="yr" style={{ position: 'relative', zIndex: 1 }}>
           <a
-            href="https://terminal.yggdrasight.com"
+            href={TERMINAL_URL}
             className="ycta"
             style={{
               display: 'inline-flex',
@@ -1377,7 +1383,7 @@ function FooterSection() {
               X / Twitter
             </a>
             <a
-              href="https://terminal.yggdrasight.com"
+              href={TERMINAL_URL}
               className="ylink"
               style={{
                 fontFamily: MONO,

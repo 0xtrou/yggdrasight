@@ -66,6 +66,16 @@ export function middleware(req: NextRequest): NextResponse {
   const hostname = host.split(':')[0]
   const isTerminal = hostname.includes('terminal.');
 
+  // ── Development: run everything locally on one origin ───────────────────────
+  // The host-based landing/terminal split only applies to the production
+  // deployments — on localhost the terminal serves at / and /landing stays
+  // reachable as a plain route.
+  if (process.env.NODE_ENV === 'development') {
+    const response = NextResponse.next()
+    applySecurityHeaders(response)
+    return response
+  }
+
   // ── MODE=terminal: pure terminal deployment, no landing page ────────────────
   if (isTerminal) {
     const response = NextResponse.next()
