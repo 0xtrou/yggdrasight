@@ -3,7 +3,9 @@ import type {
   Analyst,
   AnalystVerdict,
   AnalysisContext,
+  DataRequirement,
   LLMAnalystDefinition,
+  LLMAnalystMeta,
   Candle,
   MarketGlobal,
   SignalDoc,
@@ -216,20 +218,22 @@ function serializeDefi(data: DefiProtocolData): string {
 // ── Judgment state assembly ──────────────────────────────────────────────────
 
 /**
- * Build the TypeSafe judgment state for an analyst: one named field per
- * required data source, serialized with the helpers above. Every analyst
- * question sees the same structured market snapshot.
+ * Build the TypeSafe judgment state for a set of data requirements: one named
+ * field per data source, serialized with the helpers above. Omit
+ * `requirements` to include every section that has a data provider — used by
+ * the final-arbiter and per-signal judgment layers which want the full picture.
  */
-async function buildAnalysisState(
-  definition: LLMAnalystDefinition,
+async function buildMarketState(
   ctx: AnalysisContext,
+  requirements?: LLMAnalystMeta['requiredData'],
 ): Promise<Record<string, string>> {
-  const requirements = definition.meta.requiredData
   const state: Record<string, string> = {
     asset: `Symbol: ${ctx.symbol} | Timeframes: ${ctx.timeframes.join(', ')} | Primary: ${ctx.primaryTimeframe}`,
   }
 
-  if (requirements.includes('candles')) {
+  const wants = (key: DataRequirement) => !requirements || requirements.includes(key)
+
+  if (wants('candles')) {
     try {
       let content = `## ${ctx.primaryTimeframe}\n${serializeCandles(await ctx.getCandles(ctx.primaryTimeframe), ctx.primaryTimeframe)}`
       const higherTf = ctx.timeframes.find((tf) => tf !== ctx.primaryTimeframe)
@@ -242,52 +246,52 @@ async function buildAnalysisState(
     }
   }
 
-  if (requirements.includes('market-global')) {
+  if (wants('market-global')) {
     try { state['market'] = serializeMarketGlobal(await ctx.getMarketGlobal()) }
     catch (err) { state['market'] = `Fetch failed: ${err instanceof Error ? err.message : 'unknown error'}` }
   }
 
-  if (requirements.includes('signals')) {
+  if (wants('signals')) {
     try { state['recent_signals'] = serializeSignals(await ctx.getSignals()) }
     catch (err) { state['recent_signals'] = `Fetch failed: ${err instanceof Error ? err.message : 'unknown error'}` }
   }
 
-  if (requirements.includes('on-chain') && ctx.getOnChainData) {
+  if (wants('on-chain') && ctx.getOnChainData) {
     try {
       const data = await ctx.getOnChainData()
       state['onchain'] = data ? serializeOnChain(data) : 'Not available'
     } catch { state['onchain'] = 'Not available' }
   }
 
-  if (requirements.includes('sentiment') && ctx.getSentimentData) {
+  if (wants('sentiment') && ctx.getSentimentData) {
     try {
       const data = await ctx.getSentimentData()
       state['sentiment'] = data ? serializeSentiment(data) : 'Not available'
     } catch { state['sentiment'] = 'Not available' }
   }
 
-  if (requirements.includes('orderbook') && ctx.getOrderBookData) {
+  if (wants('orderbook') && ctx.getOrderBookData) {
     try {
       const data = await ctx.getOrderBookData()
       state['orderbook'] = data ? serializeOrderBook(data) : 'Not available'
     } catch { state['orderbook'] = 'Not available' }
   }
 
-  if (requirements.includes('news') && ctx.getNewsData) {
+  if (wants('news') && ctx.getNewsData) {
     try {
       const data = await ctx.getNewsData()
       state['news'] = data ? serializeNews(data) : 'Not available'
     } catch { state['news'] = 'Not available' }
   }
 
-  if (requirements.includes('developer') && ctx.getDeveloperData) {
+  if (wants('developer') && ctx.getDeveloperData) {
     try {
       const data = await ctx.getDeveloperData()
       state['developer'] = data ? serializeDeveloper(data) : 'Not available'
     } catch { state['developer'] = 'Not available' }
   }
 
-  if (requirements.includes('defi') && ctx.getDefiData) {
+  if (wants('defi') && ctx.getDefiData) {
     try {
       const data = await ctx.getDefiData()
       state['defi'] = data ? serializeDefi(data) : 'Not available'
@@ -295,6 +299,19 @@ async function buildAnalysisState(
   }
 
   return state
+}
+
+/** Judgment state scoped to one analyst's declared data requirements */
+function buildAnalysisState(
+  definition: LLMAnalystDefinition,
+  ctx: AnalysisContext,
+): Promise<Record<string, string>> {
+  return buildMarketState(ctx, definition.meta.requiredData)
+}
+
+/** Judgment state with every available data section — the full market picture */
+export function buildFullMarketState(ctx: AnalysisContext): Promise<Record<string, string>> {
+  return buildMarketState(ctx)
 }
 
 // ── Direction policy ─────────────────────────────────────────────────────────

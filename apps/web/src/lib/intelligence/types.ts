@@ -140,6 +140,34 @@ export interface TimeframeAnalysis {
 }
 
 /**
+ * TypeSafe judgment of a single trading signal against current market state.
+ * Full probability distribution is preserved — never flattened to a label.
+ */
+export interface SignalJudgment {
+  signalId: string
+  symbol: string
+  originalDirection: SignalDirection
+  originalConfidence: number
+  /** TypeSafe-arbitrated stance for this signal's premise */
+  direction: SignalDirection
+  probabilities: { long: number; short: number; neutral: number }
+  judgedAt: string
+}
+
+/**
+ * The final TypeSafe arbiter call over all analysts, signal judgments and
+ * computed indicators. `probabilities` is the full distribution; `concentration`
+ * is the Choice confidence (distribution spread, NOT correctness).
+ */
+export interface FinalJudgment {
+  model: string
+  direction: SignalDirection
+  probabilities: { long: number; short: number; neutral: number }
+  concentration: number
+  durationMs: number
+}
+
+/**
  * Final output of the consensus engine
  */
 export interface ConsensusResult {
@@ -152,6 +180,10 @@ export interface ConsensusResult {
   timeframeAnalyses: TimeframeAnalysis[]
   confluence: number               // 0.0 – 1.0, how much analysts agree
   createdAt: string                // ISO timestamp
+  /** Per-signal TypeSafe judgments (present when signals existed and TypeSafe ran) */
+  signalJudgments?: SignalJudgment[]
+  /** The final TypeSafe arbiter call that decided direction/confidence */
+  finalJudgment?: FinalJudgment
 }
 
 /**

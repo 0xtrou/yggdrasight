@@ -96,6 +96,25 @@ evidence source weighted alongside the TypeSafe judgments, not one of them.
 A full classification now completes in seconds (2 API requests, ~30 judgments)
 instead of 7 Docker agents doing minutes of web research each.
 
+### Final judgment — TypeSafe decides, math is the audit trail
+
+The deterministic weighted score no longer decides the final call. After all
+13 analysts run:
+
+1. **Per-signal judgments** — every recent trading signal is judged against
+   the current market snapshot (one batched request, all signals in parallel),
+   each returning its full long/short/neutral probability distribution.
+2. **Final arbiter** — one Choice over all analyst verdicts (with their
+   probabilities), all per-signal judgments, the weighted score and confluence.
+   Its distribution decides the final direction; confidence is P(direction).
+
+Every call's full distribution is preserved in the persisted consensus
+(`finalJudgment`, `signalJudgments`, and per-analyst `p_long/p_short/
+p_neutral` indicators) — probabilities are never flattened into labels. A
+near-tie between long/short is treated as genuinely contested evidence:
+NEUTRAL is the honest answer, and the deterministic verdict remains the
+fallback whenever TypeSafe is unavailable.
+
 ---
 
 ## Stack

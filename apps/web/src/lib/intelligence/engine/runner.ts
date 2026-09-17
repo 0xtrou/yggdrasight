@@ -5,6 +5,8 @@ import { getLLMAnalysts } from '../analysts/llm'
 import { buildConsensus } from './consensus'
 import { buildContext } from './context'
 import { isTypeSafeConfigured } from './typesafe'
+import { arbitrateConsensus, judgeSignals } from './final-judgment'
+import { buildFullMarketState } from '../analysts/llm/base'
 
 export interface RunAnalysisOptions {
   model?: string
@@ -74,6 +76,21 @@ export async function runAnalysis(
     }
   }
 
-  // Build and return consensus from successful verdicts
-  return buildConsensus(symbol, timeframes, verdicts)
+  // Build the deterministic consensus (weighted score + confluence — kept as
+  // audit input), then let TypeSafe judge each signal and arbitrate the final
+  // direction over all verdicts, signals and indicators.
+  const consensus = buildConsensus(symbol, timeframes, verdicts)
+
+  if (!isTypeSafeConfigured() || consensus.analysts.length === 0) {
+    return consensus
+  }
+
+  try {
+    const marketState = await buildFullMarketState(ctx)
+    const signalJudgments = await judgeSignals(ctx)
+    return await arbitrateConsensus(consensus, signalJudgments, marketState)
+  } catch (err) {
+    console.error(`[intelligence] Final judgment stage failed — keeping deterministic verdict:`, err)
+    return consensus
+  }
 }
