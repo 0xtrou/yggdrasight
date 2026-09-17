@@ -4,6 +4,7 @@ import { ANALYSTS } from '../analysts'
 import { getLLMAnalysts } from '../analysts/llm'
 import { buildConsensus } from './consensus'
 import { buildContext } from './context'
+import { isTypeSafeConfigured } from './typesafe'
 
 export interface RunAnalysisOptions {
   model?: string
@@ -32,15 +33,16 @@ export async function runAnalysis(
   }
 
 
-  // Only add LLM analysts when there is an actual model to use.
-  // An empty agentModelMap ({}) is truthy but provides no model — skip to avoid
-  // every LLM analyst returning "No model specified" without spawning containers.
+  // LLM analysts run on the TypeSafe engine when TYPESAFE_API_KEY is set.
+  // The legacy OpenCode model map is no longer required — per-agent model
+  // selection is accepted but ignored (jev-latest judges everything).
+  const hasTypeSafe = isTypeSafeConfigured()
   const hasModel = !!(
     options?.model ||
     (options?.agentModelMap && Object.keys(options.agentModelMap).length > 0)
   )
-  if (hasModel) {
-    const llmAnalysts = getLLMAnalysts(options.agentIds)
+  if (hasTypeSafe || hasModel) {
+    const llmAnalysts = getLLMAnalysts(options?.agentIds)
     analysts.push(...llmAnalysts)
   }
 

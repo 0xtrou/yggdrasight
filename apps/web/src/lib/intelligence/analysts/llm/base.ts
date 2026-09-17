@@ -4,7 +4,6 @@ import type {
   AnalystVerdict,
   AnalysisContext,
   LLMAnalystDefinition,
-  LLMAnalystMeta,
   Candle,
   MarketGlobal,
   SignalDoc,
@@ -15,12 +14,16 @@ import type {
   DeveloperData,
   DefiProtocolData,
 } from '../../types'
-import { runOpenCode, parseVerdictFromText } from '../../engine/opencode'
-import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from 'fs'
-import { tmpdir } from 'os'
-import { join } from 'path'
+import {
+  askTypeSafe,
+  choice,
+  clamp01,
+  isTypeSafeConfigured,
+  typeSafeModel,
+  type TypeSafeChoiceAnswer,
+} from '../../engine/typesafe'
 
-// ── Data serialization ───────────────────────────────────────────────────────
+// ── Data serialization (state builders — unchanged from the OpenCode era) ────
 
 function serializeCandles(candles: Candle[], tf: Timeframe): string {
   if (candles.length === 0) return `[${tf}] No data available`
@@ -210,259 +213,140 @@ function serializeDefi(data: DefiProtocolData): string {
   return lines.length > 0 ? lines.join('\n') : 'No DeFi data available'
 }
 
-// ── Work directory builder ──────────────────────────────────────────────────
-
-const VERDICT_SCHEMA = `{
-  "direction": "long" | "short" | "neutral",
-  "confidence": 0.0 to 1.0,
-  "reason": "1-3 sentence explanation of your analysis",
-  "indicators": { "key_metric_1": value, "key_metric_2": value }
-}`
+// ── Judgment state assembly ──────────────────────────────────────────────────
 
 /**
- * Create a temporary work directory with structured data files for the agent.
- *
- * Directory structure:
- *   /tmp/oculus-<id>/
- *     INSTRUCTIONS.md    — analyst role, output format, list of data files
- *     data/
- *       price.md         — OHLCV candle data
- *       market.md        — market global data
- *       signals.md       — recent signals
- *       onchain.md       — on-chain metrics
- *       sentiment.md     — sentiment data
- *       news.md          — news headlines
- *       orderbook.md     — order book data
- *       developer.md     — developer/GitHub metrics
- *       defi.md          — DeFi/protocol metrics
- * OpenCode runs with `--dir` pointing here, so its `read` tool can access all files.
+ * Build the TypeSafe judgment state for an analyst: one named field per
+ * required data source, serialized with the helpers above. Every analyst
+ * question sees the same structured market snapshot.
  */
-async function buildAnalysisWorkDir(
+async function buildAnalysisState(
   definition: LLMAnalystDefinition,
   ctx: AnalysisContext,
-): Promise<{ workDir: string; message: string; dataFiles: string[] }> {
-  const workDir = mkdtempSync(join(tmpdir(), 'oculus-'))
-  const dataDir = join(workDir, 'data')
-  mkdirSync(dataDir)
-
+): Promise<Record<string, string>> {
   const requirements = definition.meta.requiredData
-  const dataFiles: string[] = []
+  const state: Record<string, string> = {
+    asset: `Symbol: ${ctx.symbol} | Timeframes: ${ctx.timeframes.join(', ')} | Primary: ${ctx.primaryTimeframe}`,
+  }
 
-  // Write data files based on requirements
   if (requirements.includes('candles')) {
     try {
-      const candles = await ctx.getCandles(ctx.primaryTimeframe)
-      let content = `# Price Data\n\n## ${ctx.primaryTimeframe}\n${serializeCandles(candles, ctx.primaryTimeframe)}`
-
+      let content = `## ${ctx.primaryTimeframe}\n${serializeCandles(await ctx.getCandles(ctx.primaryTimeframe), ctx.primaryTimeframe)}`
       const higherTf = ctx.timeframes.find((tf) => tf !== ctx.primaryTimeframe)
       if (higherTf) {
-        const higherCandles = await ctx.getCandles(higherTf)
-        content += `\n\n## ${higherTf}\n${serializeCandles(higherCandles, higherTf)}`
+        content += `\n\n## ${higherTf}\n${serializeCandles(await ctx.getCandles(higherTf), higherTf)}`
       }
-
-      writeFileSync(join(dataDir, 'price.md'), content, 'utf-8')
-      dataFiles.push('data/price.md — OHLCV candle data with indicators')
+      state['price'] = content
     } catch (err) {
-      writeFileSync(join(dataDir, 'price.md'), `# Price Data\nFailed to fetch: ${err instanceof Error ? err.message : 'unknown error'}`, 'utf-8')
-      dataFiles.push('data/price.md — (fetch failed)')
+      state['price'] = `Fetch failed: ${err instanceof Error ? err.message : 'unknown error'}`
     }
   }
 
   if (requirements.includes('market-global')) {
-    try {
-      const mg = await ctx.getMarketGlobal()
-      writeFileSync(join(dataDir, 'market.md'), `# Market Global\n${serializeMarketGlobal(mg)}`, 'utf-8')
-      dataFiles.push('data/market.md — BTC dominance, fear & greed, market cap')
-    } catch (err) {
-      writeFileSync(join(dataDir, 'market.md'), `# Market Global\nFailed to fetch: ${err instanceof Error ? err.message : 'unknown error'}`, 'utf-8')
-      dataFiles.push('data/market.md — (fetch failed)')
-    }
+    try { state['market'] = serializeMarketGlobal(await ctx.getMarketGlobal()) }
+    catch (err) { state['market'] = `Fetch failed: ${err instanceof Error ? err.message : 'unknown error'}` }
   }
 
   if (requirements.includes('signals')) {
-    try {
-      const signals = await ctx.getSignals()
-      writeFileSync(join(dataDir, 'signals.md'), `# Recent Signals\n${serializeSignals(signals)}`, 'utf-8')
-      dataFiles.push('data/signals.md — recent trading signals')
-    } catch (err) {
-      writeFileSync(join(dataDir, 'signals.md'), `# Recent Signals\nFailed to fetch: ${err instanceof Error ? err.message : 'unknown error'}`, 'utf-8')
-      dataFiles.push('data/signals.md — (fetch failed)')
-    }
+    try { state['recent_signals'] = serializeSignals(await ctx.getSignals()) }
+    catch (err) { state['recent_signals'] = `Fetch failed: ${err instanceof Error ? err.message : 'unknown error'}` }
   }
 
   if (requirements.includes('on-chain') && ctx.getOnChainData) {
     try {
       const data = await ctx.getOnChainData()
-      writeFileSync(join(dataDir, 'onchain.md'), `# On-Chain Data\n${data ? serializeOnChain(data) : 'Not available'}`, 'utf-8')
-      dataFiles.push('data/onchain.md — funding rate, open interest, on-chain metrics')
-    } catch {
-      writeFileSync(join(dataDir, 'onchain.md'), `# On-Chain Data\nNot available`, 'utf-8')
-      dataFiles.push('data/onchain.md — (not available)')
-    }
+      state['onchain'] = data ? serializeOnChain(data) : 'Not available'
+    } catch { state['onchain'] = 'Not available' }
   }
 
   if (requirements.includes('sentiment') && ctx.getSentimentData) {
     try {
       const data = await ctx.getSentimentData()
-      writeFileSync(join(dataDir, 'sentiment.md'), `# Sentiment Data\n${data ? serializeSentiment(data) : 'Not available'}`, 'utf-8')
-      dataFiles.push('data/sentiment.md — social sentiment, fear & greed')
-    } catch {
-      writeFileSync(join(dataDir, 'sentiment.md'), `# Sentiment Data\nNot available`, 'utf-8')
-      dataFiles.push('data/sentiment.md — (not available)')
-    }
+      state['sentiment'] = data ? serializeSentiment(data) : 'Not available'
+    } catch { state['sentiment'] = 'Not available' }
   }
 
   if (requirements.includes('orderbook') && ctx.getOrderBookData) {
     try {
       const data = await ctx.getOrderBookData()
-      writeFileSync(join(dataDir, 'orderbook.md'), `# Order Book Data\n${data ? serializeOrderBook(data) : 'Not available'}`, 'utf-8')
-      dataFiles.push('data/orderbook.md — bid/ask depth, spread, imbalance')
-    } catch {
-      writeFileSync(join(dataDir, 'orderbook.md'), `# Order Book Data\nNot available`, 'utf-8')
-      dataFiles.push('data/orderbook.md — (not available)')
-    }
+      state['orderbook'] = data ? serializeOrderBook(data) : 'Not available'
+    } catch { state['orderbook'] = 'Not available' }
   }
 
   if (requirements.includes('news') && ctx.getNewsData) {
     try {
       const data = await ctx.getNewsData()
-      writeFileSync(join(dataDir, 'news.md'), `# News & Headlines\n${data ? serializeNews(data) : 'Not available'}`, 'utf-8')
-      dataFiles.push('data/news.md — recent crypto news with sentiment')
-    } catch {
-      writeFileSync(join(dataDir, 'news.md'), `# News & Headlines\nNot available`, 'utf-8')
-      dataFiles.push('data/news.md — (not available)')
-    }
+      state['news'] = data ? serializeNews(data) : 'Not available'
+    } catch { state['news'] = 'Not available' }
   }
 
   if (requirements.includes('developer') && ctx.getDeveloperData) {
     try {
       const data = await ctx.getDeveloperData()
-      writeFileSync(join(dataDir, 'developer.md'), `# Developer & Project Data\n${data ? serializeDeveloper(data) : 'Not available'}`, 'utf-8')
-      dataFiles.push('data/developer.md — GitHub metrics, project metadata, community stats')
-    } catch {
-      writeFileSync(join(dataDir, 'developer.md'), `# Developer & Project Data\nNot available`, 'utf-8')
-      dataFiles.push('data/developer.md — (not available)')
-    }
+      state['developer'] = data ? serializeDeveloper(data) : 'Not available'
+    } catch { state['developer'] = 'Not available' }
   }
 
   if (requirements.includes('defi') && ctx.getDefiData) {
     try {
       const data = await ctx.getDefiData()
-      writeFileSync(join(dataDir, 'defi.md'), `# DeFi Protocol Metrics\n${data ? serializeDefi(data) : 'Not available'}`, 'utf-8')
-      dataFiles.push('data/defi.md — TVL, fees, revenue, chain data')
-    } catch {
-      writeFileSync(join(dataDir, 'defi.md'), `# DeFi Protocol Metrics\nNot available`, 'utf-8')
-      dataFiles.push('data/defi.md — (not available)')
-    }
+      state['defi'] = data ? serializeDefi(data) : 'Not available'
+    } catch { state['defi'] = 'Not available' }
   }
 
-  // Write the INSTRUCTIONS.md file
-  const instructions = [
-    `# ${definition.meta.name} — Analysis Instructions`,
-    '',
-    `## Your Role`,
-    definition.meta.systemPrompt,
-    '',
-    `## Asset Under Analysis`,
-    `- Symbol: ${ctx.symbol}`,
-    `- Timeframes: ${ctx.timeframes.join(', ')}`,
-    `- Primary Timeframe: ${ctx.primaryTimeframe}`,
-    '',
-    `## Available Data Files`,
-    `Read each file in the \`data/\` directory to gather your analysis inputs:`,
-    ...dataFiles.map((f) => `- ${f}`),
-    '',
-    `## Required Output`,
-    `After reading ALL data files, respond with ONLY a JSON object:`,
-    VERDICT_SCHEMA,
-    '',
-    `Rules:`,
-    `- direction MUST be exactly "long", "short", or "neutral"`,
-    `- CRITICAL: Be DECISIVE. Force a direction (long or short). Only use "neutral" when signals are genuinely 50/50 contradictory with no lean either way. Most market conditions lean one direction — find it.`,
-    `- confidence MUST be a number between 0.0 and 1.0`,
-    `- reason MUST be a concise 1-3 sentence explanation`,
-    `- indicators is optional but recommended — include key metrics that drove your decision`,
-    `- Do NOT include any text outside the JSON object`,
-    `- Do NOT wrap in markdown code blocks`,
-    `- Use ALL tools at your disposal to research deeper — websearch, webfetch, Task tool, sub-agents — go as deep as needed`,
-  ].join('\n')
-
-  writeFileSync(join(workDir, 'INSTRUCTIONS.md'), instructions, 'utf-8')
-
-  // Build the short CLI message that points the agent to the files
-  const message = `Read INSTRUCTIONS.md for your analyst role and output format. Then read each file listed in the data/ directory. Use ALL tools at your disposal — websearch, webfetch, Task tool, sub-agents — to research deeper if needed. Finally, respond with ONLY the JSON verdict as specified in INSTRUCTIONS.md.`
-
-  return { workDir, message, dataFiles }
+  return state
 }
-// ── File-read validation ──────────────────────────────────────────────────────
 
-/** Map from requiredData keys to expected data file names */
-const DATA_KEY_TO_FILE: Record<string, string> = {
-  'candles': 'price.md',
-  'market-global': 'market.md',
-  'signals': 'signals.md',
-  'on-chain': 'onchain.md',
-  'sentiment': 'sentiment.md',
-  'news': 'news.md',
-  'orderbook': 'orderbook.md',
-  'developer': 'developer.md',
-  'defi': 'defi.md',
-}
+// ── Direction policy ─────────────────────────────────────────────────────────
 
 /**
- * Validate that the agent read all required data files.
- * Returns a list of data keys whose files were NOT read.
+ * Code policy on top of the raw judgment: a Choice answer whose long/short
+ * probabilities are within DIRECTION_GAP_THRESHOLD is not an actionable
+ * directional call — it becomes NEUTRAL. The probabilities are preserved in
+ * indicators so nothing is lost.
  */
-function validateFilesRead(
-  filesRead: string[],
-  requiredData: string[],
-): { missingKeys: string[]; readKeys: string[]; auditLog: string } {
-  // Normalize file paths to just filenames for matching
-  // OpenCode returns absolute paths like /private/tmp/oculus-xxx/data/price.md
-  const readFilenames = new Set(
-    filesRead.map(f => {
-      const parts = f.split('/')
-      return parts[parts.length - 1]  // e.g. 'price.md'
-    })
-  )
+const DIRECTION_GAP_THRESHOLD = 0.10
 
-  const readKeys: string[] = []
-  const missingKeys: string[] = []
+const DIRECTION_MAP: Record<string, SignalDirection> = {
+  long: SignalDirection.LONG,
+  short: SignalDirection.SHORT,
+  neutral: SignalDirection.NEUTRAL,
+}
 
-  for (const key of requiredData) {
-    const expectedFile = DATA_KEY_TO_FILE[key]
-    if (!expectedFile) continue  // Unknown key, skip
-    if (readFilenames.has(expectedFile)) {
-      readKeys.push(key)
-    } else {
-      missingKeys.push(key)
-    }
+export function verdictFromChoice(
+  answer: TypeSafeChoiceAnswer,
+): { direction: SignalDirection; confidence: number; gapNeutralized: boolean } {
+  const pLong = clamp01(answer.probabilities['long'] ?? 0)
+  const pShort = clamp01(answer.probabilities['short'] ?? 0)
+  const top = answer.choice as keyof typeof DIRECTION_MAP
+
+  let direction = DIRECTION_MAP[top] ?? SignalDirection.NEUTRAL
+  let gapNeutralized = false
+
+  if ((direction === SignalDirection.LONG || direction === SignalDirection.SHORT)
+    && Math.abs(pLong - pShort) < DIRECTION_GAP_THRESHOLD) {
+    direction = SignalDirection.NEUTRAL
+    gapNeutralized = true
   }
 
-  // Also check INSTRUCTIONS.md was read
-  const readInstructions = readFilenames.has('INSTRUCTIONS.md')
+  // Directional call → its probability; neutral → distribution concentration
+  const confidence = direction === SignalDirection.NEUTRAL
+    ? clamp01(answer.confidence)
+    : clamp01(answer.probabilities[top] ?? 0)
 
-  const auditLog = [
-    `Required: [${requiredData.join(', ')}]`,
-    `Read: [${readKeys.join(', ')}]${readInstructions ? ' + INSTRUCTIONS.md' : ''}`,
-    missingKeys.length > 0 ? `MISSING: [${missingKeys.join(', ')}]` : 'All files read ✓',
-  ].join(' | ')
-
-  return { missingKeys, readKeys, auditLog }
+  return { direction, confidence, gapNeutralized }
 }
 
 // ── Create analyst from definition ───────────────────────────────────────────
 
-const MAX_RETRIES = 1  // Retry once if agent skipped files
-
 /**
  * Create an Analyst instance from an LLM analyst definition.
  *
- * The analyst creates a temp directory with structured data files and lets
- * OpenCode's agent read them naturally — like a coding agent reviewing code.
- *
- * After each run, validates that the agent actually read ALL required data files.
- * If files were skipped, retries once with a stronger prompt.
+ * The analyst's philosophy (systemPrompt) becomes the judgment instructions;
+ * the serialized market data becomes the state. A single batched Choice
+ * question over long/short/neutral replaces the entire OpenCode container run:
+ * the answer carries the full probability distribution plus a confidence
+ * derived from how concentrated it is.
  */
 export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
   const meta = {
@@ -475,113 +359,60 @@ export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
   return {
     meta,
     analyze: async (ctx: AnalysisContext): Promise<AnalystVerdict> => {
-      const model = ctx.model
-      if (!model) {
+      const startTime = Date.now()
+
+      if (!isTypeSafeConfigured()) {
         return {
           meta,
           direction: SignalDirection.NEUTRAL,
           confidence: 0.1,
-          reason: 'No model specified for LLM analysis',
+          reason: 'TYPESAFE_API_KEY is not set — TypeSafe analysis unavailable',
         }
       }
 
-      let workDir: string | undefined
       try {
-        // Build work directory with all data files
-        const workspace = await buildAnalysisWorkDir(definition, ctx)
-        workDir = workspace.workDir
+        const state = await buildAnalysisState(definition, ctx)
 
-        let result = await runOpenCode({
-          model,
-          prompt: workspace.message,
-          workDir: workspace.workDir,
-          authJsonPath: ctx.authJsonPath,
+        const { answers } = await askTypeSafe(state, {
+          direction: choice(
+            {
+              analyst_philosophy: definition.meta.systemPrompt,
+              question: `Applying ONLY this philosophy to the state above, which directional stance is most supported for ${ctx.symbol} on the ${ctx.primaryTimeframe} timeframe over the next several days?`,
+              rules: [
+                'Be decisive: force long or short unless the evidence is genuinely 50/50 contradictory with no lean either way. Most market conditions lean one direction — find it.',
+                'Judge the data on its own merits; if a required data section says "Not available", do not let it dominate the judgment.',
+              ],
+            },
+            {
+              long: 'Bullish evidence dominates per this philosophy: long bias justified',
+              short: 'Bearish evidence dominates per this philosophy: short bias justified',
+              neutral: 'Evidence genuinely balanced or contradictory — no actionable lean either way',
+            },
+          ),
         })
 
-        // Validate file reads
-        const audit = validateFilesRead(result.filesRead, definition.meta.requiredData)
-        console.log(`[${meta.id}] File audit: ${audit.auditLog}`)
+        const answer = answers.direction
+        const { direction, confidence, gapNeutralized } = verdictFromChoice(answer)
+        const durationMs = Date.now() - startTime
 
-        // If agent skipped files, retry with explicit instructions
-        if (result.success && audit.missingKeys.length > 0) {
-          const missingFiles = audit.missingKeys
-            .map(k => `data/${DATA_KEY_TO_FILE[k]}`)
-            .filter(Boolean)
-          console.warn(`[${meta.id}] Agent skipped ${audit.missingKeys.length} files, retrying with explicit read instructions...`)
-
-          const retryPrompt = [
-            `You MUST read ALL of the following files before responding. You missed some on the previous attempt.`,
-            `Files to read:`,
-            `- INSTRUCTIONS.md`,
-            ...workspace.dataFiles.map(f => `- ${f.split(' — ')[0]}`),
-            ``,
-            `Read EVERY file listed above, then respond with ONLY the JSON verdict as specified in INSTRUCTIONS.md.`,
-          ].join('\n')
-
-          result = await runOpenCode({
-            model,
-            prompt: retryPrompt,
-            workDir: workspace.workDir,
-            authJsonPath: ctx.authJsonPath,
-          })
-
-          const retryAudit = validateFilesRead(result.filesRead, definition.meta.requiredData)
-          console.log(`[${meta.id}] Retry audit: ${retryAudit.auditLog}`)
-
-          if (retryAudit.missingKeys.length > 0) {
-            console.warn(`[${meta.id}] Agent still skipped files after retry: [${retryAudit.missingKeys.join(', ')}]`)
-          }
-        }
-
-        if (!result.success) {
-          return {
-            meta,
-            direction: SignalDirection.NEUTRAL,
-            confidence: 0.1,
-            reason: `OpenCode CLI error: ${result.error}`,
-            output: result.text,
-            indicators: { durationMs: result.durationMs },
-          }
-        }
-
-        // Parse the LLM response
-        const verdict = parseVerdictFromText(result.text)
-
-        if (!verdict) {
-          return {
-            meta,
-            direction: SignalDirection.NEUTRAL,
-            confidence: 0.1,
-            reason: 'Failed to parse LLM response',
-            output: result.text,
-            indicators: { durationMs: result.durationMs, rawLength: result.text.length },
-          }
-        }
-
-        // Map string direction to SignalDirection enum
-        const directionMap: Record<string, SignalDirection> = {
-          long: SignalDirection.LONG,
-          short: SignalDirection.SHORT,
-          neutral: SignalDirection.NEUTRAL,
-        }
-
-        // Include audit info in indicators
-        const finalAudit = validateFilesRead(result.filesRead, definition.meta.requiredData)
+        const p = (k: string) => (answer.probabilities[k] ?? 0).toFixed(2)
+        const reason = gapNeutralized
+          ? `${meta.name} judgment: LONG/SHORT probabilities within ${DIRECTION_GAP_THRESHOLD} (p_long=${p('long')}, p_short=${p('short')}) — neutral by policy.`
+          : `${meta.name} judgment: ${direction.toUpperCase()} at p=${p(answer.choice)} (p_long=${p('long')}, p_short=${p('short')}, p_neutral=${p('neutral')}, confidence ${(answer.confidence).toFixed(2)}).`
 
         return {
           meta,
-          direction: directionMap[verdict.direction] ?? SignalDirection.NEUTRAL,
-          confidence: Math.min(0.95, Math.max(0.05, verdict.confidence)),
-          reason: verdict.reason,
-          output: result.text,
+          direction,
+          confidence: Math.min(0.95, Math.max(0.05, confidence)),
+          reason,
+          output: JSON.stringify(answer),
           indicators: {
-            ...verdict.indicators,
-            durationMs: result.durationMs,
-            model,
-            filesRead: result.filesRead.length,
-            toolCalls: result.toolCallCount,
-            dataConsumed: finalAudit.readKeys.join(','),
-            ...(finalAudit.missingKeys.length > 0 ? { dataMissed: finalAudit.missingKeys.join(',') } : {}),
+            p_long: Number(p('long')),
+            p_short: Number(p('short')),
+            p_neutral: Number(p('neutral')),
+            judgment_confidence: Number(answer.confidence.toFixed(3)),
+            durationMs,
+            model: typeSafeModel(),
           },
         }
       } catch (err) {
@@ -589,12 +420,8 @@ export function createLLMAnalyst(definition: LLMAnalystDefinition): Analyst {
           meta,
           direction: SignalDirection.NEUTRAL,
           confidence: 0.1,
-          reason: `Analysis error: ${err instanceof Error ? err.message : 'Unknown error'}`,
-        }
-      } finally {
-        // Always clean up the temp directory
-        if (workDir) {
-          try { rmSync(workDir, { recursive: true, force: true }) } catch { /* ignore */ }
+          reason: `TypeSafe analysis error: ${err instanceof Error ? err.message : 'Unknown error'}`,
+          indicators: { durationMs: Date.now() - startTime },
         }
       }
     },

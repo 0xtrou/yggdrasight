@@ -33,9 +33,10 @@ export async function POST(request: Request) {
     const body = await request.json() as { symbol?: string }
     const symbol = (body.symbol ?? 'BTC').toUpperCase()
 
-    // Fetch model config from user's MongoDB
+    // Fetch model config from user's MongoDB (kept for DB compatibility —
+    // the TypeSafe engine uses jev-latest regardless)
     const agentModelMap = await getAgentModelMapFromConnection(ctx.connection)
-    const model = agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? 'github-copilot/gpt-4.1'
+    const model = agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? 'jev-latest'
 
     console.log(`[classify] Creating job for ${symbol} with model ${model}`)
 
@@ -73,6 +74,9 @@ export async function POST(request: Request) {
         DOCKER_BIN: process.env.DOCKER_BIN,
         BUN_BIN: process.env.BUN_BIN,
         OPENCODE_IMAGE: process.env.OPENCODE_IMAGE,
+        TYPESAFE_API_KEY: process.env.TYPESAFE_API_KEY,
+        TYPESAFE_API_URL: process.env.TYPESAFE_API_URL,
+        TYPESAFE_MODEL: process.env.TYPESAFE_MODEL,
         ...(userMongoUri ? { YGGDRASIGHT_MONGODB_URI: userMongoUri } : {}),
         YGGDRASIGHT_SECRET_FILE: secretFilePath,
         NODE_PATH: [

@@ -17,28 +17,7 @@ export type {
 
 export { CATEGORY_NAMES, CRACK_NAMES, MIGRATION_PATTERNS } from './types'
 
-export {
-  buildCrackMappingPrompt,
-  buildVisibilityPrompt,
-  buildNarrativeSeparatorPrompt,
-  buildPowerVectorPrompt,
-  buildProblemRecognitionPrompt,
-  buildIdentityPolarityPrompt,
-  buildSynthesizerPrompt,
-  AGENT_PROMPT_BUILDERS,
-} from './prompts'
-export type { ClassificationAgentType } from './prompts'
-
-export {
-  parseCrackMapping,
-  parseVisibility,
-  parseNarrativeSeparator,
-  parsePowerVector,
-  parseProblemRecognition,
-  parseIdentityPolarity,
-  parseClassificationResult,
-  AGENT_PARSERS,
-} from './parsers'
+export { runTypeSafeClassification } from './typesafe-classifier'
 
 export {
   detectMigration,

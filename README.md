@@ -48,37 +48,47 @@ The UI is built to feel like a Bloomberg terminal. Dark. Dense. Fast.
 
 ## Intelligence Engine
 
-The core of Yggdrasight is a 3-layer AI pipeline:
+The core of Yggdrasight is a multi-layer AI pipeline. All judgment layers run on
+[TypeSafe](https://docs.typesafe.ai) — its System One models (Jev) turn natural
+language and application state into **typed judgments with calibrated
+probabilities** (Noul = P(yes), Choice = pick from options with a distribution,
+Score = position on described levels) that code composes. No prompt-and-parse:
+every question returns structured, probability-weighted answers.
 
 ### Layer 1 — Discovery
-The discovery worker runs an [OpenCode](https://opencode.ai) agent in a Docker container with no time limit. It researches the underlying project — whitepapers, GitHub, socials, tokenomics — and returns structured context that feeds everything downstream.
+The discovery worker runs an [OpenCode](https://opencode.ai) agent in a Docker container with no time limit. It researches the underlying project — whitepapers, GitHub, socials, tokenomics — and returns structured context that feeds every judgment downstream.
 
-### Layer 2 — Classification (6 agents in parallel)
-Six specialized philosophical agents run simultaneously, each inside its own Docker container:
+### Layer 2 — Classification (1 batched TypeSafe request)
+The six philosophical dimensions — previously six separate agents — are now six
+families of typed questions over the same discovery state, all in **one batched
+request**:
 
-| Agent | What it does |
+| Dimension | TypeSafe questions |
 |---|---|
-| **Crack Mapping** | Identifies structural fractures — where narrative breaks down, trust erodes, or the thesis has contradictions |
-| **Visibility** | Measures how much of the real picture is publicly knowable vs obscured |
-| **Narrative Separator** | Strips marketing from signal — what story is being told vs what's actually happening |
-| **Power Vector** | Maps who holds leverage: teams, VCs, exchanges, whales, protocols |
-| **Problem Recognition** | Evaluates whether the project is solving a real, durable problem |
-| **Identity Polarity** | Measures community coherence vs fragmentation — how unified is the belief system |
+| **Crack Mapping** | 9 Nouls — one per crack, probability = resonance strength |
+| **Visibility** | Choice (direction) + 2 Scores (abstraction depth, crypto language) |
+| **Narrative Separator** | 2 Scores (narrative dependency, substitutability) + Noul (core function survives) + Choice (narrative label) |
+| **Power Vector** | Choice (direction) + 2 Scores (team dependency, token concentration) |
+| **Problem Recognition** | 2 Scores (recognition level, categorization coherence) |
+| **Identity Polarity** | Choice (polarity) + Noul (transcends its mirror) |
 
-Each agent gets the full discovery context plus its own specialized prompt. Each uses its own independently-configured model.
+### Layer 3 — Synthesis (second batched request)
+A second request — justified because it needs the round-1 answers as state —
+judges per-category membership (6 Nouls), the primary category, the categorical
+migration trajectory and the Inner Council archetype (Choices). Code then
+assembles the final `ClassificationResult`; narrative text is deterministically
+templated from the judgments, never generated.
 
-### Layer 3 — Synthesis
-A 7th agent reads all 6 results and produces a unified `ClassificationResult`: a structured verdict with category, conviction, risk factors, and a plain-language thesis.
+### Layer 4 — Analysis (7 TypeSafe analysts)
+The named analysts — Wyckoff, Elliott Wave, Soros Reflexivity, On-Chain, Warren
+Buffett, Long-Term Conviction and Mirofish consensus — each become a single
+Choice judgment (long/short/neutral) whose instructions carry the analyst's
+philosophy and whose state is the serialized market snapshot. The answer's
+probability distribution IS the confidence; code policy neutralizes
+near-coin-flip calls (|P(long) − P(short)| < 0.10 → NEUTRAL).
 
-### Layer 4 — Analysis (6 LLM analysts)
-Separate from classification, a set of named analysts run against live market data:
-
-- **Wyckoff** — accumulation/distribution phase analysis
-- **Elliott Wave** — wave structure and positioning
-- **Soros Reflexivity** — feedback loops between price and fundamentals
-- **On-Chain Analysis** — wallet flows, exchange deposits, miner behavior
-- **Warren Buffett** — fundamental value and moat assessment
-- **Long-Term Conviction** — multi-year thesis evaluation
+A full classification now completes in seconds (2 API requests, ~30 judgments)
+instead of 7 Docker agents doing minutes of web research each.
 
 ---
 
@@ -92,7 +102,7 @@ Fonts           SF Mono (Apple) → JetBrains Mono → system monospace
 Backend         Next.js API routes
 Database        MongoDB 7 (Docker)
 Cache           Redis 7 (Docker)
-AI Runtime      OpenCode CLI in Docker containers (ghcr.io/anomalyco/opencode)
+AI Runtime      TypeSafe System One (judgment layers) + OpenCode CLI in Docker (research/discovery)
 Workers         Bun — classify-worker.ts, discover-worker.ts
 Monorepo        Turborepo + pnpm workspaces
 Runtime         Node 24+ / Bun
@@ -126,8 +136,8 @@ yggdrasight/
 │           └── lib/
 │               ├── intelligence/
 │               │   ├── analysts/     LLM analysts + algorithmic analysts
-│               │   ├── classification/ Types, prompts, parsers
-│               │   ├── engine/       Runner, consensus, OpenCode adapter
+│               │   ├── classification/ Types + TypeSafe classifier
+│               │   ├── engine/       Runner, consensus, TypeSafe client, OpenCode adapter
 │               │   └── models/       Mongoose models (jobs, verdicts)
 │               └── ingest/           Webhook parsing + normalization
 ├── scripts/
@@ -141,15 +151,19 @@ yggdrasight/
 
 ## Per-Agent Model Configuration
 
-Every agent in the system can run a different model. Configuration lives in `/ai-config` and persists to `localStorage('yggdrasight:agentModelMap')`.
+Every OpenCode-driven agent (discovery, chat, signal crawling) can run a
+different model. Configuration lives in `/ai-config` and persists to
+`localStorage('yggdrasight:agentModelMap')`.
 
 ```
 Discovery       → one model
-Intelligence    → 7 individual models (one per sub-agent + synthesizer)
-Analysis        → 6 individual models (one per LLM analyst)
+Chat            → one model
+Signal Crawl    → one model
 ```
 
-The per-agent map flows all the way through: UI → API → worker → each Docker container. No single model lock-in.
+The TypeSafe judgment layers (classification + analysis) run on
+`jev-latest` (override with `TYPESAFE_MODEL`) — per-agent model maps are
+accepted but ignored there.
 
 ---
 
@@ -193,12 +207,19 @@ pnpm dev
 MONGODB_URI=mongodb://yggdrasight:yggdrasight_dev_secret@localhost:27017/yggdrasight?authSource=admin
 REDIS_URL=redis://localhost:6379
 
+# Required — TypeSafe intelligence (classification + analysis)
+# Get a key at https://console.typesafe.ai/settings/keys
+TYPESAFE_API_KEY=
+# Optional — overrides
+# TYPESAFE_MODEL=jev-latest
+# TYPESAFE_API_URL=https://api.typesafe.ai/v1/systemone
+
 # Optional — market data
 BINANCE_API_KEY=
 BINANCE_API_SECRET=
 COINGECKO_API_KEY=
 
-# Optional — AI providers (OpenCode handles model routing)
+# Optional — AI providers (OpenCode handles model routing for discovery/chat)
 OPENAI_API_KEY=
 ANTHROPIC_API_KEY=
 
@@ -225,18 +246,14 @@ POST /api/intelligence/classify
         │
         ▼
 classify-worker.ts
-  Loads job + latest DiscoveryJob for BTC
-  Spawns 6 Docker containers in parallel:
-    docker run opencode [crack_mapping prompt + context]
-    docker run opencode [visibility prompt + context]
-    docker run opencode [narrative_separator prompt + context]
-    docker run opencode [power_vector prompt + context]
-    docker run opencode [problem_recognition prompt + context]
-    docker run opencode [identity_polarity prompt + context]
-  Waits for all 6 (Promise.all)
-  Spawns synthesizer container with all 6 results
-  Parses structured output
-  Saves ClassificationResult to MongoDB
+  Loads job + latest DiscoveryJob for BTC (judgment state)
+  Round 1 — one batched TypeSafe request:
+    9 crack Nouls + visibility/narrative/power/recognition/polarity
+    questions over the same state (run in parallel)
+  Round 2 — synthesis request (needs round-1 answers as state):
+    6 category Nouls + primary category, migration, archetype Choices
+  Code assembles legacy SubAgentResult shapes + ClassificationResult
+  Saves to MongoDB
   Creates ClassificationSnapshot for time-series
         │
         ▼
