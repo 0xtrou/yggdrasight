@@ -41,3 +41,6 @@ opencode.json
 
 # Runtime OHLCV cache (generated when running scripts from repo root)
 data/cache/
+
+# App-level runtime OHLCV cache (fixtures stay tracked)
+apps/web/data/cache/
