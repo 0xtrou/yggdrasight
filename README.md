@@ -79,13 +79,19 @@ migration trajectory and the Inner Council archetype (Choices). Code then
 assembles the final `ClassificationResult`; narrative text is deterministically
 templated from the judgments, never generated.
 
-### Layer 4 — Analysis (7 TypeSafe analysts)
-The named analysts — Wyckoff, Elliott Wave, Soros Reflexivity, On-Chain, Warren
-Buffett, Long-Term Conviction and Mirofish consensus — each become a single
-Choice judgment (long/short/neutral) whose instructions carry the analyst's
-philosophy and whose state is the serialized market snapshot. The answer's
-probability distribution IS the confidence; code policy neutralizes
-near-coin-flip calls (|P(long) − P(short)| < 0.10 → NEUTRAL).
+### Layer 4 — Analysis (6 TypeSafe analysts + Mirofish)
+Six named analysts — Wyckoff, Elliott Wave, Soros Reflexivity, On-Chain, Warren
+Buffett and Long-Term Conviction — each become a single Choice judgment
+(long/short/neutral) whose instructions carry the analyst's philosophy and
+whose state is the serialized market snapshot. The answer's probability
+distribution IS the confidence; code policy neutralizes near-coin-flip calls
+(|P(long) − P(short)| < 0.10 → NEUTRAL).
+
+**Mirofish is NOT TypeSafe.** It stays a distinct prediction mechanism: an
+independent swarm-simulation backend (ontology → knowledge graph → multi-round
+AI-persona social simulation → crowd consensus extraction) that needs the
+`mirofish-backend` service running. Its bull/bear consensus is a separate
+evidence source weighted alongside the TypeSafe judgments, not one of them.
 
 A full classification now completes in seconds (2 API requests, ~30 judgments)
 instead of 7 Docker agents doing minutes of web research each.
