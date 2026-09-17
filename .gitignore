@@ -38,3 +38,6 @@ chat-*.md
 *.snapshot.png
 opencode.json
 *.code-workspace
+
+# Runtime OHLCV cache (generated when running scripts from repo root)
+data/cache/
