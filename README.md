@@ -186,9 +186,15 @@ docker compose up -d
 
 ### 3. Configure environment
 
+> **Local mode:** in development the terminal runs without the password-hash
+> authentication gate — everything uses the default MongoDB and the host's
+> OpenCode config, and the TypeSafe judgment layers need only
+> `TYPESAFE_API_KEY`. Set `AUTH_DISABLED=0` to re-enable the gate even in dev,
+> or `AUTH_DISABLED=1` to keep it off in production-style deployments.
+
 ```bash
-cp .env.local.example apps/web/.env.local
-# Edit apps/web/.env.local — defaults work out of the box for local Docker
+cp apps/web/.env.local.example apps/web/.env.local
+# Edit apps/web/.env.local — add your TYPESAFE_API_KEY (required)
 ```
 
 ### 4. Run
@@ -222,6 +228,11 @@ COINGECKO_API_KEY=
 # Optional — AI providers (OpenCode handles model routing for discovery/chat)
 OPENAI_API_KEY=
 ANTHROPIC_API_KEY=
+
+# Auth — development skips the password-hash gate by default (see below).
+# Force it on/off in any environment:
+# AUTH_DISABLED=1
+# AUTH_DISABLED=0
 
 # Optional — alerts
 TELEGRAM_BOT_TOKEN=
