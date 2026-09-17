@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Timeframe, SignalDirection } from '@yggdrasight/core'
 import { runAnalysis } from '@/lib/intelligence/engine/runner'
 import { withAuth } from '@/lib/auth/middleware'
-import { withDecryptedConfig } from '@/lib/auth/session'
+import { withDecryptedConfig, isLocalMode } from '@/lib/auth/session'
 import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'
 
 function sanitizeMirofishReason(reason: string): string {
@@ -61,11 +61,13 @@ export async function POST(req: NextRequest) {
       const agentModelMap = await getAgentModelMapFromConnection(ctx.connection)
       const model = agentModelMap['*'] ?? Object.values(agentModelMap)[0] ?? undefined
 
-      // Run analysis
-      // Run analysis with decrypted auth for Docker container mounts
-      const result = await withDecryptedConfig(ctx, async (configPaths) => {
-        return runAnalysis(symbol, timeframes, { model, agentModelMap, agentIds, authJsonPath: configPaths.authJsonPath })
-      })
+      // Run analysis. Local mode skips vault decryption — the host's own
+      // opencode auth.json is used, and TypeSafe analysts ignore it entirely.
+      const result = isLocalMode()
+        ? await runAnalysis(symbol, timeframes, { model, agentModelMap, agentIds })
+        : await withDecryptedConfig(ctx, async (configPaths) => {
+            return runAnalysis(symbol, timeframes, { model, agentModelMap, agentIds, authJsonPath: configPaths.authJsonPath })
+          })
 
       const sanitizedAnalysts = result.analysts
         .filter((a) => !(a.meta.id === 'mirofish' && a.confidence <= 0.1))

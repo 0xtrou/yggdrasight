@@ -90,6 +90,39 @@ async function createVerificationHash(passwordHash: string): Promise<string> {
 
 // ── Public API ───────────────────────────────────────────────────────────────
 
+// ── Local mode (development) ─────────────────────────────────────────────────
+
+/**
+ * Local mode skips password-hash authentication entirely.
+ *
+ * The hash exists to decrypt per-user OpenCode configs for the deployed
+ * multi-user setup. Locally the TypeSafe intelligence layers need only the
+ * server-side TYPESAFE_API_KEY, discovery/chat fall back to the host's own
+ * ~/.local/share/opencode/auth.json, and everything runs against the default
+ * MongoDB. Force on/off in any environment with AUTH_DISABLED=1 / AUTH_DISABLED=0.
+ */
+export function isLocalMode(): boolean {
+  if (process.env.AUTH_DISABLED !== undefined) return process.env.AUTH_DISABLED === '1'
+  return process.env.NODE_ENV === 'development'
+}
+
+let localConnection: mongoose.Connection | null = null
+
+/**
+ * Build the local-mode session: one shared connection to the default MongoDB,
+ * no password hash (vault decryption is bypassed by callers checking isLocalMode).
+ */
+async function getLocalModeSession(): Promise<AuthSession> {
+  if (!localConnection || localConnection.readyState !== 1) {
+    const uri = process.env.MONGODB_URI ?? 'mongodb://yggdrasight:yggdrasight_dev_secret@localhost:27017/yggdrasight?authSource=admin'
+    localConnection = mongoose.createConnection(uri, { bufferCommands: false })
+    await localConnection.asPromise()
+    console.log('[auth] Local mode: auth disabled — connected to default MongoDB')
+  }
+  return { sessionId: 'local', passwordHash: '', connection: localConnection }
+}
+
+
 /**
  * Register a new user with uploaded OpenCode config files.
  *
@@ -195,6 +228,9 @@ export async function loginUser(passwordHash: string): Promise<AuthSession> {
  */
 export async function getCurrentSession(): Promise<AuthSession | null> {
   try {
+    // Local mode: no cookies, no user registry — everything on the default DB
+    if (isLocalMode()) return await getLocalModeSession()
+
     const cookieStore = await cookies()
     const sessionCookie = cookieStore.get(SESSION_COOKIE)
     const hashCookie = cookieStore.get(HASH_COOKIE)

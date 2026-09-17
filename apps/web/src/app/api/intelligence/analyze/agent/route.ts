@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { Timeframe } from '@yggdrasight/core'
 import { runAnalysis } from '@/lib/intelligence/engine/runner'
 import { withAuth } from '@/lib/auth/middleware'
-import { withDecryptedConfig } from '@/lib/auth/session'
+import { withDecryptedConfig, isLocalMode } from '@/lib/auth/session'
 import { getAgentModelMapFromConnection, getIntelligenceModelsForConnection } from '@/lib/auth/intelligence-models'
 import { getUserMongoUri } from '@/lib/auth/mongo-manager'
 
@@ -86,15 +86,17 @@ export async function POST(request: Request) {
         if (!userConnection) throw new Error('No MongoDB URI for session')
         const models = getIntelligenceModelsForConnection(userConnection)
 
-        const result = await withDecryptedConfig(ctx, async (configPaths) => {
-          return runAnalysis(symbol, timeframes, {
-            model,
-            agentModelMap,
-            agentIds: [agentId],
-            authJsonPath: configPaths.authJsonPath,
-            forceFresh,
-          })
-        })
+        const result = isLocalMode()
+          ? await runAnalysis(symbol, timeframes, { model, agentModelMap, agentIds: [agentId], forceFresh })
+          : await withDecryptedConfig(ctx, async (configPaths) => {
+              return runAnalysis(symbol, timeframes, {
+                model,
+                agentModelMap,
+                agentIds: [agentId],
+                authJsonPath: configPaths.authJsonPath,
+                forceFresh,
+              })
+            })
 
         const mirofishResult = result.analysts.find(a => a.meta.id === 'mirofish')
         console.log(`[analyze-agent] ${agentId}@${symbol}: ${result.analysts.length} analysts, mirofish confidence=${mirofishResult?.confidence ?? 'N/A'}, reason=${mirofishResult?.reason ?? 'N/A'}, output=${(mirofishResult?.output ?? '').substring(0, 200)}`)

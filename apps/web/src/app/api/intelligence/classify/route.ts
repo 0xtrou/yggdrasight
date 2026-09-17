@@ -3,6 +3,7 @@ import { spawn } from 'child_process'
 import path from 'path'
 import fs from 'fs'
 import { withAuth } from '@/lib/auth/middleware'
+import { isLocalMode } from '@/lib/auth/session'
 import { getAgentModelMapFromConnection } from '@/lib/auth/intelligence-models'
 import { getUserMongoUri } from '@/lib/auth/mongo-manager'
 
@@ -56,11 +57,15 @@ export async function POST(request: Request) {
     const workerScript = path.join(projectRoot, 'scripts', 'classify-worker.ts')
     const userMongoUri = getUserMongoUri(ctx.sessionId)
 
-    // Write password hash to a temp secret file so it's not leaked via env
+    // Write password hash to a temp secret file so it's not leaked via env.
+    // Local mode has no encrypted config — the worker reads TYPESAFE_API_KEY directly.
+    const localMode = isLocalMode()
     const secretsDir = path.join(projectRoot, 'tmp', 'secrets')
-    fs.mkdirSync(secretsDir, { recursive: true })
     const secretFilePath = path.join(secretsDir, `${jobId}.key`)
-    fs.writeFileSync(secretFilePath, ctx.passwordHash ?? '', { mode: 0o600 })
+    if (!localMode) {
+      fs.mkdirSync(secretsDir, { recursive: true })
+      fs.writeFileSync(secretFilePath, ctx.passwordHash ?? '', { mode: 0o600 })
+    }
 
     const child = spawn(BUN_BIN, [workerScript, jobId], {
       detached: true,
@@ -78,7 +83,7 @@ export async function POST(request: Request) {
         TYPESAFE_API_URL: process.env.TYPESAFE_API_URL,
         TYPESAFE_MODEL: process.env.TYPESAFE_MODEL,
         ...(userMongoUri ? { YGGDRASIGHT_MONGODB_URI: userMongoUri } : {}),
-        YGGDRASIGHT_SECRET_FILE: secretFilePath,
+        ...(localMode ? {} : { YGGDRASIGHT_SECRET_FILE: secretFilePath }),
         NODE_PATH: [
           path.join(projectRoot, 'packages/db/node_modules'),
           path.join(projectRoot, 'node_modules'),
@@ -87,7 +92,7 @@ export async function POST(request: Request) {
     })
 
     // Clean up secret file after worker exits
-    child.on('close', () => { try { fs.unlinkSync(secretFilePath) } catch { /* already gone */ } })
+    child.on('close', () => { if (!localMode) { try { fs.unlinkSync(secretFilePath) } catch { /* already gone */ } } })
 
     // Log any stderr from the worker for debugging (non-blocking)
     if (child.stderr) {
