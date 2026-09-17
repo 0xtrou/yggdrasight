@@ -64,7 +64,7 @@ export function middleware(req: NextRequest): NextResponse {
   const { pathname } = req.nextUrl
   const host = req.headers.get('host') || ''
   const hostname = host.split(':')[0]
-  const isTerminal = hostname.includes('terminal.');
+  const isTerminal = hostname.includes('terminal.') || process.env.MODE === 'terminal';
 
   // ── Development: run everything locally on one origin ───────────────────────
   // The host-based landing/terminal split only applies to the production
