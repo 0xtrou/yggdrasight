@@ -1,5 +1,9 @@
 # Yggdrasight - VPS Deployment Guide
 
+> The public landing site also runs on Cloudflare Workers (`yggdrasight-landing`), deployed by
+> the IaC in `infra/` (see `infra/README.md`). This guide covers the full VPS deployment (terminal,
+> API, MongoDB, Redis, AI workers), which cannot run on Workers.
+
 ## Overview
 
 ```bash

@@ -45,3 +45,11 @@ data/cache/
 
 # App-level runtime OHLCV cache (fixtures stay tracked)
 apps/web/data/cache/
+
+# Cloudflare / OpenNext
+.open-next/
+.wrangler/
+.dev.vars
+# Generated IaC artifacts — edit infra/workers.manifest.ts, then `bun run iac:gen`
+infra/wrangler/
+infra/types/

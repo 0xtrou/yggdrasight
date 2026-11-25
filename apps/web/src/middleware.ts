@@ -85,6 +85,13 @@ export function middleware(req: NextRequest): NextResponse {
 
   // ── MODE=landing: pure landing deployment, block all terminal routes ────────
   if (!isTerminal) {
+    // Landing-only builds (Cloudflare worker) have no backend: the API would
+    // fail on its MongoDB/Redis connections, so answer a clean 404 instead.
+    if (process.env.LANDING_ONLY === '1' && pathname.startsWith('/api')) {
+      const response = NextResponse.json({ error: 'Not found' }, { status: 404 })
+      applySecurityHeaders(response)
+      return response
+    }
     if (pathname === '/landing' || pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.startsWith('/public')) {
       const response = NextResponse.next()
       applySecurityHeaders(response)

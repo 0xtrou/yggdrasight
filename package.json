@@ -15,13 +15,21 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean",
-    "feed": "ts-node -r scripts/bootstrap.js -r tsconfig-paths/register -P scripts/tsconfig.json scripts/feed.ts"
+    "feed": "ts-node -r scripts/bootstrap.js -r tsconfig-paths/register -P scripts/tsconfig.json scripts/feed.ts",
+    "iac:gen": "bun run infra/scripts/gen-wrangler.ts",
+    "cf:build": "bun run iac:gen && cd apps/web && MODE=landing LANDING_ONLY=1 opennextjs-cloudflare build --config ../../infra/wrangler/landing.jsonc && opennextjs-cloudflare populateCache local --config ../../infra/wrangler/landing.jsonc",
+    "cf:preview": "pnpm cf:build && wrangler dev --config infra/wrangler/landing.jsonc",
+    "cf:types": "bun run iac:gen && wrangler types --config infra/wrangler/landing.jsonc infra/types/cloudflare-env.d.ts",
+    "deploy": "bun run infra/scripts/deploy.ts all",
+    "deploy:landing": "bun run infra/scripts/deploy.ts landing",
+    "test:infra": "bun test infra/scripts"
   },
   "devDependencies": {
     "sharp": "^0.34.5",
     "tsconfig-paths": "^4.2.0",
     "turbo": "^2.8.13",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "4.157.0"
   },
   "engines": {
     "node": ">=24",
