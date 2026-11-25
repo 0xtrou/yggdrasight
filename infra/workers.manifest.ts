@@ -98,14 +98,10 @@ export const workers = {
     // LANDING_ONLY=1: no backend behind this build, so middleware answers /api/* with 404.
     buildEnv: { MODE: 'landing', LANDING_ONLY: '1' },
     vars: {},
-    // Cutover 2026-11-25 (founder order): apex + www attached as custom domains.
-    // The deploy replaces their DNS-only A records pointing at the VPS
-    // (51.75.185.38); see infra/docs/DEPLOYMENT.md for rollback.
-    // terminal.yggdrasight.com stays on the VPS (not a route here).
-    routes: [
-      { pattern: 'yggdrasight.com', customDomain: true },
-      { pattern: 'www.yggdrasight.com', customDomain: true },
-    ],
+    // Bootstrap: no routes, so workers.dev is the only host
+    // (yggdrasight-landing.khangtd-09.workers.dev). A custom domain needs the
+    // founder's go first; put it in pendingRoutes, then move it to routes.
+    routes: [],
   },
 } as const satisfies Record<string, WorkerEntry>;
 
