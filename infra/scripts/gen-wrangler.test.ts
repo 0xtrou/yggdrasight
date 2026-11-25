@@ -42,8 +42,13 @@ describe('wranglerConfig', () => {
     for (const w of Object.values(workers)) expect(w.name.startsWith('yggdrasight-')).toBe(true);
   });
 
-  test('the landing worker has no routes and no data bindings (workers.dev only, stateless)', () => {
-    expect(base.routes).toEqual([]);
+  test('the landing worker owns apex + www only (terminal stays on the VPS) and has no data bindings', () => {
+    expect(base.routes).toEqual([
+      { pattern: 'yggdrasight.com', customDomain: true },
+      { pattern: 'www.yggdrasight.com', customDomain: true },
+    ]);
+    expect(JSON.stringify(base.routes)).not.toContain('terminal.');
+    expect(wranglerConfig(base).workers_dev).toBe(false);
     expect(base.kv ?? []).toEqual([]);
     expect(base.d1 ?? []).toEqual([]);
     expect(base.r2 ?? []).toEqual([]);

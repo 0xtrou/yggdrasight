@@ -35,7 +35,7 @@ sessions) also need, for `next/font/google` to download fonts at build time:
 
 ## Verify a deploy
 
-Base `https://yggdrasight-landing.khangtd-09.workers.dev`:
+Base `https://yggdrasight.com` and `https://www.yggdrasight.com` (workers.dev is off once routes exist):
 
 | Path | Expect |
 |---|---|
@@ -55,10 +55,23 @@ Base `https://yggdrasight-landing.khangtd-09.workers.dev`:
   deleting it affects nothing else in the account. The VPS deployment (`DEPLOY.md`) is unaffected
   either way.
 
-## Custom domain (not done; founder decision)
+## Cutover from the VPS (2026-11-25, founder order)
 
-To serve a hostname: add it to `pendingRoutes` in `infra/workers.manifest.ts` for review, then move
-it to `routes` (`{ pattern: '<host>', customDomain: true }`) and deploy from main. A non-interactive
-`wrangler deploy` attaches custom domains with `override_existing_dns_record`, so it REPLACES any
-existing DNS record for that host: record the current one here first, for rollback. Once routes
-exist, workers.dev and preview URLs turn off (gen-wrangler.ts).
+`yggdrasight.com` and `www.yggdrasight.com` moved into `routes` as custom domains and were deployed
+from `main`. A non-interactive `wrangler deploy` attaches custom domains with
+`override_existing_dns_record`, so it replaced the VPS records in one step. Once routes exist,
+workers.dev and preview URLs are off (gen-wrangler.ts); verify on the real hosts.
+
+VPS DNS records replaced (needed for rollback; read from public DNS, DNS-only/unproxied):
+
+| Host | Type | Value |
+|---|---|---|
+| yggdrasight.com | A | 51.75.185.38 |
+| www.yggdrasight.com | A | 51.75.185.38 |
+
+Not touched: `terminal.yggdrasight.com` (A 51.75.185.38, the VPS terminal) and any MX/TXT records.
+
+**Rollback to the VPS:** remove the two custom domains from `yggdrasight-landing` (dashboard: Workers
+› yggdrasight-landing › Domains & Routes, or empty `routes` and deploy from main), then re-create the
+two A records above as DNS-only. The VPS landing (`yggdrasight-landing` in PM2 / nginx) must still
+be running.

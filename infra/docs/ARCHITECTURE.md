@@ -15,8 +15,8 @@ visitors ──► yggdrasight-landing (Cloudflare Worker, OpenNext)
   any other page path 307-redirects to `/landing`; `/_next/*` and files in `public/` are served
   as assets; `/api/*` answers `404 {"error":"Not found"}` because `LANDING_ONLY=1` (the API needs
   the backend below, which this worker does not have).
-- **Host:** `yggdrasight-landing.khangtd-09.workers.dev` only. No custom domain (the founder
-  decides; see DEPLOYMENT.md).
+- **Hosts:** `yggdrasight.com` and `www.yggdrasight.com` (custom domains, 2026-11-25). workers.dev
+  is off. `terminal.yggdrasight.com` stays on the VPS.
 - **Limits to watch:** worker bundle 2.86 MiB gzipped (2026-11-25; Free plan cap 3 MiB, Paid
   10 MiB). It is close to the Free cap because OpenNext bundles every App Router route,
   including the API routes and the terminal pages, even though this worker never serves them.
